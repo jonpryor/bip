@@ -1,3 +1,103 @@
+commit 4f5f08677f0e5e7fd42b579fa5bafe73d12430d9
+Author: Arnaud Cornet <nohar@t1r.net>
+Date:   Sat Aug 7 12:10:32 2010 +0100
+
+    Enable PIE executable creation.
+
+commit 7712ae3a926a3ac1860238988c4fc9b84822cf11
+Author: Trou <trou@iiens.net>
+Date:   Tue Jun 15 23:02:01 2010 +0100
+
+    Fix typo
+
+commit 4d3ee53e7bde06239cf25fcc199d71ec69ec7275
+Author: Zach Wily <zach@zwily.com>
+Date:   Wed Apr 7 22:12:26 2010 +0100
+
+    RFC 1459 specifies that the PONG message may have 1 or 2 parameters.
+
+commit f995c1f53751724e653f5755da2137ea468a1fc9
+Author: Arnaud Cornet <nohar@t1r.net>
+Date:   Wed Feb 17 12:34:57 2010 +0000
+
+    try to mitigate freenode antiflood throttling
+
+commit 4d5ef343253f205a4f3eb9150d4c93a22b720e46
+Author: Arnaud Cornet <nohar@t1r.net>
+Date:   Wed Feb 17 12:33:05 2010 +0000
+
+    oidentd is not debug
+
+commit 92365874d45693cd7c34290133ade5b0873430ce
+Author: Arnaud Cornet <nohar@t1r.net>
+Date:   Wed Feb 17 12:32:22 2010 +0000
+
+    Revert "Fix antiflood. Fixes freenode kicking us out."
+    
+    This reverts commit 639e929021a1095208ff4d0dc0ffc931fb0efa38.
+
+commit 5c3f22d8a84b0fcd45ba192026d1bc1fbbbc75ec
+Author: Arnaud Cornet <nohar@t1r.net>
+Date:   Wed Feb 17 12:32:15 2010 +0000
+
+    Revert "Unbraindead"
+    
+    This reverts commit b21c658b8cec8cebfb7de52f6ecb9c50e263fb89.
+
+commit b21c658b8cec8cebfb7de52f6ecb9c50e263fb89
+Author: Arnaud Cornet <nohar@t1r.net>
+Date:   Wed Feb 17 12:00:55 2010 +0000
+
+    Unbraindead
+
+commit 5b26dac4898f76ba0396fbbc87cf528ee8d99d8d
+Author: Arnaud Cornet <nohar@t1r.net>
+Date:   Wed Feb 17 10:55:09 2010 +0000
+
+    More lose MODE command handling
+
+commit 5d6b7fedaf90624f3039a7d48a23ce2f98164180
+Author: Mathieu Pillard <m@virgule.net>
+Date:   Tue Feb 16 10:08:27 2010 +0000
+
+    backread_hours is in hours, not days
+
+commit 7c0b6036f2331b601e58bfff5773ad8dec686860
+Author: Arnaud Cornet <nohar@t1r.net>
+Date:   Mon Feb 15 14:22:00 2010 +0000
+
+    Ugly header fixups to fix build
+
+commit 2e5f4287ff1f6ac446e47670db17800ab08abecd
+Author: Mathieu Pillard <m@virgule.net>
+Date:   Mon Feb 15 14:17:44 2010 +0000
+
+    With necessary header fix
+
+commit c0772f54bfc9e85f9c37f4fe4c5ae9b8c58e6d8f
+Author: Mathieu Pillard <m@virgule.net>
+Date:   Mon Feb 15 14:16:08 2010 +0000
+
+    Fix time parsing. Fixes backlog replaying one month to many,
+
+commit 639e929021a1095208ff4d0dc0ffc931fb0efa38
+Author: Arnaud Cornet <nohar@t1r.net>
+Date:   Mon Feb 15 14:06:50 2010 +0000
+
+    Fix antiflood. Fixes freenode kicking us out.
+
+commit bfe14ebb201f4fc7a48cf250d0c4048244d89559
+Author: Arnaud Cornet <nohar@t1r.net>
+Date:   Sun Nov 15 20:41:59 2009 +0000
+
+    Add -git to version string.
+
+commit ce506aaec771abffa65c7227734f3de51de99305
+Author: Arnaud Cornet <nohar@t1r.net>
+Date:   Sun Nov 15 20:41:56 2009 +0000
+
+    Update src/version.h and Changelog for release.
+
 commit a932cc53a91df6651e673b20d4de14a6bff02114
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Sun Nov 15 20:40:17 2009 +0000
