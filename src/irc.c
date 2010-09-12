@@ -148,8 +148,8 @@ list_t *channel_name_list(struct channel *c)
 char *link_name(struct link_any *l)
 {
 	if (LINK(l))
-		return LINK(l)->name;
-	return NULL;
+		return LINK(l)->name ? LINK(l)->name : "(null)";
+	return "*connecting*";
 }
 
 static int irc_001(struct link_server *server, struct line *line)
