@@ -1,3 +1,29 @@
+commit 7fb0823167af8e9a826f99b0a18539acc6cd81ec
+Author: Arnaud Cornet <nohar@t1r.net>
+Date:   Sun Sep 12 17:32:55 2010 +0100
+
+    cp
+
+commit 4822364c0fd6cda525d531c156359d57860191c5
+Author: Arnaud Cornet <nohar@t1r.net>
+Date:   Sun Sep 12 16:52:00 2010 +0100
+
+    Fix for null pointer deference
+    
+    CVE-2010-3071
+
+commit d0ee9df3eccdbef9856bd2952c0bfa7caf6f5067
+Author: Arnaud Cornet <nohar@t1r.net>
+Date:   Sat Aug 7 12:18:59 2010 +0100
+
+    Add -git to version string.
+
+commit 3c6d7765970259925024a4cf2b53ed05d154402e
+Author: Arnaud Cornet <nohar@t1r.net>
+Date:   Sat Aug 7 12:18:53 2010 +0100
+
+    Update src/version.h and Changelog for release.
+
 commit 4f5f08677f0e5e7fd42b579fa5bafe73d12430d9
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Sat Aug 7 12:10:32 2010 +0100
