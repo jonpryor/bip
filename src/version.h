@@ -1,1 +1,1 @@
-#define BIP_VERSION "0.8.6"
+#define BIP_VERSION "0.8.6-git"
