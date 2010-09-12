@@ -145,6 +145,13 @@ list_t *channel_name_list(struct channel *c)
 	return ret;
 }
 
+char *link_name(struct link_any *l)
+{
+	if (LINK(l))
+		return LINK(l)->name;
+	return NULL;
+}
+
 static int irc_001(struct link_server *server, struct line *line)
 {
 	(void)line;
@@ -1106,7 +1113,7 @@ static int irc_dispatch_client(bip_t *bip, struct link_client *ic,
 	if (irc_line_elem_equals(line, 0, "PING")) {
 		if (!irc_line_includes(line, 1))
 			return ERR_PROTOCOL;
-		WRITE_LINE1(CONN(ic), LINK(ic)->name, "PONG",
+		WRITE_LINE1(CONN(ic), link_name((struct link_any *)ic), "PONG",
 				irc_line_elem(line, 1));
 		r = OK_FORGET;
 	} else if (LINK(ic)->s_state != IRCS_CONNECTED) {
@@ -2449,7 +2456,7 @@ void bip_on_event(bip_t *bip, connection_t *conn)
 	if (err) {
 		if (TYPE(lc) == IRC_TYPE_SERVER) {
 			mylog(LOG_ERROR, "[%s] read_lines error, closing...",
-					LINK(lc)->name);
+					link_name(lc));
 			irc_server_shutdown(LINK(lc)->l_server);
 		} else {
 			mylog(LOG_ERROR, "client read_lines error, closing...");
@@ -2471,7 +2478,7 @@ void bip_on_event(bip_t *bip, connection_t *conn)
 		line = irc_line_new_from_string(line_s);
 		if (!line) {
 			mylog(LOG_ERROR, "[%s] Error in protocol, closing...",
-					LINK(lc)->name);
+					link_name(lc));
 			free(line_s);
 			goto prot_err_lines;
 		}
@@ -2481,7 +2488,7 @@ void bip_on_event(bip_t *bip, connection_t *conn)
 		free(line_s);
 		if (r == ERR_PROTOCOL) {
 			mylog(LOG_ERROR, "[%s] Error in protocol, closing...",
-					LINK(lc)->name);
+					link_name(lc));
 			goto prot_err_lines;
 		}
 		if (r == ERR_AUTH)
