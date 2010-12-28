@@ -1316,6 +1316,8 @@ static list_t *log_backread_hours(log_t *log, const char *storename,
 	blstarttime = tv.tv_sec - 3600 * hours;
 
 	store = hash_get(&log->logfgs, storename);
+	if (!store)
+		return NULL;
 
 	ret = list_new(NULL);
 	for (logstore_get_file_at(store, blstarttime, &file_it);
