@@ -475,10 +475,14 @@ void log_nick(log_t *logdata, const char *ircmask, const char *channel,
 		const char *newnick)
 {
 	char *oldnick = nick_from_ircmask(ircmask);
+	logstore_t* oldstore;
+	logstore_t* newstore;
 
-	if (hash_includes(&logdata->logfgs, oldnick)) {
-		if (hash_includes(&logdata->logfgs, newnick))
+	if ((oldstore = hash_get(&logdata->logfgs, oldnick))) {
+		if ((newstore = hash_get(&logdata->logfgs, newnick))
+			&& oldstore != newstore) {
 			log_drop(logdata, newnick);
+		}
 		hash_rename_key(&logdata->logfgs, oldnick, newnick);
 	}
 	free(oldnick);
