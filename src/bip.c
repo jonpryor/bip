@@ -56,7 +56,7 @@ list_t *parse_conf(FILE *file, int *err);
 void conf_die(bip_t *bip, char *fmt, ...);
 static char *get_tuple_pvalue(list_t *tuple_l, int lex);
 void bip_notify(struct link_client *ic, char *fmt, ...);
-void adm_list_connections(struct link_client *ic, struct user *bu);
+void adm_list_connections(struct link_client *ic, struct bipuser *bu);
 void free_conf(list_t *l);
 
 #ifdef HAVE_OIDENTD
@@ -386,7 +386,7 @@ static int add_network(bip_t *bip, list_t *data)
 
 void adm_bip_delconn(bip_t *bip, struct link_client *ic, const char *conn_name)
 {
-	struct user *user = LINK(ic)->user;
+	struct bipuser *user = LINK(ic)->user;
 	struct link *l;
 
 	if (!(l = hash_get(&user->connections, conn_name))) {
@@ -401,7 +401,7 @@ void adm_bip_delconn(bip_t *bip, struct link_client *ic, const char *conn_name)
 void adm_bip_addconn(bip_t *bip, struct link_client *ic, const char *conn_name,
 		const char *network_name)
 {
-	struct user *user = LINK(ic)->user;
+	struct bipuser *user = LINK(ic)->user;
 	struct network *network;
 
 	/* check name uniqueness */
@@ -452,7 +452,7 @@ void adm_bip_addconn(bip_t *bip, struct link_client *ic, const char *conn_name,
 	bip_notify(ic, "connection added, you should soon be able to connect");
 }
 
-static int add_connection(bip_t *bip, struct user *user, list_t *data)
+static int add_connection(bip_t *bip, struct bipuser *user, list_t *data)
 {
 	struct tuple *t, *t2;
 	struct link *l;
@@ -663,7 +663,7 @@ static int add_user(bip_t *bip, list_t *data, struct historical_directives *hds)
 {
 	int r;
 	struct tuple *t;
-	struct user *u;
+	struct bipuser *u;
 	char *name = get_tuple_pvalue(data, LEX_NAME);
 	list_t connection_list, *cl;
 
@@ -675,7 +675,7 @@ static int add_user(bip_t *bip, list_t *data, struct historical_directives *hds)
 	}
 	u = hash_get(&bip->users, name);
 	if (!u) {
-		u = bip_calloc(sizeof(struct user), 1);
+		u = bip_calloc(sizeof(struct bipuser), 1);
 		hash_insert(&bip->users, name, u);
 		hash_init(&u->connections, HASH_NOCASE);
 		u->admin = 0;
@@ -809,7 +809,7 @@ static int validate_config(bip_t *bip)
 {
 	/* nick username realname or default_{nick,username,realname} in user */
 	hash_iterator_t it, sit, cit;
-	struct user *user;
+	struct bipuser *user;
 	struct link *link;
 	struct chan_info *ci;
 	int r = 1;
@@ -881,10 +881,10 @@ void clear_marks(bip_t *bip)
 		((struct link *)list_it_item(&lit))->in_use = 0;
 	for (hash_it_init(&bip->users, &hit); hash_it_item(&hit);
 			hash_it_next(&hit))
-		((struct user *)hash_it_item(&hit))->in_use = 0;
+		((struct bipuser *)hash_it_item(&hit))->in_use = 0;
 }
 
-void user_kill(bip_t *bip, struct user *user)
+void user_kill(bip_t *bip, struct bipuser *user)
 {
 	(void)bip;
 	if (!hash_is_empty(&user->connections))
@@ -920,7 +920,7 @@ void sweep(bip_t *bip)
 	}
 	for (hash_it_init(&bip->users, &hit); hash_it_item(&hit);
 			hash_it_next(&hit)) {
-		struct user *u = (struct user *)hash_it_item(&hit);
+		struct bipuser *u = (struct bipuser *)hash_it_item(&hit);
 		if (!u->in_use) {
 			hash_it_remove(&hit);
 			user_kill(bip, u);
@@ -1332,7 +1332,7 @@ int main(int argc, char **argv)
 #define RET_STR_LEN 256
 #define LINE_SIZE_LIM 70
 void adm_print_connection(struct link_client *ic, struct link *lnk,
-		struct user *bu)
+		struct bipuser *bu)
 {
 	hash_iterator_t lit;
 	char buf[RET_STR_LEN + 1];
@@ -1500,7 +1500,7 @@ void adm_list_all_connections(struct link_client *ic)
 	bip_notify(ic, "-- All connections");
 	for (hash_it_init(&_bip->users, &it); hash_it_item(&it);
 			hash_it_next(&it)) {
-		struct user *u = hash_it_item(&it);
+		struct bipuser *u = hash_it_item(&it);
 		if (u)
 			adm_list_connections(ic, u);
 	}
@@ -1511,7 +1511,7 @@ void adm_list_all_connections(struct link_client *ic)
 
 void adm_info_user(struct link_client *ic, const char *name)
 {
-	struct user *u;
+	struct bipuser *u;
 	char buf[RET_STR_LEN + 1];
 	int t_written = 0;
 
@@ -1575,7 +1575,7 @@ void adm_list_users(struct link_client *ic)
 	bip_notify(ic, "-- User list");
 	for (hash_it_init(&_bip->users, &it); hash_it_item(&it);
 			hash_it_next(&it)) {
-		struct user *u = hash_it_item(&it);
+		struct bipuser *u = hash_it_item(&it);
 		int first = 1;
 		int t_written = 0;
 
@@ -1664,7 +1664,7 @@ noroom:
 	bip_notify(ic, "-- End of Network list");
 }
 
-void adm_list_connections(struct link_client *ic, struct user *bu)
+void adm_list_connections(struct link_client *ic, struct bipuser *bu)
 {
 	hash_iterator_t it;
 	connection_t *c;

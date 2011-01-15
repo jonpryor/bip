@@ -58,7 +58,7 @@ struct channel {
 #define IRC_TYPE_LOGING_CLIENT (2)
 #define IRC_TYPE_TRUST_CLIENT (3)
 
-struct user {
+struct bipuser {
 	/** client connection static data **/
 
 	char *name;
@@ -139,7 +139,7 @@ struct link {
 	hash_t chan_infos;		/* channels we want */
 	list_t chan_infos_order;	/* for order only */
 
-	struct user *user;
+	struct bipuser *user;
 
 	/** server connection static data **/
 	/* server list */

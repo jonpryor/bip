@@ -515,7 +515,7 @@ int irc_dispatch_server(bip_t *bip, struct link_server *server,
 /* send join and related stuff to client */
 static void irc_send_join(struct link_client *ic, struct channel *chan)
 {
-	struct user *user;
+	struct bipuser *user;
 	char *ircmask;
 
 	user = LINK(ic)->user;
@@ -669,7 +669,7 @@ static void irc_cli_make_join(struct link_client *ic)
 
 void irc_cli_backlog(struct link_client *ic, int hours)
 {
-	struct user *user;
+	struct bipuser *user;
 
 	user = LINK(ic)->user;
 	assert(user);

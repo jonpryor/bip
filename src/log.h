@@ -59,10 +59,10 @@ typedef struct log
 	int backlogging;
 	int lastfile_seeked;
 
-	struct user *user;
+	struct bipuser *user;
 } log_t;
 
-log_t *log_new(struct user *user, const char *network);
+log_t *log_new(struct bipuser *user, const char *network);
 void logdata_free(log_t *logdata);
 
 void log_join(log_t *logdata, const char *ircmask, const char *channel);

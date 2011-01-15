@@ -1200,7 +1200,7 @@ void log_flush_all(void)
 	}
 }
 
-log_t *log_new(struct user *user, const char *network)
+log_t *log_new(struct bipuser *user, const char *network)
 {
 	log_t *logdata;
 
