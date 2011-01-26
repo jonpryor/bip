@@ -357,11 +357,11 @@ logstore_t *log_find_file(log_t *logdata, const char *destination)
 				return NULL;
 			mylog(LOG_DEBUG, "Creating new logfile for %s: %s",
 					destination, filename);
-
-			if (!log_add_file(logdata, destination, filename)) {
-				free(filename);
-				return NULL;
-			}
+		}
+		if (!log_add_file(logdata, destination, filename)) {
+		    if (filename)
+			    free(filename);
+			return NULL;
 		}
 		store = hash_get(&logdata->logfgs, destination);
 		assert(store);
