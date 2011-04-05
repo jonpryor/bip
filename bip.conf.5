@@ -307,6 +307,11 @@ CAPAB (if you only use clients that support it for instance).
 The network name. See the \fBNETWORK SECTION\fP.
 
 .TP
+\fBlog\fP (override global log)
+When \fBtrue\fP, the file logs are enabled for this connection.
+When \fBfalse\fP, no log file is written, logs are kept in memory.
+
+.TP
 \fBnick\fP
 BIP will send that string as your nickname upon connect. If not specified
 and if \fBdefault_nickname\fP is specified in the \fBuser section\fP, BIP will

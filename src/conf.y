@@ -188,6 +188,7 @@ con_command:
 	   LEX_NAME LEX_EQ LEX_STRING { $$ = tuple_s_new(LEX_NAME, $3); }
 	   | LEX_NETWORK LEX_EQ LEX_STRING { $$ = tuple_s_new(LEX_NETWORK,
 			 $3); }
+	   | LEX_LOG LEX_EQ LEX_BOOL { $$ = tuple_i_new(LEX_LOG, $3); }
 	   | LEX_NICK LEX_EQ LEX_STRING { $$ = tuple_s_new(LEX_NICK, $3); }
 	   | LEX_USER LEX_EQ LEX_STRING { $$ = tuple_s_new(LEX_USER, $3); }
 	   | LEX_REALNAME LEX_EQ LEX_STRING { $$ = tuple_s_new(LEX_REALNAME,

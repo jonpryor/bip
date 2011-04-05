@@ -567,6 +567,9 @@ static int add_connection(bip_t *bip, struct bipuser *user, list_t *data)
 			list_add_last(&l->on_connect_send, t->pdata);
 			t->pdata = NULL;
 			break;
+		case LEX_LOG:
+			l->log->log_to_file = t->ndata;
+			break;
 #ifdef HAVE_LIBSSL
 		case LEX_SSL_CHECK_MODE:
 			if (strcmp(t->pdata, "basic") == 0)

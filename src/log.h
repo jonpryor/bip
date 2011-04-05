@@ -58,6 +58,7 @@ typedef struct log
 	int connected;
 	int backlogging;
 	int lastfile_seeked;
+	int log_to_file;
 
 	struct bipuser *user;
 } log_t;

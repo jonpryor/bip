@@ -264,7 +264,7 @@ static int log_add_file(log_t *logdata, const char *destination,
 	char *canonical_fname = NULL;
 	logfile_t *lf = NULL;
 
-	if (conf_log) {
+	if (logdata->log_to_file) {
 		if (log_has_file(logdata, filename)) {
 			canonical_fname = bip_strdup(filename);
 			uniq_fname = filename_uniq(filename);
@@ -309,7 +309,7 @@ static int log_add_file(log_t *logdata, const char *destination,
 		hash_insert(&logdata->logfgs, destination, store);
 	}
 
-	if (!conf_log && logdata->user->backlog) {
+	if (!logdata->log_to_file && logdata->user->backlog) {
 		if (!store->memlog)
 			store->memlog = list_new(NULL);
 	}
@@ -347,11 +347,11 @@ logstore_t *log_find_file(log_t *logdata, const char *destination)
 
 	store = hash_get(&logdata->logfgs, destination);
 
-	if (store && !conf_log)
+	if (store && !logdata->log_to_file)
 		return store;
 
 	if (!store) {
-		if (conf_log) {
+		if (logdata->log_to_file) {
 			filename = log_build_filename(logdata, destination);
 			if (!filename)
 				return NULL;
@@ -1084,7 +1084,7 @@ static list_t *log_backread(log_t *log, const char *storename, const char *dest)
 		return ret;
 	}
 
-	if (!conf_log) {
+	if (!log->log_to_file) {
 		mylog(LOG_DEBUG, "No conf_log, not backlogging");
 		return NULL;
 	}
@@ -1144,7 +1144,7 @@ static int _log_write(log_t *logdata, logstore_t *store,
 		}
 	}
 
-	if (!conf_log)
+	if (!logdata->log_to_file)
 		return 0;
 
 	logfile_t *lf = list_get_last(&store->file_group);
@@ -1212,6 +1212,7 @@ log_t *log_new(struct bipuser *user, const char *network)
 	logdata->buffer[LOGLINE_MAXLEN - 1] = 0; // debug
 	logdata->buffer[LOGLINE_MAXLEN] = 0;
 	logdata->connected = 0;
+	logdata->log_to_file = conf_log;
 	if (!log_all_logs)
 		log_all_logs = list_new(list_ptr_cmp);
 	list_add_last(log_all_logs, logdata);
