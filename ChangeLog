@@ -1,3 +1,84 @@
+commit f19e1f6209387e221a7f2535937f76dfc4938e60
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
+Date:   Tue Apr 12 01:08:41 2011 +0200
+
+    Fix backlog of queries when option 'log' is False
+    
+    Issue #212
+
+commit 87da44e5830c31e50b50d18e592c715e327034c2
+Author: Yoann Guillot <yoann.guillot@ofjj.net>
+Date:   Tue Apr 5 23:43:05 2011 +0200
+
+    connection: allow to disable / enable log (#211)
+    
+    add option 'log' (true/false) in connection section,
+    this option overrides the global 'log' option.
+    Thanks to jj !
+
+commit 2e49437ed7f5eba164316a5a8f0af0dcb4ec3718
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
+Date:   Wed Jan 26 21:47:12 2011 +0100
+
+    revert 4fdabdd166270f00513dc7e3077dce1bbb5c16c2
+    
+    better quick fix
+
+Date: Sun Jan 16 15:09:00 2011 +0100
+
+	oops version 0.8.7 (src/version.h and Changelog were not updated)
+
+commit 81b8ed48cfdece35ff433c07a1febd6750652fd9
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
+Date:   Sat Jan 15 17:53:46 2011 +0100
+
+    Fix build errors on armel
+    
+    sys/user.h on armel has a conflicting definition of 'struct user'.
+    This patch renames bip's structure to avoid the conflict.
+    Thanks to Philipp Kern and Dann Frazier !
+
+commit 4d4710acb955530694f2434d95ed887d7b96ada7
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
+Date:   Tue Dec 28 03:22:19 2010 +0100
+
+    Fix "FATAL: list_remove: item not found"
+    
+    Thanks to Jean-Edouard Babin for reporting it.
+    
+    How to reproduce:
+    1) connect to bip with an irc client using username (eg 'Pilou')
+    2) disconnect irc client
+    3) in client configuration, change the case of username (eg 'pilou')
+    4) reconnect to bip -> bip log FATAL message and exit
+    
+    If old nick and new nick are equal ignoring the case of the characters,
+    don't delete store associated with old nick: only rename it.
+
+commit ca1b383a7476f556e3f356526d083fa2677b45ef
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
+Date:   Tue Dec 28 03:20:01 2010 +0100
+
+    check return value of hash_get
+
+commit 4fdabdd166270f00513dc7e3077dce1bbb5c16c2
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
+Date:   Tue Dec 28 03:18:13 2010 +0100
+
+    filename is NULL if !store && !conf_log
+
+commit 0b7a3e6a07931aa6ea9e91c8462c8c8b0bcaeb17
+Author: Arnaud Cornet <nohar@t1r.net>
+Date:   Sun Sep 12 17:48:00 2010 +0100
+
+    Add -git to version string.
+
+commit ec078131ea13b75cb68c6e08d2074cbd649bb33d
+Author: Arnaud Cornet <nohar@t1r.net>
+Date:   Sun Sep 12 17:47:57 2010 +0100
+
+    Update src/version.h and Changelog for release.
+
 commit 7fb0823167af8e9a826f99b0a18539acc6cd81ec
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Sun Sep 12 17:32:55 2010 +0100
