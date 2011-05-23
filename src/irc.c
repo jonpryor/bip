@@ -767,8 +767,6 @@ static int irc_cli_startup(bip_t *bip, struct link_client *ic,
 	if (LINK(ic)->s_state != IRCS_CONNECTED) {
 		/* Check if we have an untrusted certificate from the server */
 		if (ssl_check_trust(ic)) {
-			TYPE(ic) = IRC_TYPE_TRUST_CLIENT;
-			ic->allow_trust = 1;
 			free(init_nick);
 			return OK_FORGET;
 		}

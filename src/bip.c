@@ -1714,8 +1714,10 @@ int ssl_check_trust(struct link_client *ic)
 	int i;
 
 	if(!LINK(ic)->untrusted_certs ||
-			sk_X509_num(LINK(ic)->untrusted_certs) <= 0)
+			sk_X509_num(LINK(ic)->untrusted_certs) <= 0) {
+		ic->allow_trust = 0;
 		return 0;
+    }
 
 	trustcert = sk_X509_value(LINK(ic)->untrusted_certs, 0);
 	strcpy(subject, "Subject: ");
@@ -1753,6 +1755,8 @@ int ssl_check_trust(struct link_client *ic)
 			"Type /QUOTE BIP TRUST OK to trust this "
 			"certificate, /QUOTE BIP TRUST NO to discard it.");
 
+	TYPE(ic) = IRC_TYPE_TRUST_CLIENT;
+	ic->allow_trust = 1;
 	return 1;
 }
 
@@ -1773,18 +1777,10 @@ static int ssl_discard_next_cert(struct link_client *ic)
 int adm_trust(struct link_client *ic, struct line *line)
 {
 	if (ic->allow_trust != 1) {
-		mylog(LOG_ERROR, "User attempted TRUST command without "
-				"being allowed to!");
-		unbind_from_link(ic);
-		return OK_CLOSE;
-	}
-
-	if(!LINK(ic)->untrusted_certs ||
-			sk_X509_num(LINK(ic)->untrusted_certs) <= 0) {
 		/* shouldn't have been asked to /QUOTE BIP TRUST but well... */
 		WRITE_LINE2(CONN(ic), P_SERV, "NOTICE", "TrustEm",
 				"No untrusted certificates.");
-		return ERR_PROTOCOL;
+		return OK_FORGET;
 	}
 
 	if (irc_line_count(line) != 3)
@@ -2268,6 +2264,8 @@ int adm_bip(bip_t *bip, struct link_client *ic, struct line *line, int privmsg)
 			adm_bip_delconn(bip, ic,
 					irc_line_elem(line, privmsg + 2));
 		}
+	} else if (strcasecmp(irc_line_elem(line, privmsg + 1), "TRUST") == 0) {
+		return adm_trust(ic, line);
 	} else {
 		bip_notify(ic, "Unknown command.");
 	}
