@@ -89,7 +89,7 @@ typedef struct array {
 #define assert(condition) \
 	do { \
 		if (!(condition)) \
-			fatal("Failed assetion in " __FILE__ "(%d): " \
+			fatal("Failed assertion in " __FILE__ "(%d): " \
 				#condition, __LINE__); \
 	} while(0)
 
