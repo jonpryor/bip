@@ -22,7 +22,6 @@
 #include "log.h"
 #include "connection.h"
 #include "md5.h"
-#include "version.h"
 
 #define S_CONN_DELAY (10)
 
@@ -1836,7 +1835,7 @@ static void irc_privmsg_check_ctcp(struct link_server *server,
 	nick = nick_from_ircmask(line->origin);
 	if (irc_line_elem_equals(line, 2, "\001VERSION\001")) {
 		WRITE_LINE2(CONN(server), NULL, "NOTICE", nick,
-				"\001VERSION bip-" BIP_VERSION "\001");
+				"\001VERSION bip-" PACKAGE_VERSION "\001");
 	}
 	free(nick);
 }

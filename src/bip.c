@@ -29,7 +29,6 @@
 #include "log.h"
 #include "bip.h"
 #include "line.h"
-#include "version.h"
 #include "defaults.h"
 
 int sighup = 0;
@@ -277,9 +276,9 @@ static void usage(char *name)
 static void version()
 {
 	printf(
-"Bip IRC Proxy - %s\n"
+"Bip IRC Proxy - " PACKAGE_VERSION "\n"
 "Copyright © Arnaud Cornet and Loïc Gomez (2004 - 2008)\n"
-"Distributed under the GNU Public License Version 2\n", BIP_VERSION);
+"Distributed under the GNU Public License Version 2\n");
 }
 
 bip_t *_bip;

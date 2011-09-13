@@ -8,35 +8,55 @@ if [ ! -d src ] ; then
 fi
 
 release="$1"
+: ${MAKEOPTS:=-j -l4}
 
-if [ -n "$release" ]
-then
-	git log > ChangeLog
-	echo '#define BIP_VERSION "'$release'"' > src/version.h
-	git commit -a -m "Update src/version.h and Changelog for release."
+set_version() {
+	local release
+	release="${1}"
+	sed -i -e '/^AC_INIT/s/\(, \[\)[^]]*/\1'${release}'/' configure.ac
+}
+
+get_version() {
+	grep -e '^AC_INIT' configure.ac | cut -d [ -f 3 | cut -d ] -f 1
+}
+
+make_distcheck() {
+	if ! make ${MAKEOPTS} distcheck; then
+	    echo "'make distcheck' fails, please try again." >&2
+		return 1
+	else
+		true
+	fi
+}
+
+git log > ChangeLog
+if [ -n "$release" ]; then
+	set_version "${release}"
+	make_distcheck || exit 1
+
+	git commit -a -m "Update version and ChangeLog for bip-${release} release."
 	git tag release-$release
-	prefix=bip-$release
-else
-	prefix=bip-$(date +%y%m%d)
-fi
 
-olddir=$(pwd)
-tmpdir=$(mktemp -d /var/tmp/bip-XXXXXX)
-git archive --format=tar --prefix=$prefix/ HEAD > $tmpdir/$prefix.tar
-cd $tmpdir
-tar xf $prefix.tar
-cd $prefix
-./bootstrap
-rm -rf autom4te.cache
-cd ..
-tar czf $olddir/../$prefix.tar.gz $prefix
-cd $olddir
-rm -rf $tmpdir
-echo "See ../$prefix.tar.gz"
-
-if [ -n "$release" ]
-then
-	echo '#define BIP_VERSION "'$release'-git"' > src/version.h
+	set_version "${release}-git"
 	git commit -a -m "Add -git to version string."
-fi
 
+	echo "See bip-${release}.tar.gz"
+else
+	make_distcheck || exit 1
+
+	tarname=bip-$(get_version)
+	prefix=bip-$(date +%y%m%d)
+
+	rm -rf "${tarname}"  "${prefix}"
+	tar -xzf "${tarname}".tar.gz
+	rm -rf "${tarname}".tar.gz
+
+	mv "${tarname}" "${prefix}"
+	tar -czf "${prefix}".tar.gz "${prefix}"
+	rm -rf "${prefix}"
+
+	# Revert the ChangeLog.
+	git checkout HEAD -- ChangeLog
+
+	echo "See ${prefix}.tar.gz"
+fi
