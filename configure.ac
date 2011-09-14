@@ -44,16 +44,12 @@ AC_ARG_ENABLE([pie], AS_HELP_STRING([--disable-pie], [Do not build a position in
 
 AM_CONDITIONAL(DEBUG, test x$enable_debug = xyes)
 AS_IF([test "x$enable_debug" = "xyes"], [
-	CFLAGS="-O0 -g -W -Wall"
-	LDFLAGS="-g"
 	AC_CHECK_FUNC(backtrace_symbols_fd, [
 		AC_DEFINE(HAVE_BACKTRACE, [], [Use glibc backtrace on fatal()])
 		LDFLAGS="-rdynamic $LDFLAGS"
 		backtrace="(with backtrace)"
 	])
 ], [
-	CFLAGS="-O2 -g -W -Wall"
-	LDFLAGS="-g"
 	enable_debug=no
 ])
 

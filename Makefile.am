@@ -13,13 +13,8 @@ src_bip_SOURCES = src/conf.y src/lex.l \
 src_bipmkpw_SOURCES = src/bipmkpw.c src/md5.c src/util.c
 AM_YFLAGS= -d
 BUILT_SOURCES = src/conf.c src/conf.h src/lex.c
-if DEBUG
-	AM_CFLAGS+=-Wall -g
-	AM_LDFLAGS+=-g
-else
-	AM_CFLAGS+=-Wall
-endif
 
+AM_CFLAGS=-Wall -Wextra
 
 dist_man_MANS = bip.1 bip.conf.5 bipmkpw.1
 
