@@ -29,6 +29,15 @@ AC_TYPE_UINT16_T
 AC_TYPE_UINT32_T
 AC_TYPE_UINT8_T
 
+AX_C___ATTRIBUTE__
+AH_BOTTOM([
+/* Unused attributes such as function parameters (GCC extension) */
+#ifdef HAVE___ATTRIBUTE__
+# define UNUSED(ATTRIBUTE) ATTRIBUTE __attribute__((unused))
+#else
+# define UNUSED(ATTRIBUTE) ATTRIBUTE
+#endif])
+
 # Checks for library functions.
 AC_FUNC_FORK
 AC_FUNC_MALLOC

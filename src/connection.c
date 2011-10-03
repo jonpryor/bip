@@ -1090,8 +1090,7 @@ static DH *dh_1024(void)
 }
 
 /* ripped from postfix's tls_dh.c */
-static DH *tmp_dh_cb(SSL *ssl_unused __attribute__((unused)),
-		     int export, int keylength)
+static DH *tmp_dh_cb(UNUSED(SSL *ssl_unused), int export, int keylength)
 {
 	DH *ret;
 
