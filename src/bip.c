@@ -1570,9 +1570,6 @@ void adm_list_users(struct link_client *ic)
 	hash_iterator_t it;
 	hash_iterator_t lit;
 	char buf[RET_STR_LEN + 1];
-	connection_t *c;
-
-	c = CONN(ic);
 
 	bip_notify(ic, "-- User list");
 	for (hash_it_init(&_bip->users, &it); hash_it_item(&it);
@@ -1620,9 +1617,6 @@ void adm_list_networks(struct link_client *ic)
 {
 	hash_iterator_t it;
 	char buf[RET_STR_LEN + 1];
-	connection_t *c;
-
-	c = CONN(ic);
 
 	bip_notify(ic, "-- Network list (* means SSL):");
 	for (hash_it_init(&_bip->networks, &it); hash_it_item(&it);
@@ -1669,9 +1663,7 @@ noroom:
 void adm_list_connections(struct link_client *ic, struct bipuser *bu)
 {
 	hash_iterator_t it;
-	connection_t *c;
 
-	c = CONN(ic);
 	if (!bu) {
 		bip_notify(ic, "-- Your connections:");
 		bu = LINK(ic)->user;

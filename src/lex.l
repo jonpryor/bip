@@ -1,3 +1,4 @@
+%option nounput noinput
 %{
 /*
  * $Id: lex.l,v 1.23 2005/04/12 19:34:35 nohar Exp $

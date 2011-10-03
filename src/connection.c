@@ -1090,7 +1090,8 @@ static DH *dh_1024(void)
 }
 
 /* ripped from postfix's tls_dh.c */
-static DH *tmp_dh_cb(SSL *ssl_unused, int export, int keylength)
+static DH *tmp_dh_cb(SSL *ssl_unused __attribute__((unused)),
+		     int export, int keylength)
 {
 	DH *ret;
 
@@ -1351,7 +1352,7 @@ static int SSLize(connection_t *cn, int *nc)
 	ERR_print_errors(errbio);
 
 	if (err2 == SSL_ERROR_NONE) {
-		SSL_CIPHER *cipher;
+		const SSL_CIPHER *cipher;
 		char buf[128];
 		int len;
 

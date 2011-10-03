@@ -655,14 +655,12 @@ void log_ping_timeout(log_t *logdata)
 
 void log_connected(log_t *logdata)
 {
-	logstore_t *store;
 	hash_iterator_t hi;
 
 	snprintf(logdata->buffer, LOGLINE_MAXLEN, "%s -!- Connected to"
 			" server...", timestamp());
 	for (hash_it_init(&logdata->logfgs, &hi); hash_it_item(&hi);
 			hash_it_next(&hi)) {
-		store = hash_it_item(&hi);
 		log_write(logdata, hash_it_key(&hi), logdata->buffer);
 	}
 }
