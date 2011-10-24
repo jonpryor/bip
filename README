@@ -32,11 +32,18 @@ I. INSTALLATION
     old-fashioned way. You will need make, gcc, lex and yacc to build bip.
     Just issue:
 
+    From bip-X.Y.Z.tar.gz package:
     # ./configure --enable-oidentd && make
+
+    From repository:
+    # ./configure --enable-maintainer-mode --enable-oidentd && make
 
     If openssl and its developement files are installed, bip should build with
     SSL support. After a successful build the bip binary can be found in
     ./src/bip.
+
+    By default, "-Werror" is used. If you encounter warnings, you could try:
+    # CFLAGS="-Wno-error" ./configure --enable-oidentd && make
 
 
 II. CONFIGURATION
