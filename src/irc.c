@@ -2439,9 +2439,10 @@ void bip_on_event(bip_t *bip, connection_t *conn)
 
 	if (conn == bip->listener) {
 		struct link_client *n = irc_accept_new(conn);
-		assert(n);
-		list_add_last(&bip->conn_list, CONN(n));
-		list_add_last(&bip->connecting_client_list, n);
+		if (n) {
+			list_add_last(&bip->conn_list, CONN(n));
+			list_add_last(&bip->connecting_client_list, n);
+		}
 		return;
 	}
 

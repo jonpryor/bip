@@ -1311,7 +1311,7 @@ int main(int argc, char **argv)
 	close(fd);
 
 	bip.listener = listen_new(conf_ip, conf_port, conf_css);
-	if (!bip.listener)
+	if (!bip.listener || bip.listener->connected == CONN_ERROR)
 		fatal("Could not create listening socket");
 
 	for (;;) {

@@ -124,6 +124,18 @@ static void connect_trynext(connection_t *cn)
 			continue;
 		}
 
+		if (cn->handle >= FD_SETSIZE) {
+			mylog(LOG_WARN, "too many fd used, close socket %d",
+					cn->handle);
+
+			if (close(cn->handle) == -1)
+				mylog(LOG_WARN, "Error on socket close: %s",
+						strerror(errno));
+
+			cn->handle = -1;
+			break;
+		}
+
 		socket_set_nonblock(cn->handle);
 
 		if (cn->connecting_data->src) {
@@ -789,13 +801,8 @@ list_t *wait_event(list_t *cn_list, int *msec, int *nc)
 		/*
 		 * This shouldn't happen ! just in case...
 		 */
-		if (cn->handle < 0) {
-			mylog(LOG_WARN, "wait_event invalid socket %d",
-					cn->handle);
-			if (cn_is_connected(cn))
-				cn->connected = CONN_ERROR;
-			continue;
-		}
+		if (cn->handle < 0 || cn->handle >= FD_SETSIZE)
+			fatal("wait_event invalid socket %d", cn->handle);
 
 		/* exceptions are OOB and disconnections */
 		FD_SET(cn->handle, &fds_except);
@@ -966,6 +973,18 @@ static void create_listening_socket(char *hostname, char *port,
 			continue;
 		}
 
+		if (cn->handle >= FD_SETSIZE) {
+			mylog(LOG_WARN, "too many fd used, close listening socket %d",
+					cn->handle);
+
+			if (close(cn->handle) == -1)
+				mylog(LOG_WARN, "Error on socket close: %s",
+						strerror(errno));
+
+			cn->handle = -1;
+			break;
+		}
+
 		if (setsockopt(cn->handle, SOL_SOCKET, SO_REUSEADDR,
 					(char *)&multi_client,
 					sizeof(multi_client)) < 0) {
@@ -1113,10 +1132,21 @@ connection_t *accept_new(connection_t *cn)
 
 	mylog(LOG_DEBUG, "Trying to accept new client on %d", cn->handle);
 	err = accept(cn->handle, &sa, &sa_len);
+
 	if (err < 0) {
-		mylog(LOG_ERROR, "accept failed: %s", strerror(errno));
+		fatal("accept failed: %s", strerror(errno));
+	}
+
+	if (err >= FD_SETSIZE) {
+		mylog(LOG_WARN, "too many client connected, close %d", err);
+
+		if (close(err) == -1)
+			mylog(LOG_WARN, "Error on socket close: %s",
+					strerror(errno));
+
 		return NULL;
 	}
+
 	socket_set_nonblock(err);
 
 	conn = connection_init(cn->anti_flood, cn->ssl, cn->timeout, 0);
