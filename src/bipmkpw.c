@@ -51,11 +51,14 @@ void readpass(char *buffer, int buflen)
 	write(ttyfd, "Password: ", 10);
 
 	int idx = 0;
+	int valid = 1;
 	while (idx < buflen) {
 		read(ttyfd, buffer+idx, 1);
 		if (buffer[idx] == '\n') {
 			buffer[idx] = 0;
 			break;
+		} else if (buffer[idx] == ' ') {
+			valid = 0;
 		}
 		idx++;
 	}
@@ -64,6 +67,11 @@ void readpass(char *buffer, int buflen)
 
 	tcsetattr(ttyfd, TCSANOW, &ttback);
 	close(ttyfd);
+
+	if (!valid) {
+		fprintf(stderr, "Password cannot contain spaces.\n");
+		exit(1);
+	}
 }
 
 int main(void)
