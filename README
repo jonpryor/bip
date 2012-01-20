@@ -29,13 +29,16 @@ I. INSTALLATION
     distro's package. Then create a configuration file.
 
     Choose your distribution package if available. If not, build bip the
-    old-fashioned way. You will need make, gcc, lex and yacc to build bip.
+    old-fashioned way. You will need make, gcc, lex, yacc, automake,
+    autoconf-archive and optionally libssl-dev to build bip.
+
     Just issue:
 
     From bip-X.Y.Z.tar.gz package:
     # ./configure --enable-oidentd && make
 
     From repository:
+    # ./bootstrap
     # ./configure --enable-maintainer-mode --enable-oidentd && make
 
     If openssl and its developement files are installed, bip should build with
