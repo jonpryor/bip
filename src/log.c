@@ -533,7 +533,13 @@ static void do_log_privmsg(log_t *logdata, const char *storage, int src,
 void log_privmsg(log_t *logdata, const char *ircmask, const char *destination,
 		const char *message)
 {
-	do_log_privmsg(logdata, destination, 0, ircmask, message);
+	if (!ischannel(*destination)) {
+		char *nick = nick_from_ircmask(ircmask);
+		do_log_privmsg(logdata, nick, 0, ircmask, message);
+		free(nick);
+	} else {
+		do_log_privmsg(logdata, destination, 0, ircmask, message);
+	}
 }
 
 void log_cli_privmsg(log_t *logdata, const char *ircmask,
