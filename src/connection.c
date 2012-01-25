@@ -21,6 +21,7 @@ extern int errno;
 static int ssl_initialized = 0;
 static SSL_CTX *sslctx = NULL;
 static int ssl_cx_idx;
+extern FILE *conf_global_log_file;
 static BIO *errbio = NULL;
 extern char *conf_ssl_certfile;
 static int SSLize(connection_t *cn, int *nc);
@@ -1232,7 +1233,7 @@ static SSL_CTX *SSL_init_context(void)
 	if (!ssl_initialized) {
 		SSL_library_init();
 		SSL_load_error_strings();
-		errbio = BIO_new_fp(stderr,BIO_NOCLOSE);
+		errbio = BIO_new_fp(conf_global_log_file, BIO_NOCLOSE);
 
 		ssl_cx_idx = SSL_get_ex_new_index(0, "bip connection_t",
 			NULL, NULL,NULL);
@@ -1427,6 +1428,7 @@ static int SSLize(connection_t *cn, int *nc)
 	/* From now on, we are on error, thus we return 1 to check timeout */
 	if (err2 == SSL_ERROR_ZERO_RETURN || err2 == SSL_ERROR_SSL) {
 		mylog(LOG_ERROR, "Error in SSL handshake.");
+		connection_close(cn);
 		cn->connected = CONN_ERROR;
 		return 1;
 	}
