@@ -38,7 +38,7 @@ I. INSTALLATION
     # ./configure --enable-oidentd && make
 
     From repository:
-    # ./bootstrap
+    #  autoreconf -i -Wall
     # ./configure --enable-maintainer-mode --enable-oidentd && make
 
     If openssl and its developement files are installed, bip should build with
