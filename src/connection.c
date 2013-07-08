@@ -24,6 +24,7 @@ static int ssl_cx_idx;
 extern FILE *conf_global_log_file;
 static BIO *errbio = NULL;
 extern char *conf_ssl_certfile;
+static int cn_want_write(connection_t *cn);
 static int SSLize(connection_t *cn, int *nc);
 static SSL_CTX *SSL_init_context(void);
 /* SSH like trust management */
@@ -339,6 +340,11 @@ static int real_write_all(connection_t *cn)
 	return 0;
 }
 
+/*
+ * May only be used when writing to the client or when sending
+ * timing-sensitive data to the server (PONG, PING for lagtest, QUIT)
+ * because fakelag is not enforced.
+ */
 void write_line_fast(connection_t *cn, char *line)
 {
 	int r;
@@ -366,13 +372,15 @@ void write_line_fast(connection_t *cn, char *line)
 void write_lines(connection_t *cn, list_t *lines)
 {
 	list_append(cn->outgoing, lines);
-	real_write_all(cn);
+	if (cn_want_write(cn))
+		real_write_all(cn);
 }
 
 void write_line(connection_t *cn, char *line)
 {
 	list_add_last(cn->outgoing, bip_strdup(line));
-	real_write_all(cn);
+	if (cn_want_write(cn))
+		real_write_all(cn);
 }
 
 list_t *read_lines(connection_t *cn, int *error)
@@ -731,7 +739,7 @@ static int check_event_write(fd_set *fds, connection_t *cn, int *nc)
 /* token generation interval: 1200ms */
 #define TOKEN_INTERVAL 1200
 
-int cn_want_write(connection_t *cn)
+static int cn_want_write(connection_t *cn)
 {
 	if (cn->anti_flood) {
 		struct timeval tv;
