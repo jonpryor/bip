@@ -17,7 +17,7 @@
 int linec;
 #include "util.h"
 extern list_t *root_list;
-void yyparse(void);
+extern int yyparse(void);
 void free_conf(list_t*);
 int conf_error;
 typedef struct bip bip_t;

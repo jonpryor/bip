@@ -122,7 +122,7 @@ static int add_server(bip_t *bip, struct server *s, list_t *data)
 #define ERRBUFSZ 128
 
 extern list_t *root_list;
-int yyparse();
+extern int yyparse();
 
 void conf_die(bip_t *bip, char *fmt, ...)
 {
