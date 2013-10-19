@@ -21,6 +21,11 @@ get_version() {
 }
 
 make_distcheck() {
+	# prepare sources
+	autoreconf -i -Wall
+	# Create makefile, use all possible options
+	./configure --enable-oidentd
+	# run distcheck
 	if ! make ${MAKEOPTS} distcheck; then
 	    echo "'make distcheck' fails, please try again." >&2
 		return 1
@@ -60,3 +65,7 @@ else
 
 	echo "See ${prefix}.tar.gz"
 fi
+
+# cleanup
+git clean -d -i -e "bip-*.tar.gz"
+
