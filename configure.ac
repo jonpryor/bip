@@ -12,6 +12,13 @@ AM_PROG_CC_C_O
 AC_PROG_INSTALL
 AM_PROG_LEX
 AC_PROG_YACC
+# AC_PROG_YACC falls back to YACC = "yacc" if bison or byacc are not found, but it does not mean it is present
+AS_IF([test x"$YACC" = "xyacc"], [
+  AC_CHECK_PROG([YACC_EXISTS], [yacc], [yes], [no])
+  AS_IF([test x"$YACC_EXISTS" != xyes], [
+    YACC=${am_missing_run}yacc
+  ])
+])
 
 # Checks for header files.
 AC_FUNC_ALLOCA
