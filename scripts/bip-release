@@ -7,13 +7,14 @@ if [ ! -d src ] ; then
 	exit 1
 fi
 
-release="$1"
+release_version="$1"
+release_name="$2"
 : ${MAKEOPTS:=-j -l4}
 
 set_version() {
-	local release
-	release="${1}"
-	sed -i -e '/^AC_INIT/s/\(, \[\)[^]]*/\1'${release}'/' configure.ac
+	local release_version
+	release_version="${1}"
+	sed -i -e '/^AC_INIT/s/\(, \[\)[^]]*/\1'${release_version}'/' configure.ac
 }
 
 get_version() {
@@ -35,17 +36,21 @@ make_distcheck() {
 }
 
 git log > ChangeLog
-if [ -n "$release" ]; then
-	set_version "${release}"
+if [ -n "$release_version" ]; then
+	set_version "${release_version}"
 	make_distcheck || exit 1
 
-	git commit -a -m "Update version and ChangeLog for bip-${release} release."
-	git tag -s release-$release
+	git commit -a -m "Update version and ChangeLog for bip-${release_version} release."
+	TAG_COMMENT="Release ${release_version}"
+	if [ -n "${release_name}" ]; then
+		TAG_COMMENT="${TAG_COMMENT} '${release_name}'"
+	fi
+	git tag -s -m "${TAG_COMMENT}" release-${release_version}
 
-	set_version "${release}-git"
+	set_version "${release_version}-git"
 	git commit -a -m "Add -git to version string."
 
-	echo "See bip-${release}.tar.gz"
+	echo "See bip-${release_version}.tar.gz"
 else
 	make_distcheck || exit 1
 
