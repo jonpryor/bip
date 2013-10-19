@@ -1,5 +1,5 @@
 AC_PREREQ([2.64])
-AC_INIT([Bip Sexy IRC Proxy], [0.8.8-git], [http://bip.milkypond.org/projects/bip/activity], [bip], [http://bip.milkypond.org/])
+AC_INIT([Bip Sexy IRC Proxy], [0.8.9], [http://bip.milkypond.org/projects/bip/activity], [bip], [http://bip.milkypond.org/])
 AM_INIT_AUTOMAKE([subdir-objects])
 AM_MAINTAINER_MODE
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES])
