@@ -50,7 +50,7 @@ else
 	make_distcheck || exit 1
 
 	tarname=bip-$(get_version)
-	prefix=bip-$(date +%y%m%d)
+	prefix=bip-$(date +%Y%m%d)
 
 	rm -rf "${tarname}"  "${prefix}"
 	tar -xzf "${tarname}".tar.gz
