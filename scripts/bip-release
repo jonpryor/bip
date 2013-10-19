@@ -35,7 +35,7 @@ if [ -n "$release" ]; then
 	make_distcheck || exit 1
 
 	git commit -a -m "Update version and ChangeLog for bip-${release} release."
-	git tag release-$release
+	git tag -s release-$release
 
 	set_version "${release}-git"
 	git commit -a -m "Add -git to version string."
