@@ -2255,8 +2255,10 @@ int adm_bip(bip_t *bip, struct link_client *ic, struct line *line, int privmsg)
 			adm_bip_delconn(bip, ic,
 					irc_line_elem(line, privmsg + 2));
 		}
+#ifdef HAVE_LIBSSL
 	} else if (strcasecmp(irc_line_elem(line, privmsg + 1), "TRUST") == 0) {
 		return adm_trust(ic, line);
+#endif
 	} else {
 		bip_notify(ic, "Unknown command.");
 	}

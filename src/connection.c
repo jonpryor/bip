@@ -24,13 +24,13 @@ static int ssl_cx_idx;
 extern FILE *conf_global_log_file;
 static BIO *errbio = NULL;
 extern char *conf_ssl_certfile;
-static int cn_want_write(connection_t *cn);
 static int SSLize(connection_t *cn, int *nc);
 static SSL_CTX *SSL_init_context(void);
 /* SSH like trust management */
 int link_add_untrusted(void *ls, X509 *cert);
 #endif
 
+static int cn_want_write(connection_t *cn);
 static int connection_timedout(connection_t *cn);
 static int socket_set_nonblock(int s);
 static void connection_connected(connection_t *c);
@@ -1538,6 +1538,7 @@ connection_t *connection_new(char *dsthostname, int dstport, char *srchostname,
 	(void)ssl;
 	(void)ssl_check_mode;
 	(void)ssl_check_store;
+	(void)ssl_client_certfile;
 #endif
 	/* TODO: allow litteral service name in the function interface */
 	if (snprintf(dstportbuf, 20, "%d", dstport) >= 20)
