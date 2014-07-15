@@ -2625,6 +2625,8 @@ void link_kill(bip_t *bip, struct link *link)
 	while ((ci = list_remove_first(&link->chan_infos_order)))
 		free(ci);
 
+	list_remove(&bip->link_list, link);
+
 	MAYFREE(link->username);
 	MAYFREE(link->realname);
 	MAYFREE(link->s_password);
