@@ -1701,13 +1701,13 @@ static int irc_mode(struct link_server *server, struct line *line)
 
 				channel->key = bip_strdup(
 					irc_line_elem(line, cur_arg + 3));
-				cur_arg++;
 			} else {
 				if (channel->key) {
 					free(channel->key);
 					channel->key = NULL;
 				}
 			}
+			cur_arg++;
 			break;
 		case 'f':
 		case 'j':
