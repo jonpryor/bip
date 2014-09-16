@@ -420,7 +420,7 @@ int irc_dispatch_server(bip_t *bip, struct link_server *server,
 		if (LINK(server)->ignore_server_capab &&
 				irc_line_elem_equals(line, 0, "005")) {
 			int i;
-			for (i = 1; i < irc_line_count(line); i++)
+			for (i = irc_line_count(line) - 1; i > 0; i--)
 				if (irc_line_elem_equals(line, i, "CAPAB"))
 					irc_line_drop(line, i);
 		}
