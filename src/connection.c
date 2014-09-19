@@ -1461,6 +1461,7 @@ static connection_t *_connection_new_SSL(char *dsthostname, char *dstport,
 	conn->ssl_check_mode = check_mode;
 
 	switch (conn->ssl_check_mode) {
+	struct stat st_buf;
 	case SSL_CHECK_BASIC:
 		if (!SSL_CTX_load_verify_locations(conn->ssl_ctx_h, check_store,
 				NULL)) {
@@ -1469,13 +1470,31 @@ static connection_t *_connection_new_SSL(char *dsthostname, char *dstport,
 		}
 		break;
 	case SSL_CHECK_CA:
-		if (!SSL_CTX_load_verify_locations(conn->ssl_ctx_h, NULL,
-				check_store)) {
-			mylog(LOG_ERROR, "Can't assign check store to "
-					"SSL connection!");
+		// Check if check_store is a file or directory
+		if (stat(check_store, &st_buf) == 0) {
+			if (st_buf.st_mode & S_IFDIR) {
+				if (!SSL_CTX_load_verify_locations(conn->ssl_ctx_h, NULL,
+						check_store)) {
+					mylog(LOG_ERROR, "Can't assign check store to "
+							"SSL connection!");
+					return conn;
+				}
+				break;
+			}
+			if (st_buf.st_mode & S_IFREG) {
+				if (!SSL_CTX_load_verify_locations(conn->ssl_ctx_h, check_store,
+						NULL)) {
+					mylog(LOG_ERROR, "Can't assign check store to "
+							"SSL connection!");
+					return conn;
+				}
+				break;
+			}
+			mylog(LOG_ERROR, "Check store is neither a file nor a directory.");
 			return conn;
 		}
-		break;
+		mylog(LOG_ERROR, "Can't open check store! Make sure path is correct.");
+		return conn;
 	}
 
 	switch (conn->ssl_check_mode) {

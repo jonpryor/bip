@@ -251,6 +251,11 @@ allows a "ssh-like" private key generation scheme. Note that in basic mode:
 .TP
 \fBssl_check_store\fP (default: \fBnot set\fP)
 This repository is browsed by BIP when a SSL certificate or CA check is needed.
+In ssl_check_mode \fBbasic\fP it must be a file, to which certificates you
+choose to trust will be appended. In ssl_check_mode \fBca\fP it may be a
+single file containing one or more trusted certificates concatenated together
+between BEGIN CERTIFICATE and END CERTIFICATE lines, or a directory containing
+individual certificates in PEM format which has been processed by \fBc_rehash\fP.
 
 .TP
 \fBssl_client_certfile\fP (default: \fBnot set\fP)
