@@ -1470,6 +1470,17 @@ static connection_t *_connection_new_SSL(char *dsthostname, char *dstport,
 		}
 		break;
 	case SSL_CHECK_CA:
+		if (!check_store) {
+			if (SSL_CTX_set_default_verify_paths(conn->ssl_ctx_h)) {
+				mylog(LOG_INFO, "No SSL certificate check store configured. "
+						"Default store will be used.");
+				break;
+			} else {
+				mylog(LOG_ERROR, "No SSL certificate check store configured "
+						"and cannot use default store!");
+				return conn;
+			}
+		}
 		// Check if check_store is a file or directory
 		if (stat(check_store, &st_buf) == 0) {
 			if (st_buf.st_mode & S_IFDIR) {
@@ -1490,10 +1501,12 @@ static connection_t *_connection_new_SSL(char *dsthostname, char *dstport,
 				}
 				break;
 			}
-			mylog(LOG_ERROR, "Check store is neither a file nor a directory.");
+			mylog(LOG_ERROR, "Specified SSL certificate check store is neither "
+					"a file nor a directory.");
 			return conn;
 		}
-		mylog(LOG_ERROR, "Can't open check store! Make sure path is correct.");
+		mylog(LOG_ERROR, "Can't open SSL certificate check store! Check path "
+				"and permissions.");
 		return conn;
 	}
 

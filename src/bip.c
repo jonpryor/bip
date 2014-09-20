@@ -1540,9 +1540,15 @@ noroom:
 	bip_notify(ic, "%s", buf);
 
 #ifdef HAVE_LIBSSL
-	bip_notify(ic, "SSL check mode '%s', stored into '%s'",
-		   checkmode2text(u->ssl_check_mode),
-		   STRORNULL(u->ssl_check_store));
+	if (u->ssl_check_store) {
+		bip_notify(ic, "SSL check mode '%s', stored into '%s'",
+				checkmode2text(u->ssl_check_mode),
+				u->ssl_check_store);
+	}
+	else {
+		bip_notify(ic, "SSL check mode '%s', default or no certificate store",
+				checkmode2text(u->ssl_check_mode));
+	}
 	if (u->ssl_client_certfile)
 		bip_notify(ic, "SSL client certificate stored into '%s'",
 				u->ssl_client_certfile);
