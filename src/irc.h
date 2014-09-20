@@ -231,6 +231,9 @@ struct link_server {
 	int lag;
 	int laginit_ts;
 	int lagtest_timeout;
+
+	/* chanmodes */
+	array_t chanmodes;
 };
 
 typedef struct bip {

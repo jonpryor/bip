@@ -1,4 +1,3 @@
-
 /*
  * $Id: irc.c,v 1.156 2005/04/21 06:58:50 nohar Exp $
  *
@@ -31,6 +30,8 @@ extern bip_t *_bip;
 static int irc_join(struct link_server *server, struct line *line);
 static int irc_part(struct link_server *server, struct line *line);
 static int irc_mode(struct link_server *server, struct line *line);
+static int irc_mode_channel(struct channel *channel, struct line *line,
+			    const char* mode, int add, int cur_arg);
 static int irc_kick(struct link_server *server, struct line *line);
 static int irc_privmsg(struct link_server *server, struct line *line);
 static int irc_notice(struct link_server *server, struct line *line);
@@ -47,6 +48,7 @@ static int irc_368(struct link_server *server, struct line *l);
 void irc_server_shutdown(struct link_server *s);
 static int origin_is_me(struct line *l, struct link_server *server);
 static void ls_set_nick(struct link_server *ircs, char *nick);
+static void server_set_chanmodes(struct link_server *l, const char *chanmodes);
 
 #ifdef HAVE_OIDENTD
 #define OIDENTD_FILENAME ".oidentd.conf"
@@ -417,12 +419,15 @@ int irc_dispatch_server(bip_t *bip, struct link_server *server,
 
 	} else if (LINK(server)->s_state == IRCS_CONNECTING) {
 		ret = OK_FORGET;
-		if (LINK(server)->ignore_server_capab &&
-				irc_line_elem_equals(line, 0, "005")) {
+			if (irc_line_elem_equals(line, 0, "005")) {
 			int i;
-			for (i = irc_line_count(line) - 1; i > 0; i--)
-				if (irc_line_elem_equals(line, i, "CAPAB"))
+			for (i = irc_line_count(line) - 1; i > 0; i--) {
+				if (LINK(server)->ignore_server_capab &&
+						irc_line_elem_equals(line, i, "CAPAB"))
 					irc_line_drop(line, i);
+				else if (!strncmp(irc_line_elem(line, i), "CHANMODES=", 10))
+					server_set_chanmodes(server, irc_line_elem(line, i) + 10);
+			}
 		}
 		if (irc_line_elem_equals(line, 0, "NOTICE")) {
 		} else if (irc_line_elem_equals(line, 0, "376")) {
@@ -1593,6 +1598,7 @@ static int irc_mode(struct link_server *server, struct line *line)
 	int add = 1;
 	unsigned cur_arg = 0;
 	array_t *mode_args = NULL;
+	int ret;
 
 	if (!irc_line_includes(line, 2))
 		return ERR_PROTOCOL;
@@ -1632,24 +1638,67 @@ static int irc_mode(struct link_server *server, struct line *line)
 	 *         ^            ^
 	 *       mode         cur_arg
 	 */
+	for (mode = irc_line_elem(line, 2); *mode; mode++) {
+		if (*mode == '-')
+			add = 0;
+		else if (*mode == '+')
+			add = 1;
+		else {
+			int i;
+			char *str;
+			array_each(&server->chanmodes, i, str) {
+				if (strchr(str, *mode)) {
+					// Types A & B always take a parameter
+					// Type C take a parameter only when set
+					if (i <= 1 || (i == 2 && add)) {
+						if (!irc_line_includes(line, cur_arg + 3)) {
+							ret = ERR_PROTOCOL;
+						} else {
+							ret = irc_mode_channel(channel, line, mode, add, cur_arg);
+							cur_arg++;
+						}
+					} else {
+						ret = irc_mode_channel(channel, line, mode, add, cur_arg);
+					}
+					break;
+				}
+			}
+
+			// Prefix
+			if (strchr("ovh", *mode)) {
+				if (!irc_line_includes(line, cur_arg + 3)) {
+					ret = ERR_PROTOCOL;
+				} else {
+					ret = irc_mode_channel(channel, line, mode, add, cur_arg);
+					cur_arg++;
+				}
+			}
+		}
+		if (ret == ERR_PROTOCOL)
+			return ret;
+	}
+	return OK_COPY;
+}
+
+static int irc_mode_channel(struct channel *channel, struct line *line,
+			    const char* mode, int add, int cur_arg)
+{
 	const char *nick;
 	long int ovmask;
-	for (mode = irc_line_elem(line, 2); *mode; mode++) {
-		switch (*mode) {
-		case '-':
-			add = 0;
-			break;
-		case '+':
-			add = 1;
-			break;
-		case 'b':
-			if (!irc_line_includes(line, cur_arg + 3))
-				return ERR_PROTOCOL;
-			cur_arg++;
+
+	switch (*mode) {
+		case 'k':
+			if (add) {
+				channel->key = bip_strdup(
+					irc_line_elem(line, cur_arg + 3));
+			} else {
+				if (channel->key) {
+					free(channel->key);
+					channel->key = NULL;
+				}
+			}
 			break;
 		case 'o':
-			if (!irc_line_includes(line, cur_arg + 3))
-				return ERR_PROTOCOL;
 			nick = irc_line_elem(line, cur_arg + 3);
 
 			if (!hash_includes(&channel->ovmasks, nick))
@@ -1660,11 +1709,8 @@ static int irc_mode(struct link_server *server, struct line *line)
 			else
 				ovmask &= ~NICKOP;
 			hash_insert(&channel->ovmasks, nick, (void *)ovmask);
-			cur_arg++;
 			break;
 		case 'h':
-			if (!irc_line_includes(line, cur_arg + 3))
-				return ERR_PROTOCOL;
 			nick = irc_line_elem(line, cur_arg + 3);
 
 			if (!hash_includes(&channel->ovmasks, nick))
@@ -1676,11 +1722,8 @@ static int irc_mode(struct link_server *server, struct line *line)
 			else
 				ovmask &= ~NICKHALFOP;
 			hash_insert(&channel->ovmasks, nick, (void *)ovmask);
-			cur_arg++;
 			break;
 		case 'v':
-			if (!irc_line_includes(line, cur_arg + 3))
-				return ERR_PROTOCOL;
 			nick = irc_line_elem(line, cur_arg + 3);
 
 			if (!hash_includes(&channel->ovmasks, nick))
@@ -1692,41 +1735,7 @@ static int irc_mode(struct link_server *server, struct line *line)
 			else
 				ovmask &= ~NICKVOICED;
 			hash_insert(&channel->ovmasks, nick, (void *)ovmask);
-			cur_arg++;
 			break;
-		case 'k':
-			if (add) {
-				if (!irc_line_includes(line, cur_arg + 3))
-					return ERR_PROTOCOL;
-
-				channel->key = bip_strdup(
-					irc_line_elem(line, cur_arg + 3));
-			} else {
-				if (channel->key) {
-					free(channel->key);
-					channel->key = NULL;
-				}
-			}
-			cur_arg++;
-			break;
-		case 'f':
-		case 'j':
-		case 'l':
-			if (add)
-				cur_arg++;
-			break;
-		case 'H':
-		case 'e':
-		case 'q':
-		case 'I':
-			/* Sucky way to try to deal with all the different mode
-			 * out there... */
-			if (irc_line_includes(line, cur_arg + 3))
-				cur_arg++;
-			break;
-		default:
-			break;
-		}
 	}
 	return OK_COPY;
 }
@@ -2137,6 +2146,12 @@ struct link_server *irc_server_new(struct link *link, connection_t *conn)
 	CONN(s) = conn;
 
 	irc_lag_init(s);
+	array_init(&s->chanmodes);
+	// Default values used if CHANMODES is not specified by the server
+	array_push(&s->chanmodes, bip_strdup("beHIq"));
+	array_push(&s->chanmodes, bip_strdup("k"));
+	array_push(&s->chanmodes, bip_strdup("fjl"));
+	array_push(&s->chanmodes, bip_strdup("fjl"));
 	return s;
 }
 
@@ -2149,6 +2164,10 @@ void irc_server_free(struct link_server *s)
 	if (s->user_mode)
 		free(s->user_mode);
 
+	int i;
+	char *ptr;
+	array_each(&s->chanmodes, i, ptr)
+		free(ptr);
 	hash_iterator_t hi;
 	for (hash_it_init(&s->channels, &hi); hash_it_item(&hi);
 			hash_it_next(&hi)) {
@@ -2222,6 +2241,12 @@ int irc_server_lag_compute(struct link *l)
 
 void irc_server_shutdown(struct link_server *s)
 {
+	int i;
+	char *cur;
+	array_each(&s->chanmodes, i, cur)
+		free(cur);
+	array_deinit(&s->chanmodes);
+
 	if (!s->nick)
 		return;
 	if (LINK(s)->prev_nick)
@@ -2638,3 +2663,36 @@ void link_kill(bip_t *bip, struct link *link)
 	free(link);
 }
 
+static void server_set_chanmodes(struct link_server *l, const char *modes)
+{
+	int i;
+	char *cur;
+	char *dup;
+
+	mylog(LOG_DEBUG, "[%s] Set chanmodes", LINK(l)->name);
+
+	array_each(&l->chanmodes, i, cur)
+		free(cur);
+	array_deinit(&l->chanmodes);
+
+	// handle four categories, ignore all others
+	for (i = 0; i < 4; i++) {
+		cur = strchr(modes, ',');
+		if (cur || modes) {
+			size_t len;
+			if (cur)
+				len = cur - modes;
+			else
+				len = strlen(modes); // last piece
+			dup = bip_malloc(len + 1);
+			memcpy(dup, modes, len);
+			dup[len] = 0;
+			modes = cur + 1;
+		} else {
+			// emptry string
+			dup = bip_calloc(1, sizeof(char));
+		}
+		mylog(LOG_DEBUGVERB, "[%s] Modes: '%s'", LINK(l)->name, dup);
+		array_push(&l->chanmodes, dup);
+	}
+}
