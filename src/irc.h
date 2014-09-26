@@ -36,10 +36,6 @@ struct server {
 
 #define server_new() bip_calloc(sizeof(struct server), 1)
 
-#define NICKOP 1
-#define NICKHALFOP (1<<1)
-#define NICKVOICED (1<<2)
-
 struct channel {
 	char *name;
 	char *mode;
@@ -234,6 +230,10 @@ struct link_server {
 
 	/* chanmodes */
 	array_t chanmodes;
+
+	/* user modes */
+	char *prefixes;
+	char *usermodes;
 };
 
 typedef struct bip {
