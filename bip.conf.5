@@ -116,6 +116,12 @@ Defines the delay between each logfiles sync to the disk. Must be a non null
 positive integer.
 
 .TP
+\fBreconn_timer\fP (default: \fB120\fP)
+Defines the initial delay (in seconds) before a reconnection attempt.
+The delay increases with the number of attempts:
+delay = reconn_timer * number of attempts
+
+.TP
 \fBpid_file\fP (default: \fBHOME/.bip/bip.pid\fP)
 Defines the file where BIP's pid will be stored. BIP checks if this file exists
 and if the pid is still alive upon startup. If true, BIP refuses to start.

@@ -45,6 +45,7 @@ char *conf_ssl_certfile;
 int conf_daemonize;
 char *conf_pid_file;
 char *conf_biphome;
+int conf_reconn_timer;
 
 /* log options, for sure the trickiest :) */
 int conf_log = DEFAULT_LOG;
@@ -989,6 +990,9 @@ int fireup(bip_t *bip, FILE *conf)
 		case LEX_PORT:
 			conf_port = t->ndata;
 			break;
+		case LEX_RECONN_TIMER:
+			conf_reconn_timer = t->ndata;
+			break;
 #ifdef HAVE_LIBSSL
 		case LEX_CSS:
 			conf_css = t->ndata;
@@ -1179,6 +1183,7 @@ int main(int argc, char **argv)
 	conf_log_root = NULL;
 	conf_log_format = bip_strdup(DEFAULT_LOG_FORMAT);
 	conf_log_level = DEFAULT_LOG_LEVEL;
+	conf_reconn_timer = DEFAULT_RECONN_TIMER;
 	conf_daemonize = 1;
 	conf_global_log_file = stderr;
 	conf_pid_file = NULL;

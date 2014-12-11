@@ -27,5 +27,6 @@
 #define DEFAULT_LOG_LEVEL LOG_INFO
 #define DEFAULT_LOG_FORMAT "%u/%n/%Y-%m/%c.%d.log"
 #define DEFAULT_BIP_USE_NOTICE 0
+#define DEFAULT_RECONN_TIMER 120
 
 #endif /* DEFAULTS_H */

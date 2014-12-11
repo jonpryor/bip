@@ -61,6 +61,7 @@ void oidentd_dump(bip_t *bip);
 
 void irc_client_free(struct link_client *cli);
 extern int conf_log_sync_interval;
+extern int conf_reconn_timer;
 
 void write_user_list(connection_t *c, char *dest);
 
@@ -72,7 +73,6 @@ int irc_cli_bip(bip_t *bip, struct link_client *ic, struct line *line);
 
 #define LAGOUT_TIME 480
 #define LAGCHECK_TIME (90)
-#define RECONN_TIMER (120)
 #define RECONN_TIMER_MAX (600)
 #define LOGGING_TIMEOUT (360)
 #define CONN_INTERVAL 60
@@ -2046,7 +2046,7 @@ static void server_setup_reconnect_timer(struct link *link)
 	if (link->last_connection_attempt &&
 			time(NULL) - link->last_connection_attempt
 				< CONN_INTERVAL) {
-		timer = RECONN_TIMER * (link->s_conn_attempt);
+		timer = conf_reconn_timer * (link->s_conn_attempt);
 		if (timer > RECONN_TIMER_MAX)
 			timer = RECONN_TIMER_MAX;
 	}
