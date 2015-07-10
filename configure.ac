@@ -96,7 +96,7 @@ AS_IF([test "x$enable_pie" != "xno"], [
 		save_LDFLAGS=$LDFLAGS 
 		CFLAGS="$CFLAGS -fPIE" 
 		LDFLAGS="$LDFLAGS -pie" 
-		AC_TRY_RUN([static int foo[30000]; int main () { return 0; }],
+		AC_RUN_IFELSE([AC_LANG_SOURCE([[static int foo[30000]; int main () { return 0; }]])],
 			[ap_cv_cc_pie=yes],
 			[ap_cv_cc_pie=no],
 			[ap_cv_cc_pie=yes]
