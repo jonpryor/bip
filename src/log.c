@@ -392,7 +392,8 @@ logstore_t *log_find_file(log_t *logdata, const char *destination)
 
 	time(&t);
 	ltime = localtime(&t);
-	if (ltime->tm_hour != lf->last_log.tm_hour) {
+	if (ltime->tm_year != lf->last_log.tm_year ||
+			ltime->tm_yday != lf->last_log.tm_yday) {
 		logfile_t *oldlf;
 
 		/* day changed, we might want to rotate logfile */
