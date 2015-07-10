@@ -874,8 +874,9 @@ list_t *wait_event(list_t *cn_list, int *msec, int *nc)
 			return cn_newdata;
 		fatal("select(): %s", strerror(errno));
 	} else if (err == 0) {
-		mylog(LOG_DEBUGTOOMUCH, "Select timed-out. irc.o timer !");
 		/* select timed-out */
+		mylog(LOG_DEBUGTOOMUCH, "Select timed-out. irc.o timer !");
+		*msec = 0;
 		return cn_newdata;
 	}
 
