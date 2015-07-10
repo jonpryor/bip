@@ -55,8 +55,8 @@ AC_FUNC_FORK
 AC_FUNC_MALLOC
 AC_FUNC_MKTIME
 AC_FUNC_REALLOC
-AC_CHECK_FUNCS(ftruncate gethostname gettimeofday localtime_r memmove memset)
-AC_CHECK_FUNCS(mkdir select socket strcasecmp strchr strcspn strdup strerror)
+AC_CHECK_FUNCS(clock_gettime ftruncate gethostname gettimeofday localtime_r memmove)
+AC_CHECK_FUNCS(memset mkdir select socket strcasecmp strchr strcspn strdup strerror)
 AC_CHECK_FUNCS(strrchr strstr)
 
 # Deal with parameters

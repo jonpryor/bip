@@ -742,7 +742,7 @@ static int check_event_write(fd_set *fds, connection_t *cn, int *nc)
 static int cn_want_write(connection_t *cn)
 {
 	if (cn->anti_flood) {
-		struct timeval tv;
+		struct timespec tv;
 		unsigned long now;
 
 		/* fill the bucket */
@@ -750,8 +750,8 @@ static int cn_want_write(connection_t *cn)
 		/* now is the number of milliseconds since the Epoch,
 		 * cn->lasttoken is the number of milliseconds when we
 		 * last added a token to the bucket */
-		if (!gettimeofday(&tv, NULL)) {
-			now = tv.tv_sec * 1000 + tv.tv_usec / 1000;
+		if (!clock_gettime(CLOCK_MONOTONIC, &tv)) {
+			now = tv.tv_sec * 1000 + tv.tv_nsec / 1000000;
 			/* round now to TOKEN_INTERVAL multiple */
 			now -= now % TOKEN_INTERVAL;
 			if (now < cn->lasttoken) {
@@ -768,7 +768,7 @@ static int cn_want_write(connection_t *cn)
 				cn->lasttoken = now;
 			}
 		} else
-			/* if gettimeofday() fails, juste ignore
+			/* if clock_gettime() fails, juste ignore
 			 * antiflood */
 			cn->token = 1;
 
@@ -782,14 +782,15 @@ static int cn_want_write(connection_t *cn)
 	return !list_is_empty(cn->outgoing);
 }
 
+
 list_t *wait_event(list_t *cn_list, int *msec, int *nc)
 {
 	fd_set fds_read, fds_write, fds_except;
-	int maxfd = -1, err;
+	int maxfd = -1, err, errtime;
 	list_t *cn_newdata;
 	list_iterator_t it;
 	struct timeval tv;
-	struct timeval btv, etv;
+	struct timespec btv, etv;
 	*nc = 0;
 
 	cn_newdata = list_new(list_ptr_cmp);
@@ -853,31 +854,45 @@ list_t *wait_event(list_t *cn_list, int *msec, int *nc)
 
 	tv.tv_sec = *msec / 1000;
 	tv.tv_usec = (*msec % 1000) * 1000;
-	gettimeofday(&btv, NULL);
 	mylog(LOG_DEBUGTOOMUCH, "msec: %d, sec: %d, usec: %d", *msec, tv.tv_sec,
 			tv.tv_usec);
-	err = select(maxfd + 1, &fds_read, &fds_write, &fds_except, &tv);
-	gettimeofday(&etv, NULL);
 
-	if (etv.tv_sec < btv.tv_sec)
-		mylog(LOG_ERROR, "Time rewinded ! not touching interval");
-	else
-		*msec -= (etv.tv_sec - btv.tv_sec) * 1000
-			+ (etv.tv_usec - btv.tv_usec) / 1000;
-	/* in case we go forward in time */
-	if (*msec < 0)
-		*msec = 0;
-	mylog(LOG_DEBUGTOOMUCH, "msec: %d, sec: %d, usec: %d", *msec, tv.tv_sec,
-			tv.tv_usec);
-	if (err < 0) {
-		if (errno == EINTR)
-			return cn_newdata;
-		fatal("select(): %s", strerror(errno));
-	} else if (err == 0) {
+	errtime = clock_gettime(CLOCK_MONOTONIC, &btv);
+	if (errtime != 0) {
+		fatal("clock_gettime: %s", strerror(errno));
+	}
+
+	err = select(maxfd + 1, &fds_read, &fds_write, &fds_except, &tv);
+
+	if (err == 0) {
 		/* select timed-out */
 		mylog(LOG_DEBUGTOOMUCH, "Select timed-out. irc.o timer !");
 		*msec = 0;
 		return cn_newdata;
+	} else {
+		mylog(LOG_DEBUGTOOMUCH, "msec: %d, sec: %d, usec: %d", *msec,
+				tv.tv_sec, tv.tv_usec);
+	}
+
+	errtime = clock_gettime(CLOCK_MONOTONIC, &etv);
+	if (errtime != 0) {
+		fatal("clock_gettime: %s", strerror(errno));
+	}
+
+	if (etv.tv_sec < btv.tv_sec)
+		mylog(LOG_ERROR, "Time rewinded ! not touching interval");
+	else {
+		*msec -= (etv.tv_sec - btv.tv_sec) * 1000
+			+ (etv.tv_nsec - btv.tv_nsec) / 1000000;
+		/* in case we go forward in time */
+		if (*msec < 0)
+			*msec = 0;
+	}
+
+	if (err < 0) {
+		if (errno == EINTR)
+			return cn_newdata;
+		fatal("select(): %s", strerror(errno));
 	}
 
 	for (list_it_init(cn_list, &it); list_it_item(&it); list_it_next(&it)) {
