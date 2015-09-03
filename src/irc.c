@@ -139,7 +139,7 @@ list_t *channel_name_list(struct link_server *server, struct channel *c)
 		int msb;
 		if ((msb = fls(ovmask))) {
 			str[len] = server->prefixes[msb - 1];
-			len++;
+			str[++len] = 0;
 		}
 
 		strcat(str, nick);
