@@ -2701,10 +2701,10 @@ static void server_set_prefix(struct link_server *s, const char *modes)
 	s->prefixes = bip_realloc(s->prefixes, sizeof(*s->prefixes) * (len + 1));
 	s->usermodes = bip_realloc(s->usermodes, sizeof(s->usermodes) * (len + 1));
 
-	memcpy(s->prefixes, modes + 1, len);
-	s->prefixes[len] = 0;
-	memcpy(s->usermodes, end_mode + 1, len);
+	memcpy(s->usermodes, modes + 1, len);
 	s->usermodes[len] = 0;
+	memcpy(s->prefixes, end_mode + 1, len);
+	s->prefixes[len] = 0;
 
 	mylog(LOG_DEBUGVERB, "[%s] user prefix: '%s'", LINK(s)->name, s->prefixes);
 	mylog(LOG_DEBUGVERB, "[%s] user modes: '%s'", LINK(s)->name, s->usermodes);
