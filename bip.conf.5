@@ -59,13 +59,19 @@ If you use vim you will probably want to use vim with the provided
 \fBbip.vim\fP syntax file to avoid common syntax and lexical mistakes. You can
 also find an example configuration file along with BIP.
 
+By default, \fBbipdir\fR is the \fB$HOME/.bip\fP directory and the parent
+directory for client certificate, configuration, logs, pid, oidentd. If
+environment variable \fB$HOME\fP doesn't exist, \fB-s\fP parameter must be
+used.
+
 .SH GLOBAL OPTIONS
 
 .TP
 \fBclient_side_ssl\fP (default: \fBfalse\fP)
 When true, clients will need to connect to BIP using SSL.
-You'll also need to generate a SSL cert/key pair in <bipdir>/bip.pem (usually
-~/.bip/bip.pem or /var/lib/bip/bip.pem) or <client_side_ssl_pem> if defined.
+You'll also need to generate a SSL cert/key pair in \fBbipdir\fR/bip.pem
+(usually ~/.bip/bip.pem or /var/lib/bip/bip.pem) or <client_side_ssl_pem> if
+defined.
 
 .TP
 \fBclient_side_ssl_pem\fP (default: \fB<bipdir>/bip.pem\fP)
@@ -106,7 +112,7 @@ Determines the log file name depending on :
 Specify the verbosity of BIP from 0 (fatal errors) to 6 (huge debug output)
 
 .TP
-\fBlog_root\fP (default: \fBHOME/.bip/logs\fP)
+\fBlog_root\fP (default: \fB<bipdir>/logs\fP)
 Main log directory. Sub-directories and files will be created from there
 depending on \fBlog_format\fP.
 
@@ -122,7 +128,7 @@ The delay increases with the number of attempts:
 delay = reconn_timer * number of attempts
 
 .TP
-\fBpid_file\fP (default: \fBHOME/.bip/bip.pid\fP)
+\fBpid_file\fP (default: \fB<bipdir>/bip.pid\fP)
 Defines the file where BIP's pid will be stored. BIP checks if this file exists
 and if the pid is still alive upon startup. If true, BIP refuses to start.
 

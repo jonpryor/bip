@@ -269,6 +269,8 @@ static void usage(char *name)
 "	-f config_file: Use config_file as the configuration file\n"
 "		If no config file is given %s will try to open ~/.bip/" S_CONF "\n"
 "	-n: Don't daemonize, log in stderr\n"
+"	-s: Bip HOME, default parent directory for client certificate,\n"
+"		configuration, logs, pid, oidentd\n"
 "	-v: Print version and exit\n"
 "	-h: This help\n", name, name);
 	exit(1);
@@ -1218,24 +1220,25 @@ int main(int argc, char **argv)
 
 	char *home = NULL; /* oidentd path searching ignores conf_biphome */
 	home = getenv("HOME");
-	if (!home) {
-		conf_die(&bip, "no $HOME !, do you live in a trailer ?");
+	if (!home && !conf_biphome) {
+		conf_die(&bip, "no value for environment variable $HOME,"
+			"use '-s' parameter");
 		return 0;
 	}
-#ifdef HAVE_OIDENTD
-	bip.oidentdpath = bip_malloc(strlen(home) + 1 +
-			strlen(OIDENTD_FILENAME) + 1);
-	strcpy(bip.oidentdpath, home);
-	strcat(bip.oidentdpath, "/");
-	strcat(bip.oidentdpath, OIDENTD_FILENAME);
-#endif
-
 
 	if (!conf_biphome) {
 		conf_biphome = bip_malloc(strlen(home) + strlen("/.bip") + 1);
 		strcpy(conf_biphome, home);
 		strcat(conf_biphome, "/.bip");
 	}
+
+#ifdef HAVE_OIDENTD
+	bip.oidentdpath = bip_malloc(strlen(conf_biphome) + 1 +
+			strlen(OIDENTD_FILENAME) + 1);
+	strcpy(bip.oidentdpath, conf_biphome);
+	strcat(bip.oidentdpath, "/");
+	strcat(bip.oidentdpath, OIDENTD_FILENAME);
+#endif
 
 	if (!confpath) {
 		confpath = bip_malloc(strlen(conf_biphome) + 1 +
