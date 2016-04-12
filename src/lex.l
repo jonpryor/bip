@@ -81,6 +81,8 @@ list_t *parse_conf(FILE *file, int *err)
 "ssl_check_mode"        { return LEX_SSL_CHECK_MODE; }
 "ssl_check_store"       { return LEX_SSL_CHECK_STORE; }
 "ssl_client_certfile"   { return LEX_SSL_CLIENT_CERTFILE; }
+"ssl_default_ciphers"	{ return LEX_DEFAULT_CIPHERS; }
+"ciphers"		{ return LEX_CIPHERS; }
 "key"			{ return LEX_KEY; }
 "autojoin_on_kick"	{ return LEX_AUTOJOIN_ON_KICK; }
 "channel"		{ return LEX_CHANNEL; }
@@ -108,6 +110,7 @@ list_t *parse_conf(FILE *file, int *err)
 "pid_file"		{ return LEX_PID_FILE; }
 "bip_use_notice"	{ return LEX_BIP_USE_NOTICE; }
 "client_side_ssl_pem"	{ return LEX_CSS_PEM; }
+"client_side_ciphers"	{ return LEX_CSS_CIPHERS; }
 "ignore_server_capab"	{ return LEX_IGNORE_CAPAB; }
 "reconn_timer"		{ return LEX_RECONN_TIMER; }
 \"[^"]*\" 		{

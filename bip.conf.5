@@ -79,6 +79,14 @@ Set this to the full path of the cert/key pair bip should use to accept clients
 SSL connections.
 
 .TP
+\fBclient_side_ciphers\fP
+OpenSSL cipher lists used for clients SSL connections.
+
+.TP
+\fBssl_default_ciphers\fP
+OpenSSL cipher lists used for server connections.
+
+.TP
 \fBip\fP
 Ignored for the time being.
 
@@ -146,6 +154,10 @@ sections. It may appear more than once in the configuration file.
 If true, BIP will connect to this network using SSL only. You cannot mix
 SSL servers and non-SSL servers in the same network section. This is by choice,
 we believe it's a bad idea.
+
+.TP
+\fBssl_ciphers\fP (override global ssl_default_ciphers)
+OpenSSL cipher lists used for this network.
 
 .TP
 \fBname\fP

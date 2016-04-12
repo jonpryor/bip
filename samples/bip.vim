@@ -55,7 +55,8 @@ syn region	bipMain		start=/\%^/ end=/\%$/
 syn keyword	bipKeyword	contained nextgroup=bipBoolV client_side_ssl 
 	\ log log_system
 syn keyword	bipKeyword	contained nextgroup=bipStringV log_root
-	\ log_format pid_file client_side_ssl_pem
+	\ log_format pid_file client_side_ssl_pem client_side_ciphers
+	\ ssl_default_ciphers
 syn keyword	bipKeyword	contained nextgroup=bipNumericV port log_level
 	\ log_sync_interval
 syn keyword	bipKeyword	contained nextgroup=bipIPV ip
@@ -64,7 +65,7 @@ syn keyword	bipKeyword	contained nextgroup=bipIPV ip
 syn region	bipNetwork	contained matchgroup=Macro 
 	\ start=/network\s*{\s*/ end=/};/
 	\ contains=bipNKeyword,bipServer,bipComment,bipEndError,bipWhite
-syn keyword	bipNKeyword	contained nextgroup=bipStringV name
+syn keyword	bipNKeyword	contained nextgroup=bipStringV name ciphers
 syn keyword	bipNKeyword	contained nextgroup=bipBoolV ssl
 
 " User block (level 1)
@@ -85,7 +86,7 @@ syn region	bipConnection	contained matchgroup=Macro
 	\ start=/connection\s*{\s*/ end=/};/
 	\ contains=bipCoKeyword,bipChannel,bipComment,bipEndError,bipWhite
 syn keyword	bipCoKeyword	contained nextgroup=bipBoolV follow_nick
-	\ ignore_first_nick
+	\ ignore_first_nick log
 syn keyword	bipCoKeyword	contained nextgroup=bipStringV name user nick
 	\ network password vhost away_nick on_connect_send realname
 	\ no_client_away_msg ssl_check_mode

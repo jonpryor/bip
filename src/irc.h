@@ -93,6 +93,7 @@ struct network
 	char *name;
 #ifdef HAVE_LIBSSL
 	int ssl;
+	char *ciphers;
 #endif
 	int serverc;
 	struct server *serverv;

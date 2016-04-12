@@ -2171,11 +2171,13 @@ connection_t *irc_server_connect(struct link *link)
 				link->network->serverv[link->cur_server].port,
 				link->vhost, link->bind_port,
 #ifdef HAVE_LIBSSL
-				link->network->ssl, link->ssl_check_mode,
+				link->network->ssl,
+				link->network->ciphers,
+				link->ssl_check_mode,
 				link->user->ssl_check_store,
 				link->user->ssl_client_certfile,
 #else
-				0, 0, NULL, NULL,
+				0, NULL, 0, NULL, NULL,
 #endif
 				CONNECT_TIMEOUT);
 	assert(conn);

@@ -24,8 +24,9 @@ static int ssl_cx_idx;
 extern FILE *conf_global_log_file;
 static BIO *errbio = NULL;
 extern char *conf_ssl_certfile;
+extern char *conf_client_ciphers;
 static int SSLize(connection_t *cn, int *nc);
-static SSL_CTX *SSL_init_context(void);
+static SSL_CTX *SSL_init_context(char *ciphers);
 /* SSH like trust management */
 int link_add_untrusted(void *ls, X509 *cert);
 #endif
@@ -1240,7 +1241,7 @@ connection_t *accept_new(connection_t *cn)
 			mylog(LOG_DEBUG, "No SSL context available for "
 					"accepted connections. "
 					"Initializing...");
-			if (!(sslctx = SSL_init_context())) {
+			if (!(sslctx = SSL_init_context(conf_client_ciphers))) {
 				mylog(LOG_ERROR, "SSL context initialization "
 						"failed");
 				connection_free(conn);
@@ -1303,7 +1304,7 @@ static connection_t *_connection_new(char *dsthostname, char *dstport,
 }
 
 #ifdef HAVE_LIBSSL
-static SSL_CTX *SSL_init_context(void)
+static SSL_CTX *SSL_init_context(char *ciphers)
 {
 	int fd, flags, ret, rng;
 	char buf[1025];
@@ -1358,6 +1359,10 @@ prng_end:
 	SSL_CTX_set_session_cache_mode(ctx, SSL_SESS_CACHE_BOTH);
 	SSL_CTX_set_timeout(ctx, (long)60);
 	SSL_CTX_set_options(ctx, SSL_OP_ALL);
+	if (ciphers && !SSL_CTX_set_cipher_list(ctx, ciphers)) {
+		SSL_CTX_free(ctx);
+		return NULL;
+	}
 
 	return ctx;
 }
@@ -1518,13 +1523,13 @@ static int SSLize(connection_t *cn, int *nc)
 }
 
 static connection_t *_connection_new_SSL(char *dsthostname, char *dstport,
-		char *srchostname, char *srcport, int check_mode,
+		char *srchostname, char *srcport, char *ciphers, int check_mode,
 		char *check_store, char *ssl_client_certfile, int timeout)
 {
 	connection_t *conn;
 
 	conn = connection_init(1, 1, timeout, 0);
-	if (!(conn->ssl_ctx_h = SSL_init_context())) {
+	if (!(conn->ssl_ctx_h = SSL_init_context(ciphers))) {
 		mylog(LOG_ERROR, "SSL context initialization failed");
 		return conn;
 	}
@@ -1634,12 +1639,13 @@ static connection_t *_connection_new_SSL(char *dsthostname, char *dstport,
 #endif
 
 connection_t *connection_new(char *dsthostname, int dstport, char *srchostname,
-		int srcport, int ssl, int ssl_check_mode, char *ssl_check_store,
-		char *ssl_client_certfile, int timeout)
+		int srcport, int ssl, char *ssl_ciphers, int ssl_check_mode,
+		char *ssl_check_store, char *ssl_client_certfile, int timeout)
 {
 	char dstportbuf[20], srcportbuf[20], *tmp;
 #ifndef HAVE_LIBSSL
 	(void)ssl;
+	(void)ssl_ciphers;
 	(void)ssl_check_mode;
 	(void)ssl_check_store;
 	(void)ssl_client_certfile;
@@ -1656,7 +1662,7 @@ connection_t *connection_new(char *dsthostname, int dstport, char *srchostname,
 #ifdef HAVE_LIBSSL
 	if (ssl)
 		return _connection_new_SSL(dsthostname, dstportbuf, srchostname,
-				tmp, ssl_check_mode, ssl_check_store,
+				tmp, ssl_ciphers, ssl_check_mode, ssl_check_store,
 				ssl_client_certfile, timeout);
 	else
 #endif

@@ -41,6 +41,8 @@ unsigned short conf_port;
 int conf_css;
 #ifdef HAVE_LIBSSL
 char *conf_ssl_certfile;
+char *conf_client_ciphers;
+char *conf_server_default_ciphers;
 #endif
 int conf_daemonize;
 char *conf_pid_file;
@@ -358,6 +360,9 @@ static int add_network(bip_t *bip, list_t *data)
 		case LEX_SSL:
 			n->ssl = t->ndata;
 			break;
+		case LEX_CIPHERS:
+			MOVE_STRING(n->ciphers, t->pdata);
+			break;
 #endif
 		case LEX_SERVER:
 			n->serverv = bip_realloc(n->serverv, (n->serverc + 1)
@@ -383,6 +388,12 @@ static int add_network(bip_t *bip, list_t *data)
 			free(t->pdata);
 		free(t);
 	}
+
+#ifdef HAVE_LIBSSL
+	if (!n->ciphers) {
+		n->ciphers = conf_server_default_ciphers;
+	}
+#endif
 	return 1;
 }
 
@@ -996,6 +1007,12 @@ int fireup(bip_t *bip, FILE *conf)
 			conf_reconn_timer = t->ndata;
 			break;
 #ifdef HAVE_LIBSSL
+		case LEX_DEFAULT_CIPHERS:
+			MOVE_STRING(conf_server_default_ciphers, t->pdata);
+			break;
+		case LEX_CSS_CIPHERS:
+			MOVE_STRING(conf_client_ciphers, t->pdata);
+			break;
 		case LEX_CSS:
 			conf_css = t->ndata;
 			break;
@@ -1003,7 +1020,9 @@ int fireup(bip_t *bip, FILE *conf)
 			MOVE_STRING(conf_ssl_certfile, t->pdata);
 			break;
 #else
+		case LEX_DEFAULT_CIPHERS:
 		case LEX_CSS:
+		case LEX_CSS_CIPHERS:
 		case LEX_CSS_PEM:
 			mylog(LOG_WARN, "Found SSL option whereas bip is "
 					"not built with SSL support.");
@@ -1191,6 +1210,8 @@ int main(int argc, char **argv)
 	conf_pid_file = NULL;
 #ifdef HAVE_LIBSSL
 	conf_ssl_certfile = NULL;
+	conf_client_ciphers = NULL;
+	conf_server_default_ciphers = NULL;
 #endif
 
 	while ((ch = getopt(argc, argv, "hvnf:s:")) != -1) {
