@@ -1355,7 +1355,10 @@ prng_end:
 	}
 
 	/* allocated by function */
-	ctx = SSL_CTX_new(SSLv23_method());
+	if (!(ctx = SSL_CTX_new(SSLv23_method()))) {
+		ERR_print_errors(errbio);
+		return NULL;
+	}
 	SSL_CTX_set_session_cache_mode(ctx, SSL_SESS_CACHE_BOTH);
 	SSL_CTX_set_timeout(ctx, (long)60);
 	SSL_CTX_set_options(ctx, SSL_OP_ALL);
