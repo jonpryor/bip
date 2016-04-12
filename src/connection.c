@@ -1264,6 +1264,7 @@ connection_t *accept_new(connection_t *cn)
 		conn->ssl_h = SSL_new(sslctx);
 		if (!conn->ssl_h) {
 			connection_free(conn);
+			SSL_CTX_free(sslctx);
 			return NULL;
 		}
 		SSL_set_accept_state(conn->ssl_h);
