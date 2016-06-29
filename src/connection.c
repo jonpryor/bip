@@ -238,6 +238,49 @@ static int _write_socket_SSL(connection_t *cn, char* message)
 	mylog(LOG_DEBUGVERB, "%d/%d bytes sent", count, size);
 	return WRITE_OK;
 }
+
+#if OPENSSL_VERSION_NUMBER < 0x10100000L
+#define X509_OBJECT_get0_X509(o) ((o)->data.x509)
+#define X509_STORE_CTX_get_by_subject(vs, type, name, ret) X509_STORE_get_by_subject(vs, type, name, ret)
+
+int DH_set0_pqg(DH *dh, BIGNUM *p, BIGNUM *q, BIGNUM *g)
+{
+	// bip doesn't use q parameter
+	assert(q == NULL);
+	dh->p = p;
+	dh->g = g;
+
+	return 1;
+}
+
+X509_OBJECT *X509_OBJECT_new()
+{
+	X509_OBJECT *ret = OPENSSL_malloc(sizeof(*ret));
+
+	if (ret != NULL) {
+		memset(ret, 0, sizeof(*ret));
+		ret->type = X509_LU_FAIL;
+	}
+	return ret;
+}
+
+void X509_OBJECT_free(X509_OBJECT *a)
+{
+	if (a == NULL)
+		return;
+	switch (a->type) {
+	default:
+		break;
+	case X509_LU_X509:
+		X509_free(a->data.x509);
+		break;
+	case X509_LU_CRL:
+		X509_CRL_free(a->data.crl);
+		break;
+	}
+	OPENSSL_free(a);
+}
+#endif
 #endif
 
 static int _write_socket(connection_t *cn, char *message)
@@ -1089,6 +1132,8 @@ static connection_t *connection_init(int anti_flood, int ssl, int timeout,
 static DH *dh_512(void)
 {
 	DH *dh;
+	BIGNUM *p;
+	BIGNUM *g;
 	static DH *dh_512;
 
 	if (dh_512 == NULL) {
@@ -1096,15 +1141,19 @@ static DH *dh_512(void)
 			mylog(LOG_WARN, "SSL: cannot create DH parameter set");
 			return (0);
 		}
-		dh->p = BN_bin2bn(dh512_p, sizeof(dh512_p), (BIGNUM *) 0);
-		dh->g = BN_bin2bn(dh512_g, sizeof(dh512_g), (BIGNUM *) 0);
-		if ((dh->p == NULL) || (dh->g == NULL)) {
+
+		p = BN_bin2bn(dh512_p, sizeof(dh512_p), (BIGNUM *) 0);
+		g = BN_bin2bn(dh512_g, sizeof(dh512_g), (BIGNUM *) 0);
+
+		if ((p == NULL) || (g == NULL)) {
 			mylog(LOG_WARN, "SSL: cannot load compiled-in DH "
 					"parameters");
 			DH_free(dh);
 			return (0);
-		} else
+		} else {
+			DH_set0_pqg(dh, p, NULL, g);
 			dh_512 = dh;
+		}
 	}
 	return dh_512;
 }
@@ -1113,6 +1162,8 @@ static DH *dh_512(void)
 static DH *dh_1024(void)
 {
 	DH *dh;
+	BIGNUM *p;
+	BIGNUM *g;
 	static DH *dh_1024;
 
 	if (dh_1024 == NULL) {
@@ -1120,15 +1171,19 @@ static DH *dh_1024(void)
 			mylog(LOG_WARN, "SSL: cannot create DH parameter set");
 			return (0);
 		}
-		dh->p = BN_bin2bn(dh1024_p, sizeof(dh1024_p), (BIGNUM *) 0);
-		dh->g = BN_bin2bn(dh1024_g, sizeof(dh1024_g), (BIGNUM *) 0);
-		if ((dh->p == NULL) || (dh->g == NULL)) {
+
+		p = BN_bin2bn(dh1024_p, sizeof(dh1024_p), (BIGNUM *) 0);
+		g = BN_bin2bn(dh1024_g, sizeof(dh1024_g), (BIGNUM *) 0);
+
+		if ((p == NULL) || (g == NULL)) {
 			mylog(LOG_WARN, "SSL: cannot load compiled-in DH "
 					"parameters");
 			DH_free(dh);
 			return (0);
-		} else
+		} else {
+			DH_set0_pqg(dh, p, NULL, g);
 			dh_1024 = dh;
+		}
 	}
 	return (dh_1024);
 }
@@ -1315,7 +1370,7 @@ static int bip_ssl_verify_callback(int preverify_ok, X509_STORE_CTX *ctx)
 	int err, depth;
 	SSL *ssl;
 	connection_t *c;
-	X509_OBJECT xobj;
+	X509_OBJECT *xobj;
 	int result;
 
 	err_cert = X509_STORE_CTX_get_current_cert(ctx);
@@ -1345,10 +1400,10 @@ static int bip_ssl_verify_callback(int preverify_ok, X509_STORE_CTX *ctx)
 			 err == X509_V_ERR_CERT_HAS_EXPIRED ||
 			 err == X509_V_ERR_SELF_SIGNED_CERT_IN_CHAIN)) {
 
-		if (X509_STORE_get_by_subject(ctx, X509_LU_X509,
-				X509_get_subject_name(err_cert), &xobj) > 0 &&
-				!X509_cmp(xobj.data.x509, err_cert)) {
-
+		xobj = X509_OBJECT_new();
+		if (X509_STORE_CTX_get_by_subject(ctx, X509_LU_X509,
+				X509_get_subject_name(err_cert), xobj) > 0 &&
+				!X509_cmp(X509_OBJECT_get0_X509(xobj), err_cert)) {
 			if (err == X509_V_ERR_CERT_HAS_EXPIRED)
 				mylog(LOG_INFO, "Basic mode; Accepting "
 						"*expired* peer certificate "
@@ -1368,6 +1423,7 @@ static int bip_ssl_verify_callback(int preverify_ok, X509_STORE_CTX *ctx)
 
 			link_add_untrusted(c->user_data, X509_dup(err_cert));
 		}
+		X509_OBJECT_free(xobj);
 	}
 
 	if (!result) {
