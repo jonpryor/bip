@@ -1031,6 +1031,17 @@ int fireup(bip_t *bip, FILE *conf)
 		case LEX_PID_FILE:
 			MOVE_STRING(conf_pid_file, t->pdata);
 			break;
+
+#ifdef HAVE_OIDENTD
+		case LEX_OIDENTD_FILE:
+			MOVE_STRING(bip->oidentdpath, t->pdata);
+			break;
+#else
+		case LEX_OIDENTD_FILE:
+			mylog(LOG_WARN, "Found oidentd option whereas bip is "
+					"not built with oidentd support.");
+			break;
+#endif
 		case LEX_ALWAYS_BACKLOG:
 			hds.always_backlog = t->ndata;
 			break;
@@ -1254,11 +1265,13 @@ int main(int argc, char **argv)
 	}
 
 #ifdef HAVE_OIDENTD
-	bip.oidentdpath = bip_malloc(strlen(conf_biphome) + 1 +
-			strlen(OIDENTD_FILENAME) + 1);
-	strcpy(bip.oidentdpath, conf_biphome);
-	strcat(bip.oidentdpath, "/");
-	strcat(bip.oidentdpath, OIDENTD_FILENAME);
+	if (!bip.oidentdpath) {
+		bip.oidentdpath = bip_malloc(strlen(conf_biphome) + 1 +
+				strlen(OIDENTD_FILENAME) + 1);
+		strcpy(bip.oidentdpath, conf_biphome);
+		strcat(bip.oidentdpath, "/");
+		strcat(bip.oidentdpath, OIDENTD_FILENAME);
+	}
 #endif
 
 	if (!confpath) {

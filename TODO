@@ -1,6 +1,3 @@
-<jj> faudrait ptet pouvoir specifier directement le oidentd_path
-
-
 - Allow to dump a config file, so that when the config is dynamically
    changed, we can find it back after bip restart.
 

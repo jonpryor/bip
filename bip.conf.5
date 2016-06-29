@@ -141,6 +141,10 @@ Defines the file where BIP's pid will be stored. BIP checks if this file exists
 and if the pid is still alive upon startup. If true, BIP refuses to start.
 
 .TP
+\fBoidentd_file\fP (default: \fB<bipdir>/.oidentd.conf\fP)
+oidentd configuration file (if oidentd enabled).
+
+.TP
 \fBport\fP (default: \fB7778\fP)
 The port on which BIP should listen for clients.
 
