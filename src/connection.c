@@ -25,6 +25,7 @@ extern FILE *conf_global_log_file;
 static BIO *errbio = NULL;
 extern char *conf_ssl_certfile;
 extern char *conf_client_ciphers;
+extern char *conf_client_dh_file;
 static int SSLize(connection_t *cn, int *nc);
 static SSL_CTX *SSL_init_context(char *ciphers);
 /* SSH like trust management */
@@ -1126,81 +1127,39 @@ static connection_t *connection_init(int anti_flood, int ssl, int timeout,
 }
 
 #ifdef HAVE_LIBSSL
-
-#include "moduli.h"
-
-/* from postfix tls impl */
-static DH *dh_512(void)
+static int ctx_set_dh(SSL_CTX *ctx)
 {
-	DH *dh;
-	BIGNUM *p;
-	BIGNUM *g;
-	static DH *dh_512;
+	/* Return ephemeral DH parameters. */
+	DH *dh = NULL;
+	FILE *f;
+	int ret;
 
-	if (dh_512 == NULL) {
-		if ((dh = DH_new()) == NULL) {
-			mylog(LOG_WARN, "SSL: cannot create DH parameter set");
-			return (0);
-		}
-
-		p = BN_bin2bn(dh512_p, sizeof(dh512_p), (BIGNUM *) 0);
-		g = BN_bin2bn(dh512_g, sizeof(dh512_g), (BIGNUM *) 0);
-
-		if ((p == NULL) || (g == NULL)) {
-			mylog(LOG_WARN, "SSL: cannot load compiled-in DH "
-					"parameters");
-			DH_free(dh);
-			return (0);
-		} else {
-			DH_set0_pqg(dh, p, NULL, g);
-			dh_512 = dh;
-		}
+	/* Should not fail: already checked in main function */
+	if ((f = fopen(conf_client_dh_file, "r")) == NULL) {
+		mylog(LOG_ERROR, "Unable to open DH parameters (%s): %s",
+				conf_client_dh_file, strerror(errno));
+		return 0;
 	}
-	return dh_512;
-}
 
-/* tls_get_dh_1024 - get 1024-bit DH parameters, compiled-in or from file */
-static DH *dh_1024(void)
-{
-	DH *dh;
-	BIGNUM *p;
-	BIGNUM *g;
-	static DH *dh_1024;
+	dh = PEM_read_DHparams(f, NULL, NULL, NULL);
+	fclose(f);
 
-	if (dh_1024 == NULL) {
-		if ((dh = DH_new()) == NULL) {
-			mylog(LOG_WARN, "SSL: cannot create DH parameter set");
-			return (0);
-		}
-
-		p = BN_bin2bn(dh1024_p, sizeof(dh1024_p), (BIGNUM *) 0);
-		g = BN_bin2bn(dh1024_g, sizeof(dh1024_g), (BIGNUM *) 0);
-
-		if ((p == NULL) || (g == NULL)) {
-			mylog(LOG_WARN, "SSL: cannot load compiled-in DH "
-					"parameters");
-			DH_free(dh);
-			return (0);
-		} else {
-			DH_set0_pqg(dh, p, NULL, g);
-			dh_1024 = dh;
-		}
+	if (dh == NULL) {
+		mylog(LOG_ERROR, "Could not parse DH parameters from: %s",
+				conf_client_dh_file);
+		return 0;
 	}
-	return (dh_1024);
-}
 
-/* ripped from postfix's tls_dh.c */
-static DH *tmp_dh_cb(UNUSED(SSL *ssl_unused), int export, int keylength)
-{
-	DH *ret;
+	ret = SSL_CTX_set_tmp_dh(ctx, dh);
+	DH_free(dh);
 
-	if (export && keylength == 512) {
-		mylog(LOG_WARN, "SSL: using 512 bits diffie hellman moduli");
-		ret = dh_512();
-	} else {
-		ret = dh_1024();
+	if (ret != 1) {
+		mylog(LOG_ERROR, "Unable to set DH parameters: %s",
+				ERR_error_string(ERR_get_error(), NULL));
+		return 0;
 	}
-	return ret;
+
+	return 1;
 }
 #endif
 
@@ -1247,6 +1206,14 @@ connection_t *accept_new(connection_t *cn)
 				connection_free(conn);
 				return NULL;
 			}
+
+			if (!ctx_set_dh(sslctx)) {
+				mylog(LOG_ERROR, "SSL Unable to load DH "
+						"parameters");
+				connection_free(conn);
+				return NULL;
+			}
+
 			if (!SSL_CTX_use_certificate_chain_file(sslctx,
 						conf_ssl_certfile))
 				mylog(LOG_WARN, "SSL: Unable to load "
@@ -1255,10 +1222,6 @@ connection_t *accept_new(connection_t *cn)
 						conf_ssl_certfile,
 						SSL_FILETYPE_PEM))
 				mylog(LOG_WARN, "SSL: Unable to load key file");
-
-			/* diffie hellman key generation need us to feed some
-			   data that can be static ... */
-			SSL_CTX_set_tmp_dh_callback(sslctx, tmp_dh_cb);
 		}
 
 		conn->ssl_h = SSL_new(sslctx);

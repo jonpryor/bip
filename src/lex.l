@@ -112,6 +112,7 @@ list_t *parse_conf(FILE *file, int *err)
 "bip_use_notice"	{ return LEX_BIP_USE_NOTICE; }
 "client_side_ssl_pem"	{ return LEX_CSS_PEM; }
 "client_side_ciphers"	{ return LEX_CSS_CIPHERS; }
+"client_side_dh_param"	{ return LEX_DH_PARAM; }
 "ignore_server_capab"	{ return LEX_IGNORE_CAPAB; }
 "reconn_timer"		{ return LEX_RECONN_TIMER; }
 \"[^"]*\" 		{

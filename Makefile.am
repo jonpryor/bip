@@ -7,7 +7,7 @@ src_bip_SOURCES = src/conf.y src/lex.l \
 	src/line.c src/line.h \
 	src/log.c src/log.h \
 	src/md5.c src/md5.h \
-	src/moduli.h \
+	src/path_util.c src/path_util.h \
 	src/tuple.h \
 	src/util.c src/util.h
 src_bipmkpw_SOURCES = src/bipmkpw.c src/md5.c src/util.c

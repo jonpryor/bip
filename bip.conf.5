@@ -1,4 +1,4 @@
-.TH BIP.CONF 5 "10 October 2005"
+.TH BIP.CONF 5 "04 July 2016"
 
 .SH NAME
 
@@ -81,6 +81,10 @@ SSL connections.
 .TP
 \fBclient_side_ciphers\fP
 OpenSSL cipher lists used for clients SSL connections.
+
+.TP
+\fBclient_side_dh_param\fP DH parameters filename\fP (default: \fB<bipdir>/dh.pem\fP)
+Used for clients SSL connections, Supply at least 2048-bit parameters.
 
 .TP
 \fBssl_default_ciphers\fP

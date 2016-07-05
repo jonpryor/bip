@@ -25,6 +25,7 @@
 #include <fcntl.h>
 #include "irc.h"
 #include "conf.h"
+#include "path_util.h"
 #include "tuple.h"
 #include "log.h"
 #include "bip.h"
@@ -42,6 +43,7 @@ int conf_css;
 #ifdef HAVE_LIBSSL
 char *conf_ssl_certfile;
 char *conf_client_ciphers;
+char *conf_client_dh_file;
 char *conf_server_default_ciphers;
 #endif
 int conf_daemonize;
@@ -1019,11 +1021,15 @@ int fireup(bip_t *bip, FILE *conf)
 		case LEX_CSS_PEM:
 			MOVE_STRING(conf_ssl_certfile, t->pdata);
 			break;
+		case LEX_DH_PARAM:
+			MOVE_STRING(conf_client_dh_file, t->pdata);
+			break;
 #else
 		case LEX_DEFAULT_CIPHERS:
 		case LEX_CSS:
 		case LEX_CSS_CIPHERS:
 		case LEX_CSS_PEM:
+		case LEX_DH_PARAM:
 			mylog(LOG_WARN, "Found SSL option whereas bip is "
 					"not built with SSL support.");
 			break;
@@ -1223,6 +1229,7 @@ int main(int argc, char **argv)
 	conf_ssl_certfile = NULL;
 	conf_client_ciphers = NULL;
 	conf_server_default_ciphers = NULL;
+	conf_client_dh_file = NULL;
 #endif
 
 	while ((ch = getopt(argc, argv, "hvnf:s:")) != -1) {
@@ -1309,24 +1316,14 @@ int main(int argc, char **argv)
 
 #ifdef HAVE_LIBSSL
 	if (conf_css) {
-		int e, fd;
+		int e;
 		struct stat fs;
 
 		if (!conf_ssl_certfile) {
-			char *ap = "/bip.pem";
-			conf_ssl_certfile = bip_malloc(strlen(conf_biphome) +
-					strlen(ap) + 1);
-			strcpy(conf_ssl_certfile, conf_biphome);
-			strcat(conf_ssl_certfile, ap);
-			mylog(LOG_INFO, "Using default SSL certificate file: "
-					"%s", conf_ssl_certfile);
+			conf_ssl_certfile = default_path(conf_biphome, "bip.pem",
+					"SSL certificate");
 		}
-
-		if ((fd = open(conf_ssl_certfile, O_RDONLY)) == -1)
-			fatal("Unable to open PEM file %s for reading",
-				conf_ssl_certfile);
-		else
-			close(fd);
+		assert_path_exists(conf_ssl_certfile);
 
 		e = stat(conf_ssl_certfile, &fs);
 		if (e)
@@ -1336,6 +1333,12 @@ int main(int argc, char **argv)
 			mylog(LOG_ERROR, "PEM file %s should not be world "
 				"readable / writable. Please fix the modes.",
 				conf_ssl_certfile);
+
+		if (!conf_client_dh_file) {
+			conf_client_dh_file = default_path(conf_biphome, "dh.pem",
+					"DH parameters");
+		}
+		assert_path_exists(conf_client_dh_file);
 	}
 #endif
 
