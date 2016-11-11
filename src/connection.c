@@ -1374,30 +1374,33 @@ static int bip_ssl_verify_callback(int preverify_ok, X509_STORE_CTX *ctx)
 			 err == X509_V_ERR_CERT_HAS_EXPIRED ||
 			 err == X509_V_ERR_SELF_SIGNED_CERT_IN_CHAIN)) {
 
-		xobj = X509_OBJECT_new();
-		if (X509_STORE_CTX_get_by_subject(ctx, X509_LU_X509,
-				X509_get_subject_name(err_cert), xobj) > 0 &&
-				!X509_cmp(X509_OBJECT_get0_X509(xobj), err_cert)) {
-			if (err == X509_V_ERR_CERT_HAS_EXPIRED)
-				mylog(LOG_INFO, "Basic mode; Accepting "
-						"*expired* peer certificate "
-						"found in store.");
-			else
-				mylog(LOG_INFO, "Basic mode; Accepting peer "
-					"certificate found in store.");
-
-			result = 1;
-			err = X509_V_OK;
-			X509_STORE_CTX_set_error(ctx, err);
+		if (!(xobj = X509_OBJECT_new())) {
+			result = 0;
 		} else {
-			mylog(LOG_INFO, "Basic mode; peer certificate NOT "
-					"in store, rejecting it!");
-			err = X509_V_ERR_CERT_REJECTED;
-			X509_STORE_CTX_set_error(ctx, err);
+			if (X509_STORE_CTX_get_by_subject(ctx, X509_LU_X509,
+					X509_get_subject_name(err_cert), xobj) > 0 &&
+					!X509_cmp(X509_OBJECT_get0_X509(xobj), err_cert)) {
+				if (err == X509_V_ERR_CERT_HAS_EXPIRED)
+					mylog(LOG_INFO, "Basic mode; Accepting "
+							"*expired* peer certificate "
+							"found in store.");
+				else
+					mylog(LOG_INFO, "Basic mode; Accepting peer "
+						"certificate found in store.");
 
-			link_add_untrusted(c->user_data, X509_dup(err_cert));
+				result = 1;
+				err = X509_V_OK;
+				X509_STORE_CTX_set_error(ctx, err);
+			} else {
+				mylog(LOG_INFO, "Basic mode; peer certificate NOT "
+						"in store, rejecting it!");
+				err = X509_V_ERR_CERT_REJECTED;
+				X509_STORE_CTX_set_error(ctx, err);
+
+				link_add_untrusted(c->user_data, X509_dup(err_cert));
+			}
+			X509_OBJECT_free(xobj);
 		}
-		X509_OBJECT_free(xobj);
 	}
 
 	if (!result) {
