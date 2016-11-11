@@ -262,6 +262,8 @@ X509_OBJECT *X509_OBJECT_new()
 	if (ret != NULL) {
 		memset(ret, 0, sizeof(*ret));
 		ret->type = X509_LU_FAIL;
+	} else {
+		X509err(X509_F_X509_VERIFY_CERT, ERR_R_MALLOC_FAILURE);
 	}
 	return ret;
 }
