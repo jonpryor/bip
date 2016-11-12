@@ -1,5 +1,5 @@
 AC_PREREQ([2.69])
-AC_INIT([Bip Sexy IRC Proxy], [0.8.9-git],
+AC_INIT([Bip Sexy IRC Proxy], [0.9.0-rc1],
   [http://bip.milkypond.org/projects/bip/activity], [bip],
   [http://bip.milkypond.org/])
 AM_INIT_AUTOMAKE([subdir-objects])

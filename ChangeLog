@@ -1,4 +1,259 @@
-commit c34b030 (HEAD, refs/heads/master)
+commit 2e81cca480ed74abf8559d7e1bbe52f6be273786
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
+Date:   Sat Nov 12 00:52:50 2016 +0100
+
+    Check value returned by X509_OBJECT_new()
+    
+    Reported by Alexander Couzens, thanks to him !
+
+commit e452c023ad83b4e88c5b09fef501ab82e7058bf7
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
+Date:   Sat Nov 12 00:58:18 2016 +0100
+
+    X509_OBJECT_new: call X509err
+    
+    mimic behavior of X509_OBJECT_new provided by OpenSSL >= 1.1
+
+commit 6b3844987509517dad6e41391d9142b867266b8b
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
+Date:   Tue Jul 5 09:18:07 2016 +0200
+
+    Allow to set DH parameters
+
+commit 5db61f3982780d50f7a3e036c3814d99c35995ad
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
+Date:   Wed Jun 29 19:55:27 2016 +0200
+
+    Allow to set oidentd path
+
+commit e8b5d02f132627bb8b6a985d9d908fe31f9d7f71
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
+Date:   Wed Apr 13 01:15:43 2016 +0200
+
+    Add missing call to SSL_CTX_free
+
+commit 406ebacfe5ab8fbd5747d08a6eab3d43d45709e2
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
+Date:   Wed Apr 13 01:14:36 2016 +0200
+
+    check value returned by SSL_CTX_new
+
+commit 30270bc8e85ca2d7ccf4f1f0bf2babb91983489b
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
+Date:   Wed Apr 13 01:13:11 2016 +0200
+
+    sample configuration: add per connection log parameter
+
+commit ab8e5eece1a80c9096de1c8abd9dc2a447548287
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
+Date:   Wed Apr 13 01:04:33 2016 +0200
+
+    Add cipher specifications setting
+    
+    Allow to configure cipher specifications for the listening bip
+    connection and for each outgoing IRC connection.
+    
+    Closes #301
+
+commit 20f39abc5680cd1b3d97359cfeb61a9b65f5b836
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
+Date:   Mon Nov 30 10:59:32 2015 +0100
+
+    bipdir improvements
+    
+    - more documentation
+    - don't die if environment variable $HOME isn't defined but '-s'
+      parameter is used
+    - oidentd: change path, file is located in bipdir
+
+commit 39414f8ff9df63c8bc2e4eee34f09f829a5bf8f5
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
+Date:   Wed Jun 29 19:40:32 2016 +0200
+
+    Handle OpenSSL version 1.1
+    
+    adding forward-compatible code to older versions
+
+commit 148b38a95398e7766b11549d9c0a34f2982b8bcf
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
+Date:   Thu Sep 10 18:47:53 2015 +0200
+
+    Prefixes and usermodes were inverted
+
+commit 209b9a7cd756f9857f5ccdd3b6e7d24531cdac31
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
+Date:   Thu Sep 3 05:40:58 2015 +0200
+
+    Add missing terminating null byte
+    
+    Reported by Trou, thanks to him !
+    Closes #477
+
+commit 5594e69bf6fd140dc159d791ce107b6b8b674ee6
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
+Date:   Fri Jul 10 23:20:30 2015 +0200
+
+    Use a new logfile when day changed
+
+commit bdec94020eb8bd764c049f1d77b087919867a1bf
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
+Date:   Fri Jul 10 11:49:30 2015 +0200
+
+    Use monotonic time
+
+commit 34baf6e8418a2a999aa45da889a11ecddc2abdf3
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
+Date:   Fri Jul 10 11:49:30 2015 +0200
+
+    Always call bip_tick when select timeout
+
+commit 9df25a64237e91c46484b29072ca8cb2c9ba0edc
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
+Date:   Fri Jul 10 11:49:30 2015 +0200
+
+    Reformatting
+
+commit ddf79583534b2a2206561a69d0b16572c913d6de
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
+Date:   Fri Jul 10 13:18:27 2015 +0200
+
+    Use AC_RUN_IFELSE instead deprecated AC_TRY_RUN
+
+commit fbb285fc919af2eccc26ed0420592bcfc94fbc73
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
+Date:   Fri Jul 10 13:18:01 2015 +0200
+
+    Update AC_PREREQ entry: bump to 2.69
+
+commit 4eec0844521fd52b6dec8edd67bf5ea3a5082092
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
+Date:   Thu Dec 11 17:20:14 2014 +0100
+
+    Allow to configure the delay before a reconnection
+    
+    Initial patch submitted by Romain Gayon, thanks to him !
+
+commit 73483ff08880b2bfee17b424d1e9db3cacfb4831
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
+Date:   Fri Sep 26 14:59:57 2014 +0200
+
+    Handle PREFIX defined in ISUPPORT
+    
+    ISUPPORT is a de facto standard extension to IRC.
+    Available prefixes and usermodes are handled at the connection
+    level (link_level struct).
+
+commit e88d7da7602ee583da7b01f0a956d70027721b95
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
+Date:   Sat Sep 20 17:57:39 2014 +0200
+
+    Handle CHANMODES defined in ISUPPORT
+    
+    ISUPPORT is a de facto standard extension to IRC.
+    chanmodes are handled at the connection level (link_level struct).
+
+commit fda9fccb855efebef816b5976bd9f47e78dd0ffa
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
+Date:   Tue Sep 16 02:50:04 2014 +0200
+
+    Handle unlikely case: "CAPAB" present twice
+    
+    If "CAPAB" element were present twice, a wrong element would be removed.
+
+commit db27168c76b028170312cbe75816de86f82bb66d
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
+Date:   Tue Sep 16 02:40:45 2014 +0200
+
+    Avoid unnecessary test
+    
+    The first element is "005", it cannot be "CAPAB".
+
+commit f7ace64abec430b97a26c2e377f2bb412da001dd
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
+Date:   Tue Jul 15 02:31:19 2014 +0200
+
+    Remove dead links from the list of all links
+    
+    Fix segfault that occurs when bip admin users use:
+    /BIP DEL_CONN <connection name>
+    /BIP ADD_CONN <connection name> <network>
+    
+    Closes #325
+
+commit 88242715f489850a1f7cad6064492668c84f5083
+Author: Adam Williamson <awilliam@redhat.com>
+Date:   Fri Sep 19 18:04:53 2014 -0700
+
+    allow for certificate store to be unspecified in CA mode
+    
+    In many cases, using OpenSSL's default certificate store is fine
+    and even preferred. If your OpenSSL provider (e.g. your
+    distribution) is competent, they will manage this database
+    better than you likely will. With this change, bip will
+    attempt to use the default certificate store if you set
+    CA mode but do not specify a certificate store location.
+    
+    This could be refined to test after enabling the default paths
+    whether the certificate store is empty, and error/warn if
+    so.
+
+commit 89295ca4b2b89f88b4ce52fd78f0033a34906d90
+Author: Adam Williamson <awilliam@redhat.com>
+Date:   Fri Sep 19 13:01:53 2014 -0700
+
+    check whether trust store is a file or directory in CHECK_CA
+    
+    The existing code only allows you to provide a set of trusted
+    CA certificates as an openssl 'CApath'-type directory. Fedora,
+    RHEL (and derived distros) and probably other distros provide
+    a system-wide database of trusted CA certs in various bundle
+    formats, but not as a CApath-type directory. This checks whether
+    check_store is a file or directory and loads it appropriately,
+    when initializing an SSL connection.
+    
+    Note that there is code elsewhere which assumes the trust store
+    will be a file, but that code is hit only in CHECK_BASIC mode.
+    This change applies only to CHECK_CA mode.
+
+commit e0b63528f23a6da3245babf8ae6394b3ab59c3b1
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
+Date:   Wed Sep 3 02:18:02 2014 +0200
+
+    Channel modes: 'Type B' flags always have a value
+    
+    even when removed.
+    Refs #345
+
+commit d2fa844960630bf80048b20100fa5f4db672dd33
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
+Date:   Mon Sep 1 16:49:29 2014 +0200
+
+    Channel mode: handle flags 'f' and 'j'
+    
+    Closes #345
+
+commit 8d3539a7d0eed8f9074eb5ec42c9f9d39d6b4af4
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
+Date:   Mon Nov 4 08:49:06 2013 +0100
+
+    Fix --without-openssl build
+    
+    Reported & fixed by Whoopie, thanks to him !
+    Closes #313
+
+commit acfad6dee2be7c8b9325af77740f4e2e593f2eeb
+Author: Marc DequÃ¨nes (Duck) <Duck@DuckCorp.org>
+Date:   Sat Oct 19 15:58:19 2013 +0200
+
+    Add -git to version string.
+
+commit a6e29858879a27152b4ed9a4f3bbcffb70346826
+Author: Marc DequÃ¨nes (Duck) <Duck@DuckCorp.org>
+Date:   Sat Oct 19 15:58:14 2013 +0200
+
+    Update version and ChangeLog for bip-0.8.9 release.
+
+commit c34b030e217fbd3b7cb5d425015a40f5eebd5943
 Author: Marc DequÃ¨nes (Duck) <Duck@DuckCorp.org>
 Date:   Sat Oct 19 14:57:15 2013 +0200
 
@@ -7,25 +262,25 @@ Date:   Sat Oct 19 14:57:15 2013 +0200
     This release name is used in the git tag. The previous 'release'
     variable was renamed in 'release_version' to avoid confusion.
 
-commit ca4dd55 (refs/remotes/origin/master, refs/remotes/origin/HEAD)
+commit ca4dd55e71ab91791fdf0db2cef2a6db543118c4
 Author: Marc DequÃ¨nes (Duck) <Duck@DuckCorp.org>
 Date:   Sat Oct 19 13:34:15 2013 +0200
 
     Use full year in dev tarball name made by bip-release
 
-commit d9461b8
+commit d9461b8c8d0ac5f757a52fef8eb95fc7e5dd4fe5
 Author: Marc DequÃ¨nes (Duck) <Duck@DuckCorp.org>
 Date:   Sat Oct 19 13:28:42 2013 +0200
 
     make_distcheck in bip-release needs to prepare sources
 
-commit b6d9151
+commit b6d9151e8c866867b593fcc6388a576410a7c509
 Author: Marc DequÃ¨nes (Duck) <Duck@DuckCorp.org>
 Date:   Sat Oct 19 13:07:45 2013 +0200
 
     Corrected AC_INIT: package and tarname were inverted
 
-commit 400cfed
+commit 400cfedb6ca8feb6ab3cd15bb7b041aa17ba943d
 Author: Marc DequÃ¨nes (Duck) <Duck@DuckCorp.org>
 Date:   Sat Oct 19 12:52:04 2013 +0200
 
@@ -33,7 +288,7 @@ Date:   Sat Oct 19 12:52:04 2013 +0200
     
     Closes #270
 
-commit 1c3ef1d
+commit 1c3ef1d360c2db1902f5f04415192c123ba4c378
 Author: Marc DequÃ¨nes (Duck) <Duck@DuckCorp.org>
 Date:   Sat Oct 19 11:53:13 2013 +0200
 
@@ -44,7 +299,7 @@ Date:   Sat Oct 19 11:53:13 2013 +0200
     
     Closes #294
 
-commit 8b98c37
+commit 8b98c3746e625c41f84816f75fd3297a74609b25
 Author: Marc DequÃ¨nes (Duck) <Duck@DuckCorp.org>
 Date:   Fri Oct 18 17:31:47 2013 +0200
 
@@ -55,7 +310,7 @@ Date:   Fri Oct 18 17:31:47 2013 +0200
     
     Reported in Debian#710614
 
-commit 71801fb
+commit 71801fb3d2d7e429fe350298006c5fdae28e4478
 Author: Nathan Phillip Brink <binki@gentoo.org>
 Date:   Mon Jul 8 12:18:03 2013 +0200
 
@@ -67,7 +322,7 @@ Date:   Mon Jul 8 12:18:03 2013 +0200
     
     Closes #191
 
-commit aa4ee44
+commit aa4ee44d68f16173cfdb76a3c9db602be0bd48c3
 Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
 Date:   Sun Jul 7 19:29:28 2013 +0200
 
@@ -75,7 +330,7 @@ Date:   Sun Jul 7 19:29:28 2013 +0200
     
     Refs #284
 
-commit 2c39039
+commit 2c390390ed90d4baa27a8d75762c4868bdf65e84
 Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
 Date:   Sat Jan 7 12:28:47 2012 +0100
 
@@ -83,7 +338,7 @@ Date:   Sat Jan 7 12:28:47 2012 +0100
     
     Thanks to Tim Hansen for reporting this bug.
 
-commit df45c4c
+commit df45c4c2d6f892e3e1dec23ce0ed2575b53a7d8c
 Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
 Date:   Wed Jan 25 05:08:52 2012 +0100
 
@@ -92,7 +347,7 @@ Date:   Wed Jan 25 05:08:52 2012 +0100
     - use conf_global_log_file instead of stderr
     - when a SSL handshake error occurs, close socket
 
-commit f1bec50
+commit f1bec50a9cc81417344f62e021e14c0a254737d6
 Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
 Date:   Wed Jan 25 04:03:18 2012 +0100
 
@@ -101,7 +356,7 @@ Date:   Wed Jan 25 04:03:18 2012 +0100
     f19e1f6 introduces a regression (#252) and bug described in commit
     message can not be reproduced.
 
-commit 222a33c
+commit 222a33cb84a2e52ad55a88900b7895bf9dd0262c
 Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
 Date:   Sat Jan 7 11:41:02 2012 +0100
 
@@ -110,7 +365,7 @@ Date:   Sat Jan 7 11:41:02 2012 +0100
     Reported by Julien Tinnes (Fix #269)
     exit is called when the listening socket can not be created
 
-commit 0ed5240
+commit 0ed5240de5dce0730c9ebaedff6aa874c68fb671
 Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
 Date:   Fri Jan 20 05:27:28 2012 +0100
 
@@ -119,7 +374,7 @@ Date:   Fri Jan 20 05:27:28 2012 +0100
     - build dependencies: add automake & autoconf-archive
     - mention 'bootstrap' script
 
-commit 7fef65f
+commit 7fef65fbe84753b50b4df9ec938a906c33bd2853
 Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
 Date:   Tue Oct 25 01:17:54 2011 +0200
 
@@ -127,37 +382,37 @@ Date:   Tue Oct 25 01:17:54 2011 +0200
     
     try CFLAGS="-Wno-error" if build failed
 
-commit 975ccac
+commit 975ccac0b13ad5fb71779da39ecd88a822d5474e
 Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
 Date:   Mon Oct 24 23:45:01 2011 +0200
 
     delete generated file
 
-commit a46b8bd
+commit a46b8bd2c2c3683d1aa40656123c7f15d6a53b3c
 Author: Arnaud Fontaine <arnau@debian.org>
 Date:   Mon Oct 3 15:25:26 2011 +0900
 
     Fix GCC warnings.
 
-commit ab0a41b
+commit ab0a41b7bb529386a2a9e6cc29faddf46d7dfea2
 Author: Arnaud Fontaine <arnau@debian.org>
 Date:   Tue Oct 4 11:15:12 2011 +0900
 
     Add AM_MAINTAINER_MODE for vendors.
 
-commit 6103f8b
+commit 6103f8bc84d7231b4a7064e29f305cb1779ced59
 Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
 Date:   Tue Oct 4 00:47:22 2011 +0200
 
     CFLAGS: add -Werror
 
-commit 0da434d
+commit 0da434d126ddaeef80a92acddf3e7d2fab28b642
 Author: Arnaud Fontaine <arnau@debian.org>
 Date:   Mon Oct 3 15:25:26 2011 +0900
 
     Fix GCC warnings.
 
-commit 559fa7e
+commit 559fa7ed44238e811ac0c11321ed021c35cba2be
 Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
 Date:   Wed Sep 14 06:30:09 2011 +0200
 
@@ -167,19 +422,19 @@ Date:   Wed Sep 14 06:30:09 2011 +0200
     See http://www.gnu.org/software/autoconf/manual/automake.html#User-Variables
     If user doesn't specify CFLAGS, default value is "-Wall -Wextra -g -O2".
 
-commit 7e1c80a
+commit 7e1c80a65a0516312985349104068ed771425ccd
 Author: Nathan Phillip Brink <binki@gentoo.org>
 Date:   Tue Sep 13 02:55:17 2011 +0000
 
     Use 'make dist' instead of 'git archive' to create a release or snapshot tarball.
 
-commit 84fa6c7
+commit 84fa6c7eb0f5b81a28ee88ca45f22d210e0c3d16
 Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
 Date:   Mon May 23 04:36:58 2011 +0200
 
     Fix typo in assertion message
 
-commit b2dde37
+commit b2dde370d679378638a691547c2a2afb7d7b27bc
 Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
 Date:   Mon May 23 04:01:27 2011 +0200
 
@@ -188,19 +443,19 @@ Date:   Mon May 23 04:01:27 2011 +0200
     if a client send "TRUST OK" to bip and all connexions are already trusted,
     reply "No untrusted certificates." instead of "Unknown command"
 
-commit 46c599d
+commit 46c599d92ed7b8fdfae4ca224f5dd99c6e5d6d31
 Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
 Date:   Tue Apr 12 02:14:20 2011 +0200
 
     Add -git to version string.
 
-commit e730a96 (tag: refs/tags/release-0.8.8)
+commit e730a96cd8ee64ff438bfde3c231ebd9a4c2d4d6
 Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
 Date:   Tue Apr 12 02:14:18 2011 +0200
 
     Update src/version.h and Changelog for release.
 
-commit f19e1f6
+commit f19e1f6209387e221a7f2535937f76dfc4938e60
 Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
 Date:   Tue Apr 12 01:08:41 2011 +0200
 
@@ -208,7 +463,7 @@ Date:   Tue Apr 12 01:08:41 2011 +0200
     
     Issue #212
 
-commit 87da44e
+commit 87da44e5830c31e50b50d18e592c715e327034c2
 Author: Yoann Guillot <yoann.guillot@ofjj.net>
 Date:   Tue Apr 5 23:43:05 2011 +0200
 
@@ -218,7 +473,7 @@ Date:   Tue Apr 5 23:43:05 2011 +0200
     this option overrides the global 'log' option.
     Thanks to jj !
 
-commit 2e49437
+commit 2e49437ed7f5eba164316a5a8f0af0dcb4ec3718
 Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
 Date:   Wed Jan 26 21:47:12 2011 +0100
 
@@ -226,7 +481,7 @@ Date:   Wed Jan 26 21:47:12 2011 +0100
     
     better quick fix
 
-commit 81b8ed4
+commit 81b8ed48cfdece35ff433c07a1febd6750652fd9
 Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
 Date:   Sat Jan 15 17:53:46 2011 +0100
 
@@ -236,7 +491,7 @@ Date:   Sat Jan 15 17:53:46 2011 +0100
     This patch renames bip's structure to avoid the conflict.
     Thanks to Philipp Kern and Dann Frazier !
 
-commit 4d4710a
+commit 4d4710acb955530694f2434d95ed887d7b96ada7
 Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
 Date:   Tue Dec 28 03:22:19 2010 +0100
 
@@ -253,37 +508,37 @@ Date:   Tue Dec 28 03:22:19 2010 +0100
     If old nick and new nick are equal ignoring the case of the characters,
     don't delete store associated with old nick: only rename it.
 
-commit ca1b383
+commit ca1b383a7476f556e3f356526d083fa2677b45ef
 Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
 Date:   Tue Dec 28 03:20:01 2010 +0100
 
     check return value of hash_get
 
-commit 4fdabdd
+commit 4fdabdd166270f00513dc7e3077dce1bbb5c16c2
 Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
 Date:   Tue Dec 28 03:18:13 2010 +0100
 
     filename is NULL if !store && !conf_log
 
-commit 0b7a3e6
+commit 0b7a3e6a07931aa6ea9e91c8462c8c8b0bcaeb17
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Sun Sep 12 17:48:00 2010 +0100
 
     Add -git to version string.
 
-commit ec07813
+commit ec078131ea13b75cb68c6e08d2074cbd649bb33d
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Sun Sep 12 17:47:57 2010 +0100
 
     Update src/version.h and Changelog for release.
 
-commit 7fb0823
+commit 7fb0823167af8e9a826f99b0a18539acc6cd81ec
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Sun Sep 12 17:32:55 2010 +0100
 
     cp
 
-commit 4822364
+commit 4822364c0fd6cda525d531c156359d57860191c5
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Sun Sep 12 16:52:00 2010 +0100
 
@@ -291,49 +546,49 @@ Date:   Sun Sep 12 16:52:00 2010 +0100
     
     CVE-2010-3071
 
-commit d0ee9df
+commit d0ee9df3eccdbef9856bd2952c0bfa7caf6f5067
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Sat Aug 7 12:18:59 2010 +0100
 
     Add -git to version string.
 
-commit 3c6d776
+commit 3c6d7765970259925024a4cf2b53ed05d154402e
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Sat Aug 7 12:18:53 2010 +0100
 
     Update src/version.h and Changelog for release.
 
-commit 4f5f086
+commit 4f5f08677f0e5e7fd42b579fa5bafe73d12430d9
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Sat Aug 7 12:10:32 2010 +0100
 
     Enable PIE executable creation.
 
-commit 7712ae3
+commit 7712ae3a926a3ac1860238988c4fc9b84822cf11
 Author: Trou <trou@iiens.net>
 Date:   Tue Jun 15 23:02:01 2010 +0100
 
     Fix typo
 
-commit 4d3ee53
+commit 4d3ee53e7bde06239cf25fcc199d71ec69ec7275
 Author: Zach Wily <zach@zwily.com>
 Date:   Wed Apr 7 22:12:26 2010 +0100
 
     RFC 1459 specifies that the PONG message may have 1 or 2 parameters.
 
-commit f995c1f
+commit f995c1f53751724e653f5755da2137ea468a1fc9
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Wed Feb 17 12:34:57 2010 +0000
 
     try to mitigate freenode antiflood throttling
 
-commit 4d5ef34
+commit 4d5ef343253f205a4f3eb9150d4c93a22b720e46
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Wed Feb 17 12:33:05 2010 +0000
 
     oidentd is not debug
 
-commit 9236587
+commit 92365874d45693cd7c34290133ade5b0873430ce
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Wed Feb 17 12:32:22 2010 +0000
 
@@ -341,7 +596,7 @@ Date:   Wed Feb 17 12:32:22 2010 +0000
     
     This reverts commit 639e929021a1095208ff4d0dc0ffc931fb0efa38.
 
-commit 5c3f22d
+commit 5c3f22d8a84b0fcd45ba192026d1bc1fbbbc75ec
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Wed Feb 17 12:32:15 2010 +0000
 
@@ -349,79 +604,79 @@ Date:   Wed Feb 17 12:32:15 2010 +0000
     
     This reverts commit b21c658b8cec8cebfb7de52f6ecb9c50e263fb89.
 
-commit b21c658
+commit b21c658b8cec8cebfb7de52f6ecb9c50e263fb89
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Wed Feb 17 12:00:55 2010 +0000
 
     Unbraindead
 
-commit 5b26dac
+commit 5b26dac4898f76ba0396fbbc87cf528ee8d99d8d
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Wed Feb 17 10:55:09 2010 +0000
 
     More lose MODE command handling
 
-commit 5d6b7fe
+commit 5d6b7fedaf90624f3039a7d48a23ce2f98164180
 Author: Mathieu Pillard <m@virgule.net>
 Date:   Tue Feb 16 10:08:27 2010 +0000
 
     backread_hours is in hours, not days
 
-commit 7c0b603
+commit 7c0b6036f2331b601e58bfff5773ad8dec686860
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Mon Feb 15 14:22:00 2010 +0000
 
     Ugly header fixups to fix build
 
-commit 2e5f428
+commit 2e5f4287ff1f6ac446e47670db17800ab08abecd
 Author: Mathieu Pillard <m@virgule.net>
 Date:   Mon Feb 15 14:17:44 2010 +0000
 
     With necessary header fix
 
-commit c0772f5
+commit c0772f54bfc9e85f9c37f4fe4c5ae9b8c58e6d8f
 Author: Mathieu Pillard <m@virgule.net>
 Date:   Mon Feb 15 14:16:08 2010 +0000
 
     Fix time parsing. Fixes backlog replaying one month to many,
 
-commit 639e929
+commit 639e929021a1095208ff4d0dc0ffc931fb0efa38
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Mon Feb 15 14:06:50 2010 +0000
 
     Fix antiflood. Fixes freenode kicking us out.
 
-commit bfe14eb
+commit bfe14ebb201f4fc7a48cf250d0c4048244d89559
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Sun Nov 15 20:41:59 2009 +0000
 
     Add -git to version string.
 
-commit ce506aa
+commit ce506aaec771abffa65c7227734f3de51de99305
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Sun Nov 15 20:41:56 2009 +0000
 
     Update src/version.h and Changelog for release.
 
-commit a932cc5
+commit a932cc53a91df6651e673b20d4de14a6bff02114
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Sun Nov 15 20:40:17 2009 +0000
 
     [BUILD] Attempt to fix autostuff
 
-commit 944f189
+commit 944f18962a1a4e937db9d689a80c0b3958ec6301
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Sun Nov 15 20:21:27 2009 +0000
 
     Add -git to version string.
 
-commit 06a67e0
+commit 06a67e08af30d9b10d0707096d47ceb59b27fc39
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Sun Nov 15 20:21:24 2009 +0000
 
     Update src/version.h and Changelog for release.
 
-commit 03ee43c
+commit 03ee43ca89edaf4dfa79412dc91aa89694634445
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Sun Nov 15 20:14:28 2009 +0000
 
@@ -430,25 +685,25 @@ Date:   Sun Nov 15 20:14:28 2009 +0000
     Some time gamesurge sends a "foo NICK :foo" which we didn't handle
     correctly.
 
-commit 31ae5ac
+commit 31ae5ac0bf2651778979fb974bba4e0fb6b4f0b8
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Mon Aug 24 21:26:46 2009 +0200
 
     [autostuff] Rewrite. Use non recursive make. Drop src/config.h.in that must be populated by autoheader
 
-commit 889f3cc
+commit 889f3cc1b7b4ed62f1d34c5afee6835ec30b72a6
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Mon Aug 24 19:05:48 2009 +0200
 
     Add -git to version string.
 
-commit c496bd7
+commit c496bd702791b451d2bc248679405eaa0c9d9d41
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Mon Aug 24 19:05:45 2009 +0200
 
     Update src/version.h and Changelog for release.
 
-commit 70fbf99
+commit 70fbf99c7f6422a033220211307f6085a453edc3
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Wed Aug 19 22:02:56 2009 +0200
 
@@ -458,43 +713,43 @@ Date:   Wed Aug 19 22:02:56 2009 +0200
     This should fix debian bug #542291.
     BIG thanks to Zygo Blaxell.
 
-commit 7546daa
+commit 7546daa27691fb981230c0119cd0e25a461ca770
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Wed Aug 19 02:09:16 2009 +0200
 
     [BUG] Handle badly lagging client conns decently.
 
-commit fa0c705
+commit fa0c70539b5e2a86d08b635ff87979758d57da09
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Sun Jul 26 11:38:20 2009 +0200
 
     Allow parallel build (thks Whoopie and psychon).
 
-commit 442e497
+commit 442e4973cd6f67ef069b0d674d527033b68a57c2
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Fri Jul 17 11:43:34 2009 +0200
 
     Add -git to version string.
 
-commit a7c38c1
+commit a7c38c17c07d80fb740cd47098f75c93d76f7c1c
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Fri Jul 17 11:43:29 2009 +0200
 
     Update src/version.h and Changelog for release.
 
-commit 213643d
+commit 213643d5bf74d1d71b8faec71505a4c1ec448452
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Sun Jul 5 19:35:00 2009 +0200
 
     size hour array correctly
 
-commit 1a2b1dd
+commit 1a2b1dd165282d24cc5c2a2e5f1bc4e793e41be5
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Sun Jul 5 19:04:51 2009 +0200
 
     Cleanup log outputs
 
-commit 3698955
+commit 36989553659370a8ed76d80932be485410095bbf
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Sun Jul 5 18:08:35 2009 +0200
 
@@ -502,19 +757,19 @@ Date:   Sun Jul 5 18:08:35 2009 +0200
     
     This just makes no sense
 
-commit a8fb0c4
+commit a8fb0c40d3a0f26617bbbc5eea2381284d346f6b
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Sun Jul 5 14:00:06 2009 +0200
 
     Support hour in log format. Mostly for debugging
 
-commit 32e08c9
+commit 32e08c94aaa192edafbe910901be79554a50e6ff
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Thu Jul 2 18:05:51 2009 +0200
 
     SSL basic mode, support X509_V_ERR_SELF_SIGNED_CERT_IN_CHAIN
 
-commit 405f8b4
+commit 405f8b4afc33bac9fa8d7afffd526e9a02c81f0d
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Sun Jun 28 16:33:29 2009 +0200
 
@@ -522,25 +777,25 @@ Date:   Sun Jun 28 16:33:29 2009 +0200
     
     Also reset store on part from server to close more file descriptor.
 
-commit 4532234
+commit 453223442660150c33c3f55b661d7ba93fab3802
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Thu Jun 25 01:24:38 2009 +0200
 
     [ssl:basic] Restore trust command behavior that was broken (repported by psychon)
 
-commit 5ae1c1d
+commit 5ae1c1dec53b22e4af4ca283d3d140862bec6ec7
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Thu Jun 25 00:43:44 2009 +0200
 
     [log] close logs files more intensively.
 
-commit 7af35a3
+commit 7af35a3018e3aff62411ad770d9fc14e344b526a
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Thu Jun 18 13:50:43 2009 +0200
 
     Bad and useless strncat use (reported by psychon, thanks to him)
 
-commit 015969e
+commit 015969e86be1f15925856c0673b1dd3261b3b2fc
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Sat Jun 13 17:29:44 2009 +0200
 
@@ -550,67 +805,67 @@ Date:   Sat Jun 13 17:29:44 2009 +0200
     When using /bip backlog X windows with no tracked backlog (ie after a
     blreset) do not show backlog
 
-commit 8cea2bd
+commit 8cea2bdb710f40d7ed22acc14af5ead9179912aa
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Sun Jun 7 13:22:20 2009 +0200
 
     Don't fail if ressetting non existing store.
 
-commit 94b5ac4
+commit 94b5ac4797a10188f95cc7e8774cb2dfd6db6302
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Fri Jun 5 00:44:28 2009 +0200
 
     [release script] Fix mktemp usage
 
-commit 499a7d7
+commit 499a7d75b59e7bfdf3bfc9201015f7bc94e3135e
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Fri Jun 5 00:43:05 2009 +0200
 
     backlog tweak
 
-commit 9187d55
+commit 9187d556b54d04927b11c97aed18909059be6c43
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Wed Mar 25 11:40:19 2009 +0100
 
     Fix info user parsing.
 
-commit 3166a57
+commit 3166a570223020f8b3c7bee8649f244e40d6978d
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Mon Mar 2 12:54:27 2009 +0100
 
     Add -git to version string.
 
-commit 104d251
+commit 104d251a0bfe29e9a8a2edf67373b6cf2db11ddf
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Mon Mar 2 12:54:25 2009 +0100
 
     Update src/version.h and Changelog for release.
 
-commit b6f30f6
+commit b6f30f6a032421911035f77a59d29549e4ab7828
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Sat Feb 28 11:19:57 2009 +0100
 
     Fix one leak. Fix git-release script for new git.
 
-commit 29ff342
+commit 29ff342d93ba4f5c253702468c3c951a9e61eb91
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Sun Feb 8 12:36:49 2009 +0100
 
     Add option ignore_server_capab
 
-commit b8c7403
+commit b8c740357d9aeaa0d74b53bacdd55156752d3c64
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Mon Feb 2 19:51:10 2009 +0100
 
     Add -git to version string.
 
-commit 1f462ef
+commit 1f462ef03585d3cf439e36a591dc3c4630d2d2a1
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Mon Feb 2 19:51:05 2009 +0100
 
     Update src/version.h and Changelog for release.
 
-commit eef2fd1
+commit eef2fd180d77aab96337a5a0ecd240cc2dea0328
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Mon Feb 2 19:47:53 2009 +0100
 
@@ -620,19 +875,19 @@ Date:   Mon Feb 2 19:47:53 2009 +0100
     Doing this xchat does not start the mode that prepends a + or a - at the
     beginning of PRIVMSGS.
 
-commit c4fb1b1
+commit c4fb1b140add5050c8f4c1a77856272aac40cc01
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Wed Jan 28 19:21:30 2009 +0100
 
     Another man typo found by Renzokuken.
 
-commit b5d777d
+commit b5d777dfee75cad37fe488634b68d2fd71689189
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Wed Jan 28 15:13:44 2009 +0100
 
     man typo found by Renzokuken.
 
-commit 69640ea
+commit 69640eaf8c49339d71523d01fcb21494db546172
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Tue Jan 27 11:24:50 2009 +0100
 
@@ -641,7 +896,7 @@ Date:   Tue Jan 27 11:24:50 2009 +0100
     Previous commit was incomplete and did not log some weird messages. They
     still might be legit, so we come with them
 
-commit 5416fc1
+commit 5416fc19b203e94bb31cd35ef2ceeafb2ddbbd5f
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Tue Jan 27 08:25:44 2009 +0100
 
@@ -649,31 +904,31 @@ Date:   Tue Jan 27 08:25:44 2009 +0100
     
     Prevents a fatal on some rare conditions
 
-commit c2b3090
+commit c2b3090e471b6f169b9359e5c8d89c6b5920e0d1
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Mon Jan 26 16:57:52 2009 +0100
 
     Cosmetic (special kasdedi a trou)
 
-commit bfc8620
+commit bfc86202a1cfc3c0c7ed7252106f5ed4e1e265b7
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Sun Jan 25 14:44:26 2009 +0100
 
     Add -git to version string.
 
-commit 488a17d
+commit 488a17dab5f29a19071edc798863a11507a1c893
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Sun Jan 25 14:44:22 2009 +0100
 
     Update src/version.h and Changelog for release.
 
-commit 5628da3
+commit 5628da3ee07b7891c159469b0e8ac4080e91c8b5
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Sun Jan 25 14:41:19 2009 +0100
 
     Add warning when using 512 bits long moduli for diffie hellman
 
-commit b62c3e4
+commit b62c3e4697124e1331362f973296003fffc4b26f
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Sun Jan 25 14:24:22 2009 +0100
 
@@ -682,13 +937,13 @@ Date:   Sun Jan 25 14:24:22 2009 +0100
     Pushing some non private data into openssl enables to use edh that
     provides perfect forward secrecy.
 
-commit 7e53929
+commit 7e539298fdd5860e947debfa41c456efda0ba4aa
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Sat Jan 24 21:48:12 2009 +0100
 
     Update NEWS file.
 
-commit 03210a7
+commit 03210a796e45ec50709cca4528b98406e68f3fbe
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Thu Jan 22 12:06:26 2009 +0100
 
@@ -696,19 +951,19 @@ Date:   Thu Jan 22 12:06:26 2009 +0100
     
     list hash and array types are now even stricter on their usage.
 
-commit dae6cad
+commit dae6cad3f7b0b6959ee8df2c9831c2c78e70162e
 Author: Ben Byer <bbyer@mm.st>
 Date:   Thu Jan 22 11:26:03 2009 +0100
 
     Add limit.h for INT_MAX
 
-commit 23b6ec4
+commit 23b6ec4492dca350435069c170bffac8beb2ac65
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Thu Jan 22 11:24:44 2009 +0100
 
     Better check for backread returning NULL
 
-commit 43fe81e
+commit 43fe81e114e9fab747fc15a2e5683dc3d1d9f94b
 Author: Ben Byer <bbyer@mm.st>
 Date:   Thu Jan 22 10:14:33 2009 +0100
 
@@ -716,7 +971,7 @@ Date:   Thu Jan 22 10:14:33 2009 +0100
     
     In some configuration backlog_lines can return NULL
 
-commit 170d4d1
+commit 170d4d1e00ebc16f898c093fbf094667058d7cd9
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Wed Jan 21 17:24:54 2009 +0100
 
@@ -724,7 +979,7 @@ Date:   Wed Jan 21 17:24:54 2009 +0100
     
     true by default
 
-commit afefc9a
+commit afefc9a3d4590f488e3ffba3c9d016c0c335ef13
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Tue Jan 20 19:30:20 2009 +0100
 
@@ -734,7 +989,7 @@ Date:   Tue Jan 20 19:30:20 2009 +0100
     with current dst, which makes no sense, but at least it provides decent
     result when not near dst change.
 
-commit 500d546
+commit 500d5467069657c8258696d82cbc8a384ae0ddd8
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Sun Jan 18 12:26:41 2009 +0100
 
@@ -744,7 +999,7 @@ Date:   Sun Jan 18 12:26:41 2009 +0100
     So if the message after a new day is a disconnected message, logs files
     did not rotate.
 
-commit 7a7c243
+commit 7a7c2432cf3fcffc8c78585d95c7c3a2d08e565d
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Sun Jan 18 11:26:08 2009 +0100
 
@@ -754,13 +1009,13 @@ Date:   Sun Jan 18 11:26:08 2009 +0100
     determine the presence of logs. This does not work anymore. This patch
     uses the last file tracker to determine that.
 
-commit 9882a0c
+commit 9882a0cbdc7c3235a9df211b04dc47e8d1bbb846
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Sat Jan 17 15:03:06 2009 +0100
 
     [CLEANUP] various cleanups
 
-commit fe251f7
+commit fe251f72b5267f0223a0fe76910ffd215c34c40e
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Sat Jan 17 14:16:31 2009 +0100
 
@@ -770,7 +1025,7 @@ Date:   Sat Jan 17 14:16:31 2009 +0100
     With the optional argument n in hours, you can request a backlog of a
     few hours.
 
-commit 26eb9c2
+commit 26eb9c28d7f81cbf6402117a9910ce430a2f29dc
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Sat Jan 17 12:50:39 2009 +0100
 
@@ -780,7 +1035,7 @@ Date:   Sat Jan 17 12:50:39 2009 +0100
     Setting backlog_reset_connection to true falls back to the former kind
     of backlog reset.
 
-commit 0e2f305
+commit 0e2f305d4edcee4c00b5c638681473ecd95062b2
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Fri Jan 16 15:17:34 2009 +0100
 
@@ -788,55 +1043,55 @@ Date:   Fri Jan 16 15:17:34 2009 +0100
     
     close files, but no too soon...
 
-commit 2d9d388
+commit 2d9d388fba14659e5052a8658a1f36a257a84ad0
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Fri Jan 16 15:09:53 2009 +0100
 
     Close some fds, original path from Trou.
 
-commit 7565b9c
+commit 7565b9cb8ef708cb21bb4ce40f2378c750055853
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Fri Jan 16 15:09:22 2009 +0100
 
     typos
 
-commit 111f138
+commit 111f1382d1b1e160a1edf6a52c4b4d9f6415b529
 Author: Trou <devel@syscall.eu>
 Date:   Fri Jan 16 14:45:31 2009 +0100
 
     Fix fd leak
 
-commit b912282
+commit b912282410dd701abf353e7d197ef49b31bd55cf
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Fri Jan 16 12:30:24 2009 +0100
 
     optionnal -> optional
 
-commit 3b704f5
+commit 3b704f53c4cbc849d0a83cf171393930280a9d76
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Thu Jan 15 22:56:42 2009 +0100
 
     drop unused variables
 
-commit be0d83d (refs/remotes/origin/bip08)
+commit be0d83d681b5ebce5b6d9fe53121e04ef6792227
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Sat Jan 10 14:16:36 2009 +0100
 
     Remove code inside #if 0... it's what svcs are for
 
-commit 8ed0565
+commit 8ed0565266040c53043e8a875d86d61bd6c09096
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Sat Jan 10 14:08:41 2009 +0100
 
     [LOG] Fixup log_beautify to work beautifully :)
 
-commit a5814b1
+commit a5814b17a03902648acf66a958c6434dc792a104
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Sat Jan 10 13:34:40 2009 +0100
 
     Don't log queries with -bip, fix blreset help
 
-commit b3d7dbf
+commit b3d7dbfb02f18f8858f0ce335191826013ce10a9
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Sat Jan 10 13:26:59 2009 +0100
 
@@ -846,14 +1101,14 @@ Date:   Sat Jan 10 13:26:59 2009 +0100
     backlog from your own nick for your mode changes only.  Hence opening a
     query just to say "end of backlog"...
 
-commit 744ea7d
+commit 744ea7d03b5adb4ea36f547d326cbd3262ed2ddf
 Merge: f536a05 67ddf15
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Sat Jan 10 12:55:13 2009 +0100
 
     Merge branch 'master' into bip08
 
-commit 67ddf15
+commit 67ddf152647e178d97359907782375d30586ca5f
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Sat Jan 10 12:53:25 2009 +0100
 
@@ -863,13 +1118,13 @@ Date:   Sat Jan 10 12:53:25 2009 +0100
     JOIN #a,#b keya,keyb
     which this patch fixes
 
-commit f536a05
+commit f536a0546d113436bcc690708049ecb1a4aefeaf
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Sat Jan 10 12:35:59 2009 +0100
 
     Cleanup and fixes of the backlog code
 
-commit 32cf2d4
+commit 32cf2d462f54f06b59a1a5d635e01b5da0f4492a
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Fri Jan 9 13:24:11 2009 +0100
 
@@ -877,7 +1132,7 @@ Date:   Fri Jan 9 13:24:11 2009 +0100
     
     This makes the new backlogging code, actually backlog something.
 
-commit f122170
+commit f1221703b06da28696b5f0e607f1f99abcf1c351
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Fri Jan 9 11:26:12 2009 +0100
 
@@ -887,7 +1142,7 @@ Date:   Fri Jan 9 11:26:12 2009 +0100
     The /bip blreset command not takes an optional argument taking query
     name or channel name.
 
-commit a6bb697
+commit a6bb697f5da9016c65bf8dd39767d12a4422b6c3
 Merge: 0600196 d2f7840
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Fri Jan 9 09:57:17 2009 +0100
@@ -896,9 +1151,9 @@ Date:   Fri Jan 9 09:57:17 2009 +0100
     
     Conflicts:
     
-    	src/log.c
+            src/log.c
 
-commit d2f7840
+commit d2f7840ced065d644ba626413f5e53900efb39ef
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Thu Jan 8 11:01:47 2009 +0100
 
@@ -910,19 +1165,19 @@ Date:   Thu Jan 8 11:01:47 2009 +0100
     
     This pach cleans things up before rename the logstore.
 
-commit a57e76f
+commit a57e76f883c8d7f138fb61eb2c8edc66413c7012
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Tue Jan 6 16:34:17 2009 +0100
 
     add fclose on pid file
 
-commit eb57d96
+commit eb57d9683d95ea49868f984ad2c2cd93e85fc351
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Tue Jan 6 16:28:06 2009 +0100
 
     Drop some unused variable.
 
-commit 41c0a5a
+commit 41c0a5a9c6d5d403445ad9bac18823bae9c49b10
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Tue Jan 6 15:58:18 2009 +0100
 
@@ -931,75 +1186,75 @@ Date:   Tue Jan 6 15:58:18 2009 +0100
     These may lead to crash if you call in your conf networks or other names
     with %s or other fancy format strings.
 
-commit 0600196
+commit 06001961021beff6aca472b7456078651bad8f2e
 Merge: 3f895fa 217816c
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Mon Jan 5 23:24:49 2009 +0100
 
     merge master
 
-commit 217816c
+commit 217816c220905365b323acee8c81a67917e26d08
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Mon Jan 5 22:57:27 2009 +0100
 
     And anothear nick_from_ircmask leak.
 
-commit 00a10a9
+commit 00a10a9f610cda3d186ac464ba6b485b52db94b2
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Mon Jan 5 22:56:01 2009 +0100
 
     Fix another leak.
 
-commit 96a91cd
+commit 96a91cd92e6aab1c04587e5c3a77bfefcb89adff
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Mon Jan 5 22:54:10 2009 +0100
 
     Fix leak during backlog.
 
-commit aab5e61
+commit aab5e61c050d28ae049d46d2a50781c4a2b6fd94
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Mon Jan 5 22:52:25 2009 +0100
 
     Fix leak.
 
-commit 2ef3506
+commit 2ef3506a22deb016055d66d2c036976028d948a1
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Tue Dec 30 11:12:52 2008 +0100
 
     Remove useless null check. Cycle server on early connection problem.
 
-commit 0ecb776
+commit 0ecb77617cedbf0b82c9f1ed78af61d47a6c3a32
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Mon Dec 29 15:31:32 2008 +0100
 
     Sanitize bip_(m|re)alloc size.
 
-commit b9f86d5
+commit b9f86d544d6422f61870f1326cf1197a959530fb
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Mon Dec 29 14:07:09 2008 +0100
 
     Add autoheader in boostrap script.
 
-commit a4b101c
+commit a4b101cea82654ab3eb028b794b8776238ddd82c
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Mon Dec 29 14:04:51 2008 +0100
 
     ensure null terminated str
 
-commit 3f895fa
+commit 3f895fa6ea4632f4fb6e28d539410ad4b1123c46
 Merge: c0db3c4 5a5f1b8
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Mon Dec 29 09:15:44 2008 +0100
 
     Merge branch 'master' into bip08
 
-commit 5a5f1b8
+commit 5a5f1b8bfbbdca16b141b776593721b4c2fdcf00
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Mon Dec 29 09:15:27 2008 +0100
 
     Some autoconf magic fix
 
-commit 8d7eecf
+commit 8d7eecf78bb45b4205abd14923a3b3a3ce59b0e9
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Mon Dec 29 09:14:24 2008 +0100
 
@@ -1008,7 +1263,7 @@ Date:   Mon Dec 29 09:14:24 2008 +0100
     on client disconnect.
     bad hash usage
 
-commit b222196
+commit b222196b18b6854963c625f874457aa520b3955b
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Sun Dec 28 15:47:43 2008 +0100
 
@@ -1016,14 +1271,14 @@ Date:   Sun Dec 28 15:47:43 2008 +0100
     
     I KNOW AUTOCONF.
 
-commit c0db3c4
+commit c0db3c408dfb6ebbd01d481bf00e33eb0c26706e
 Merge: 3c810ee 24110a5
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Sun Dec 28 14:47:44 2008 +0100
 
     Merge fixups
 
-commit 24110a5
+commit 24110a58dc0e5c38751ffdfd698360f45b5e65d2
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Sun Dec 28 14:45:44 2008 +0100
 
@@ -1031,19 +1286,19 @@ Date:   Sun Dec 28 14:45:44 2008 +0100
     
     Thanks to TheMIROn for spotting the leak.
 
-commit 3c810ee
+commit 3c810eef53be514d76109a94b7e35579585408e3
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Fri Dec 26 18:43:35 2008 +0100
 
     Refactor log system. prepare for /backlog 1 hour
 
-commit 8693044
+commit 8693044511a2129a3b24c9fd7c20f38972c971f3
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Fri Dec 26 08:56:03 2008 +0100
 
     fix notice logging file storage
 
-commit 20ce456
+commit 20ce456e385cf843aca99e58c0f92af595151420
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Thu Dec 25 18:34:36 2008 +0100
 
@@ -1052,25 +1307,25 @@ Date:   Thu Dec 25 18:34:36 2008 +0100
     Now --disable-ssl works as expected.
     The bug is there since bip uses autoconf. CHAMPAGNE.
 
-commit b102aed
+commit b102aed08a511e283aab1850fd955163d3758208
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Thu Dec 25 17:49:48 2008 +0100
 
     array_extract: fix braindeadness.
 
-commit 7c6cc20
+commit 7c6cc20e90dc073763cab3550b6f921c98bcfb02
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Sat Dec 20 21:15:04 2008 +0100
 
     Use hash_it_key cause now hash items can be null.
 
-commit fa78df6
+commit fa78df648265955586e3013940f41218a02a2434
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Sat Dec 20 20:26:38 2008 +0100
 
     Fixup file name allocation
 
-commit e8bb841
+commit e8bb841e5f04c6dd4982919d3a515bbbe8f136a0
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Sat Dec 20 17:59:16 2008 +0100
 
@@ -1081,19 +1336,19 @@ Date:   Sat Dec 20 17:59:16 2008 +0100
       right now it does not work if one changes nick and somebody else takes
       the old unused nick.
 
-commit 4d231e8
+commit 4d231e8ddce7881321a77e4bd20d43cd278590df
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Sat Dec 20 14:28:18 2008 +0100
 
     Inline most array methods
 
-commit d3ef106
+commit d3ef106c4f717ab696a32c44c668368f3c18608d
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Sat Dec 20 14:20:50 2008 +0100
 
     New array type, cleanupts and rename logfilegroup log_store
 
-commit 4b723ca
+commit 4b723ca4798a2a60e84bbd2d92f68d1cfa2c8a66
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Thu Dec 18 14:27:16 2008 +0100
 
@@ -1101,25 +1356,25 @@ Date:   Thu Dec 18 14:27:16 2008 +0100
     
     That changes log format and might breack everything.
 
-commit fd644b3
+commit fd644b312bb0b2d1b9689ce9de88fe81dcc4f33c
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Mon Dec 15 20:02:56 2008 +0100
 
     bip_strdup fatals on out of memory
 
-commit c150151
+commit c1501510662acec2ddc5f316546cef4f6e0d043f
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Mon Dec 15 19:19:27 2008 +0100
 
     BIG cleanup. check for memory allocation failure, add extra checks all arround.
 
-commit e18d335
+commit e18d335578b63f888c9d9fec178c39f8f40c8b2f
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Thu Dec 11 11:00:05 2008 +0100
 
     calloc/realloc checks.
 
-commit 2b96805
+commit 2b96805ecb40862ff2c6927a72da20327f008ab2
 Author: Arnaud Cornet <nohar@t1r.net>
 Date:   Wed Dec 10 23:27:53 2008 +0100
 
@@ -1128,13 +1383,13 @@ Date:   Wed Dec 10 23:27:53 2008 +0100
     This reverts commit 1cbb1b9b7aa228704db91b942b6105e848a4eed0.
     It juste does not work, since this limit is uid-wide (thanks julien`)
 
-commit 3ab2755
+commit 3ab27557679d766571ba5cacb9012dca60b60fcc
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Wed Dec 10 23:26:37 2008 +0100
 
     Catch malloc returning NULL.
 
-commit c3bb663
+commit c3bb6639b68529ba34a8e6def5dbcb086b41e682
 Author: Vladislav Grishenko <themiron@mail.ru>
 Date:   Sun Nov 23 15:12:32 2008 +0100
 
@@ -1149,187 +1404,187 @@ Date:   Sun Nov 23 15:12:32 2008 +0100
     so, all what we need is just chamge the order in
     static void irc_send_join(struct link_client *ic, struct channel *chan)
 
-commit 0f0d042
+commit 0f0d0427b8303414a7058cfe8f867837118c17f0
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Sun Nov 23 15:09:24 2008 +0100
 
     Enlarge connection buffer size and logline_maxlen.
 
-commit c21db5a
+commit c21db5a556df2e1b647a32b811fe1db73cbc4982
 Author: theMIROn <themiron@mail.ru>
 Date:   Tue Nov 11 16:07:42 2008 +0100
 
     Fix for empty topic creator and timestamp on RusNet IRC Servers
 
-commit 383a3a4
+commit 383a3a4477387392d50e245b049cf0c5e0490505
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Sun Nov 9 19:05:49 2008 +0100
 
     Fix help message: bip reload is quite stable for some time now.
 
-commit 1cbb1b9
+commit 1cbb1b9b7aa228704db91b942b6105e848a4eed0
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Fri Oct 31 19:38:12 2008 +0100
 
     drop fork priviledges when running.
 
-commit e8c6ade
+commit e8c6adedc9d782ef35968cc7b68c21c5fbb3f7c6
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Fri Oct 24 10:24:52 2008 +0200
 
     Add -git to version string.
 
-commit fcfea99
+commit fcfea9921a55455bba7ad5f0e616170e228b885a
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Fri Oct 24 10:24:49 2008 +0200
 
     Update src/version.h and Changelog for release.
 
-commit cd82512
+commit cd82512f7a5f2d708c87e486cbf48ed2d933287b
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Fri Oct 24 09:11:23 2008 +0200
 
     Ignore nick channel status in whorepl. Fix crash on client empty privmsg.
 
-commit f6582a5
+commit f6582a54b294d6fb1f68e6e732aff3b8702e70df
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Fri Oct 24 00:08:47 2008 +0200
 
     bipgenconfig: generate 4096 bit rsa keys
 
-commit 83b19b7
+commit 83b19b7c5a002a64259441f4dc4af743b560eafd
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Wed Oct 8 01:04:14 2008 +0200
 
     Hack around to make halfop support actually work.
 
-commit ed92b9a
+commit ed92b9a8bdc19587549de8d480d47a25511bddb4
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Wed Oct 8 00:05:26 2008 +0200
 
     Build fix
 
-commit 8ba9841
+commit 8ba984165b0fd464a9730c41e975f3b24f1da187
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Sat Sep 20 14:48:16 2008 +0200
 
     Implement quick halfop tracking support.
 
-commit ddacb83
+commit ddacb833dd99df287853db3c97c71c17c491182b
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Sat Jun 28 18:59:19 2008 +0200
 
     Add -git to version string.
 
-commit 412cdda
+commit 412cddaf519e78dba62afac3ecc28a0b85011ce8
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Sat Jun 28 18:59:15 2008 +0200
 
     Update src/version.h and Changelog for release.
 
-commit babaac2
+commit babaac246d9d05a0c555823be16e8827561b2da8
 Author: Sebastian Hagen <sebastian_hagen@memespace.net>
 Date:   Tue Jun 24 20:27:12 2008 +0200
 
     Do not freak out when seeing unreal ircd wierd name flags.
 
-commit 8123926
+commit 81239265b9732177bfa2de785399528e5c79317a
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Sun Jun 1 11:11:30 2008 +0200
 
     Add -git to version string.
 
-commit 1fb6c2a
+commit 1fb6c2a164f7aeeb556015b68dfc80357b6723b2
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Sun Jun 1 11:11:28 2008 +0200
 
     Update src/version.h and Changelog for release.
 
-commit 9ab6e6e
+commit 9ab6e6e125ba33aba50b261a2dc09ebf58c6db9c
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Sun Jun 1 11:11:08 2008 +0200
 
     Update src/version.h and Changelog for release.
 
-commit 35e5812
+commit 35e581244813c7db42c0267f0189c270a24c0577
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Sun Jun 1 11:11:03 2008 +0200
 
     Make jj's patch build
 
-commit e863227
+commit e863227099e4fdd60bf5c6a87e2a274d4c89d683
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Sun Jun 1 11:05:22 2008 +0200
 
     Fix probable but rare memory leak
 
-commit 3f9d162
+commit 3f9d1621293176ca489c341ccde154eff8c28437
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Sun Jun 1 10:56:16 2008 +0200
 
     Add -git to version string.
 
-commit 9fcbe8a
+commit 9fcbe8a6aa9ef113b721c97139f1e1d6af91a64c
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Sun Jun 1 10:56:12 2008 +0200
 
     Update src/version.h and Changelog for release.
 
-commit fc546e9
+commit fc546e9db8ddf63b92d9cab5743148fb787d0953
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Sun Jun 1 10:27:52 2008 +0200
 
     Support channel modes q and I (oftc)
 
-commit 604eb26
+commit 604eb26ec6fa46b7840d03208da1bb8a1f78a727
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Sat May 31 12:31:30 2008 +0200
 
     Merge jj's patch (debian bug 481488)
 
-commit d92ffee
+commit d92ffeea09a7a725ec16e15735f4b18670878187
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Sat May 31 12:24:56 2008 +0200
 
     Update todo
 
-commit 4b2a0eb
+commit 4b2a0eb935101e353d9d510f4a53da77c04c67bd
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Sat Apr 5 11:55:42 2008 +0200
 
     Add -git to version string.
 
-commit 39d2850
+commit 39d2850ad722d5df4f4d42206b1d757bde690c84
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Sat Apr 5 11:55:40 2008 +0200
 
     Update src/version.h and Changelog for release.
 
-commit dbcd0aa
+commit dbcd0aad07cf3f0ccdd2b59d827535e80d99c1e2
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Sat Apr 5 11:44:15 2008 +0200
 
     Fix build on systems without RLIMIT_AS (eg OpenBSD).
 
-commit f618d05
+commit f618d05af831cc7691b15a997dcfada0dd30a4cb
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Wed Apr 2 23:56:21 2008 +0200
 
     Merge bip.conf.5 fix from debian.
 
-commit 82dbe85
+commit 82dbe852f8833a875b0509d1532e4f8c9fb2725b
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Wed Apr 2 23:49:51 2008 +0200
 
     Add -git to version string.
 
-commit 37a4413
+commit 37a44139d11dc48691bdd7ce1ea424c94fc241af
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Wed Apr 2 23:49:48 2008 +0200
 
     Update src/version.h and Changelog for release.
 
-commit 2cbf377
+commit 2cbf377cc2ce387ed2542a0c2c7a2b45c38ba58d
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Wed Apr 2 23:41:27 2008 +0200
 
@@ -1341,51 +1596,51 @@ Date:   Wed Apr 2 23:41:27 2008 +0200
     
     Most of this is Yoann Guillot's work.
 
-commit e383c2b
+commit e383c2b6f6c69bf71010621b5e9f2be875b92971
 Merge: d7430d4 6cee8c7
 Author: Loïc Gomez <opensource@kyoshiro.org>
 Date:   Sat Feb 16 13:50:40 2008 +0100
 
     Merge branch 'master' of http://bip.t1r.net/bip
 
-commit 6cee8c7
+commit 6cee8c728f4465e2cb185d2e32e1d6587c063a41
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Sat Feb 16 11:33:00 2008 +0100
 
     bip-release glitch fix.
 
-commit 303503c
+commit 303503cfc75634b891664afa00ccdad290e464bc
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Sat Feb 16 11:32:13 2008 +0100
 
     Post release leak fix. :)
 
-commit 2516a89
+commit 2516a89ac873cc04dc2403b9b3400a5125cc6828
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Fri Feb 15 23:59:35 2008 +0100
 
     Add -git to version string.
 
-commit eb1dbb1
+commit eb1dbb1023ca4d5c207936e1e7f39aa323eebe2c
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Fri Feb 15 23:59:30 2008 +0100
 
     Update src/version.h and Changelog for release.
 
-commit d7430d4
+commit d7430d44cc780384507bef5bb3f1a4c3e1cc6315
 Author: Loïc Gomez <opensource@kyoshiro.org>
 Date:   Mon Feb 11 13:10:42 2008 +0100
 
     SSL:
     - make bip compile with --disable-ssl configuration
 
-commit ba4e70d
+commit ba4e70d6647cab63471391649adc7d5029d43228
 Author: Loïc Gomez <opensource@kyoshiro.org>
 Date:   Mon Feb 4 18:38:09 2008 +0100
 
     fix unwanted commit
 
-commit efe0c43
+commit efe0c43b9cdd3c0a4d1183678b36e2c33d7383fa
 Author: Loïc Gomez <opensource@kyoshiro.org>
 Date:   Mon Feb 4 18:36:35 2008 +0100
 
@@ -1393,125 +1648,125 @@ Date:   Mon Feb 4 18:36:35 2008 +0100
     - update bip.vim and bip.conf sample files
     - remove nonsense LOG_STD log level
 
-commit 89e88f6
+commit 89e88f6b7ba73eabe11d1dfae11131a9095248c2
 Author: Loïc Gomez <opensource@kyoshiro.org>
 Date:   Mon Feb 4 18:07:27 2008 +0100
 
     /BIP commands:
     - fix "(admin)" info inverted in /BIP list users
 
-commit fd5e483
+commit fd5e483a499d8b4986128e9be7bcb70cc8315c8a
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Sun Feb 3 11:55:24 2008 +0100
 
     Warn only when open files limit is smaller that 256.
 
-commit b024221
+commit b024221cecb8f61e00c251f9785e84852169667b
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Sat Feb 2 12:46:20 2008 +0100
 
     Use const varibable more consistently.
 
-commit d5ef114
+commit d5ef114c2e71e444cf698b56052e066e409f57b5
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Tue Jan 22 00:36:18 2008 +0100
 
     Have autodirt install manpages.
 
-commit 7470ebe
+commit 7470ebe96eb381e660508a32b81beba4f20e10f5
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Mon Jan 21 22:21:09 2008 +0100
 
     Move bip.conf man page to section 5 (Fix debian bug 461871).
 
-commit 055266f
+commit 055266f92decb1c7155748f9dfd230fa63172be7
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Sun Jan 20 18:51:04 2008 +0100
 
     Add -git to version string.
 
-commit f8c2876
+commit f8c2876633167e36340cfe1304f2cd412168fc18
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Sun Jan 20 18:51:01 2008 +0100
 
     Update src/version.h and Changelog for release.
 
-commit f1cc645
+commit f1cc6451f5d1815d2865567cd841ac06fd32be5a
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Sun Jan 20 18:49:44 2008 +0100
 
     Handle SSL-client auth. Fix crash on del_conn when the link never got connected at all.
 
-commit c905781
+commit c90578103cdc158c709d5e11f17a8fca5e7650ae
 Author: Loïc Gomez <opensource@kyoshiro.org>
 Date:   Thu Jan 10 11:33:00 2008 +0100
 
     README:
     - add a "session limit exceeded" / oidentd section
 
-commit 06cfc91
+commit 06cfc9160bff7e246564817df0f0dc1061a280b6
 Merge: 671a455 78cb1c4
 Author: Loïc Gomez <opensource@kyoshiro.org>
 Date:   Thu Jan 10 11:11:49 2008 +0100
 
     Merge branch 'master' of http://bip.t1r.net/bip
 
-commit 78cb1c4
+commit 78cb1c44c48c9fccfc4dacb6d35eece622f45be5
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Wed Jan 9 23:47:19 2008 +0100
 
     Cleanup BUGS and TODO.
 
-commit 671a455
+commit 671a4552193b1b1cc463e85ab044e6851e9c20a1
 Author: Loïc Gomez <opensource@kyoshiro.org>
 Date:   Wed Jan 9 23:45:40 2008 +0100
 
     Fix UTF-8 in all files
 
-commit 1ea9f51
+commit 1ea9f515397c18fcb50744bc66bc22bf2706282e
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Wed Jan 9 23:31:22 2008 +0100
 
     Fixup for release script.
 
-commit 7aae8ed
+commit 7aae8ed1806f7a811609f8d96af4778e5524190a
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Wed Jan 9 20:32:35 2008 +0100
 
     ctcp version reply cosmetics.
 
-commit 60e50d5
+commit 60e50d56c6bd15bb87f17de908970d5e92b1a679
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Wed Jan 9 20:18:48 2008 +0100
 
     Add -git to version string.
 
-commit 985c75a
+commit 985c75a38b79bc891435b5dc25963f7a5bfc822f
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Wed Jan 9 20:18:27 2008 +0100
 
     Update src/version.h for release.
 
-commit 8827476
+commit 8827476701e124f1b329b7211da43a3e588ce707
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Wed Jan 9 20:17:38 2008 +0100
 
     Turn bip-take-snapshot to a bip-release script.
 
-commit b9b4917
+commit b9b491725e683738a9ae5d48f50c5494cd57576a
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Tue Jan 8 23:47:26 2008 +0100
 
     Don't close not opened file.
 
-commit 9f9a2e0
+commit 9f9a2e085662f3bc559b06a82f31d557f4b3e21e
 Author: Loïc Gomez <opensource@kyoshiro.org>
 Date:   Tue Jan 8 10:50:55 2008 +0100
 
     Documentation :
     - README.floodcontrol is in README now
 
-commit 7ba4297
+commit 7ba4297a92e95af4ab61386bc889107678ec1e94
 Author: Loïc Gomez <opensource@kyoshiro.org>
 Date:   Tue Jan 8 10:50:31 2008 +0100
 
@@ -1519,7 +1774,7 @@ Date:   Tue Jan 8 10:50:31 2008 +0100
     - fix typos
     - include README.floodcontrol into README
 
-commit eb32b16
+commit eb32b16872d84103bede36a450eba2e31a6e713d
 Author: Loïc Gomez <opensource@kyoshiro.org>
 Date:   Tue Jan 8 10:31:22 2008 +0100
 
@@ -1527,118 +1782,118 @@ Date:   Tue Jan 8 10:31:22 2008 +0100
     - fixes
     - PEM file world readable is a non fatal error
 
-commit 8c0ce5e
+commit 8c0ce5efd3a32200f54696ce84f461a6cd4192ef
 Author: Loïc Gomez <opensource@kyoshiro.org>
 Date:   Tue Jan 8 00:24:53 2008 +0100
 
     SSL:
     - check PEM, last version...
 
-commit 517cda4
+commit 517cda49466b85d2e61b1462b06b04a328949983
 Author: Loïc Gomez <opensource@kyoshiro.org>
 Date:   Tue Jan 8 00:09:16 2008 +0100
 
     SSL:
     - fix checking of PEM file
 
-commit c100611
+commit c10061172c34bb6c6b8b4e5febbe39a14595b342
 Merge: 4d97f4e d007a14
 Author: Loïc Gomez <opensource@kyoshiro.org>
 Date:   Mon Jan 7 23:46:31 2008 +0100
 
     Merge branch 'master' of http://bip.t1r.net/bip
 
-commit 4d97f4e
+commit 4d97f4ebcdc80718a54adbb5aecc4d9fa21b8aac
 Author: Loïc Gomez <opensource@kyoshiro.org>
 Date:   Mon Jan 7 23:46:29 2008 +0100
 
     SSL:
     check for client_side_ssl_pem file to be present
 
-commit d007a14
+commit d007a14baa114fc1a532bba98ba85d647d98a55a
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Mon Jan 7 23:43:37 2008 +0100
 
     Bail on config errro on startup.
 
-commit 1a8b06a
+commit 1a8b06ab30f0b7ddb7920848ecac7834c7b472e6
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Mon Jan 7 23:32:34 2008 +0100
 
     Update Changelog and NEWS.
 
-commit 47807cd
+commit 47807cd2b3a062e77223e5829466b262edf94099
 Author: Loïc Gomez <opensource@kyoshiro.org>
 Date:   Mon Jan 7 22:57:11 2008 +0100
 
     bipgenconfig:
     - detect bipmkpw path when possible
 
-commit f8e377c
+commit f8e377c2b6662c1eafaf9e2dd10bebf153628097
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Mon Jan 7 22:53:40 2008 +0100
 
     README typo fixes.
 
-commit 74ef2e7
+commit 74ef2e746018ae621d68d51cc5a7b24d0953cafd
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Mon Jan 7 22:31:28 2008 +0100
 
     Cosmetic fix for man page.
 
-commit ca785fd
+commit ca785fd28020d640a03a8f8f2f13191dea05c2e6
 Merge: 87ef072 36d31e3
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Mon Jan 7 22:21:55 2008 +0100
 
     Merge commit 'kyo/pemfile_option'
 
-commit 36d31e3
+commit 36d31e32e516f3b0ebb637b6580b5bbfce52833e
 Author: Loïc Gomez <opensource@kyoshiro.org>
 Date:   Mon Jan 7 20:42:40 2008 +0100
 
     rename client_side_ssl_key to client_side_ssl_pem
 
-commit d02957f
+commit d02957f8bb3bca87747880b659bd098c5f604491
 Merge: d3a4ee6 2cd37c0
 Author: Loïc Gomez <opensource@kyoshiro.org>
 Date:   Mon Jan 7 20:39:13 2008 +0100
 
     Merge branch 'master' into pemfile_option
 
-commit 2cd37c0
+commit 2cd37c0e13d4d500e7e989b46277810c544ab588
 Author: Loïc Gomez <opensource@kyoshiro.org>
 Date:   Mon Jan 7 20:38:57 2008 +0100
 
     fill readme with more information
 
-commit d3a4ee6
+commit d3a4ee6bcbcab4f14181a14f44bdca5cb76644e1
 Author: Loïc Gomez <opensource@kyoshiro.org>
 Date:   Mon Jan 7 19:48:04 2008 +0100
 
     forgot the manpage..
 
-commit 87ef072
+commit 87ef072bb9a56311296f3afe0ad3702a88d5a030
 Merge: 8eda1ac e7e49fd
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Mon Jan 7 19:36:38 2008 +0100
 
     Merge commit 'kyo/pemfile_option'
 
-commit da442e0
+commit da442e0be70bdd66a99b54d4383cfbf8d852637e
 Author: Loïc Gomez <opensource@kyoshiro.org>
 Date:   Mon Jan 7 15:54:51 2008 +0100
 
     bipgenconfig client_side_ssl_key option
 
-commit 2034713
+commit 2034713356184d6921bdf33e50cac796f5ffe2c3
 Merge: e7e49fd 8eda1ac
 Author: Loïc Gomez <opensource@kyoshiro.org>
 Date:   Mon Jan 7 15:50:25 2008 +0100
 
     Merge branch 'master' into pemfile_option
 
-commit 8eda1ac
+commit 8eda1ace0e350231ae623ea990364ebfb55b0f4c
 Author: Loïc Gomez <opensource@kyoshiro.org>
 Date:   Mon Jan 7 15:22:28 2008 +0100
 
@@ -1649,7 +1904,7 @@ Date:   Mon Jan 7 15:22:28 2008 +0100
     - add compatibility process to rename old options to their new names
       when loading config from bipgenconfig store
 
-commit e7e49fd
+commit e7e49fdad1a2d6929fc02ff177b5e0c9bee9c612
 Author: Loïc Gomez <opensource@kyoshiro.org>
 Date:   Mon Jan 7 14:27:37 2008 +0100
 
@@ -1657,13 +1912,13 @@ Date:   Mon Jan 7 14:27:37 2008 +0100
     - warn when bip is not SSL-capable and configuration contain SSL options
     - add a client_side_ssl_key option to define the path to bip.pem file
 
-commit 8b272bb
+commit 8b272bb0fdb1b1578094a1317c552b848684b4d8
 Author: Loïc Gomez <opensource@kyoshiro.org>
 Date:   Mon Jan 7 14:00:25 2008 +0100
 
     fix misleading fatal() message (pidfile error)
 
-commit 56b73ad
+commit 56b73ad73af0b24ff6980c35166d44d77dbd6b12
 Merge: ac407d9 20129da
 Author: Loïc Gomez <opensource@kyoshiro.org>
 Date:   Mon Jan 7 13:47:12 2008 +0100
@@ -1672,112 +1927,112 @@ Date:   Mon Jan 7 13:47:12 2008 +0100
     
     Conflicts:
     
-    	bip.conf.1
+            bip.conf.1
 
-commit 20129da
+commit 20129da225d1355cb08fbb929280921893b73795
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Sun Jan 6 00:25:56 2008 +0100
 
     Realloc correct size when receiving admin privmsg.
 
-commit c5d1f53
+commit c5d1f537e40706cdfdd5a8ff23de9b3e337153a8
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Sat Jan 5 23:25:24 2008 +0100
 
     Null deref fixes when fetching info.
 
-commit f96751c
+commit f96751cfb9e1a1b08ac0a0b95b4715f2bb7c629b
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Sat Jan 5 23:11:41 2008 +0100
 
     We are in 2008, and strncasecmp -> strcasecmp when cmp'ing with constants.
 
-commit b095e53
+commit b095e53efbd052cfd876a7c302c09c52f6dfac5c
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Sat Jan 5 23:04:07 2008 +0100
 
     Fix adm privmsg parsing.
 
-commit a7e5ca3
+commit a7e5ca3d0b2495b4ff044037592a8fb550d9fca7
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Tue Jan 1 21:24:04 2008 +0100
 
     Have a sane ctcp version code.
 
-commit eb82981
+commit eb829819965806365ecfa111d4d1102781bfb923
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Tue Jan 1 15:02:45 2008 +0100
 
     Allow weirdly ordered user blocks in config.
 
-commit 781b1ba
+commit 781b1ba8d063d8ba54a2c23e6d8bc85d4dd1e232
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Tue Jan 1 13:59:48 2008 +0100
 
     Fix README (thanks to Brian Evans).
 
-commit f7d07bc
+commit f7d07bc5fa207ce4305ee632debbcae1065ce133
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Tue Jan 1 13:55:47 2008 +0100
 
     Bail on invalid confs.
 
-commit 3eab14c
+commit 3eab14cfb95d9ecee76fd67d7df528b1617e0e3e
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Tue Jan 1 13:33:21 2008 +0100
 
     Have the arrow bold to highlight your own words in remote clients.
 
-commit 8b8024b
+commit 8b8024b81ecce0ce43422aa6eda3f8f49f0ea21f
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Sat Dec 29 18:17:50 2007 +0100
 
     Make it even build.
 
-commit 95618a0
+commit 95618a06ab001179e107f535aa48193ddab38132
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Sat Dec 29 18:15:03 2007 +0100
 
     Fix stuuuuuupid leak in hash_clean.
 
-commit b020e89
+commit b020e895a84bc3a1649b8f8a43f034e3e27604c7
 Author: LoÃ¯c Gomez <opensource@kyoshiro.org>
 Date:   Sat Dec 29 01:35:11 2007 +0100
 
     Add subcategory in help commands.
 
-commit ac407d9
+commit ac407d9a3deae111dd00cacd298e70d1b8780b33
 Merge: 130d649 e0170c8
 Author: Loïc Gomez <opensource@kyoshiro.org>
 Date:   Sun Dec 23 21:17:57 2007 +0100
 
     Merge branch 'master' of http://bip.t1r.net/bip
 
-commit e0170c8
+commit e0170c8144b0ff0321004bd40e6f26674c372945
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Fri Dec 21 12:54:06 2007 +0100
 
     This makes no sense.
 
-commit 64b3468
+commit 64b34683937de4a81bbfbfcf6f689490945538b3
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Fri Dec 21 12:45:49 2007 +0100
 
     Fix misplaced free.
 
-commit 8d25dfe
+commit 8d25dfea51149762959d5df834b04740a666ed4b
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Fri Dec 21 12:27:44 2007 +0100
 
     Clear newly allocated connection structs.
 
-commit e6efc4b
+commit e6efc4b1c5c9f7b42047d5c4b89c6e85f340d3ca
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Fri Dec 21 12:21:23 2007 +0100
 
     Fix just introduced leak.
 
-commit 27b16a8
+commit 27b16a86b8fed92e2e5bba4ed44a921a696ac532
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Fri Dec 21 12:20:21 2007 +0100
 
@@ -1786,99 +2041,99 @@ Date:   Fri Dec 21 12:20:21 2007 +0100
     Refactor calls to getaddrinfo only on socket establishement, cache in
     connection structure.
 
-commit 130d649
+commit 130d649e0b53c4bb77cf4320afd4a12b61441c2a
 Author: Loïc Gomez <opensource@kyoshiro.org>
 Date:   Sun Dec 16 17:28:01 2007 +0100
 
     Fix misleading text in manpage
 
-commit 8f998c9
+commit 8f998c97b6413a2982af0b7a4e4bf08a8f993d59
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Fri Dec 14 23:07:18 2007 +0100
 
     Be verbose when conf_die is called. Try to inform calling client.
 
-commit cbcd4c1
+commit cbcd4c18a3fb3bf32f884954843185f4761f3543
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Fri Dec 14 22:06:20 2007 +0100
 
     Fix fatal() on /bip jump.
 
-commit 7c3fc4b
+commit 7c3fc4bc2763701c13f15a36f344855502a1b003
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Tue Dec 11 00:23:49 2007 +0100
 
     Fix ctcp reply so it has a chance to work
 
-commit 73c4a8f
+commit 73c4a8f1f13d0633fd3486d546f73551593f37d9
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Sun Dec 9 14:23:00 2007 +0100
 
     Fix bad error message when log_format does not contain %u
 
-commit 91fa881
+commit 91fa881f948e727712d04eb93498a7a291f6dd63
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Sun Dec 9 14:10:33 2007 +0100
 
     Update news file.
 
-commit 5f562e7
+commit 5f562e74321e287e302c1170e9043aada9a4eff2
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Sat Dec 8 16:22:56 2007 +0100
 
     Annoying bip-take-snapshot fix
 
-commit e1fb3e4
+commit e1fb3e42ff539bae7142b03779543fef82fb79d9
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Sat Dec 8 16:12:05 2007 +0100
 
     Fix backloging error when one character message.
 
-commit 1a9a724
+commit 1a9a72432baae4700997026eb958c1b71935d895
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Sat Dec 8 16:00:50 2007 +0100
 
     Fix double arrow prefix for self issued private messages when more that
     two clients are connected.
 
-commit 95586c7
+commit 95586c79e3791bd01379d50968d39f2a8add1e49
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Mon Nov 26 22:58:10 2007 +0100
 
     init ci->backlog properly
 
-commit d92525b
+commit d92525b7a342d393eb012096e84453bf7914c1f2
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Mon Nov 26 19:57:12 2007 +0100
 
     Add ctcp reply.
     Fix badly initied chan_info
 
-commit 731a39f
+commit 731a39f0d281ed38798b6358b442397d8a31fc5f
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Sun Nov 25 23:44:14 2007 +0100
 
     Respond to CTCP VERSION.
 
-commit 8c649b4
+commit 8c649b4357dddf241cd3caa224e099eba5901e1f
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Sun Nov 25 18:37:13 2007 +0100
 
     Big grammar round-up :)
 
-commit 7020e7f
+commit 7020e7fa4c3cd59bbe8e50ce14dea11b75aa21b0
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Sun Nov 25 18:35:53 2007 +0100
 
     snprintf fixups.
 
-commit 05e0f84
+commit 05e0f84af8c275371f63745aee6aab5a83aefe06
 Author: Loïc Gomez <opensource@kyoshiro.org>
 Date:   Sun Nov 25 16:34:52 2007 +0100
 
     bip_use_notice option
 
-commit b68b0dc
+commit b68b0dc71d802805b0c2ef7d0da729f574089d2a
 Merge: a65ffa6 c064fe6
 Author: Loïc Gomez <opensource@kyoshiro.org>
 Date:   Sun Nov 25 16:12:36 2007 +0100
@@ -1887,15 +2142,15 @@ Date:   Sun Nov 25 16:12:36 2007 +0100
     
     Conflicts:
     
-    	src/bip.c
+            src/bip.c
 
-commit c064fe6
+commit c064fe6472c5acc0b883516616029723ec9a488f
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Sun Nov 25 16:07:53 2007 +0100
 
     notify when addconn command is successful.
 
-commit a65ffa6
+commit a65ffa67fa72a842a49a412f9c0bf598aa6367a2
 Merge: 38148bb a169ceb
 Author: Loïc Gomez <opensource@kyoshiro.org>
 Date:   Sun Nov 25 16:06:45 2007 +0100
@@ -1904,81 +2159,81 @@ Date:   Sun Nov 25 16:06:45 2007 +0100
     
     Conflicts:
     
-    	src/bip.c
+            src/bip.c
 
-commit 32cdb53
+commit 32cdb53d09f2c8028ffe4d438ae45c5c4f3579ce
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Sun Nov 25 15:50:19 2007 +0100
 
     Add bip-take-snapshot
 
-commit 5faa658
+commit 5faa6581b769aa747a85b5828e34a2fc893f4079
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Sun Nov 25 15:39:38 2007 +0100
 
     make log_has_backlog aware of track_backlog.
 
-commit 546f86b
+commit 546f86b59287d91ecfed79751b824227e77edf1b
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Sun Nov 25 15:37:26 2007 +0100
 
     Fix help message.
 
-commit b3b6df5
+commit b3b6df53bb47d9626dd62f69dd4cca206124615a
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Sun Nov 25 15:29:32 2007 +0100
 
     Add track_backlog member in lfg, so we have a cleaner way to exempt a channel from backloggin.
 
-commit cc9afd6
+commit cc9afd6b1e03cf849122d10ba661f0cbec4d4c57
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Sun Nov 25 14:50:22 2007 +0100
 
     Support live addition and removal of connection.
 
-commit f1a0aed
+commit f1a0aede23539db2c9e527f58e4da220301d2525
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Mon Nov 19 23:02:25 2007 +0100
 
     typo.
 
-commit b33e832
+commit b33e832d2d9f697bdb0f020ffc6470348097147c
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Sun Nov 18 14:57:00 2007 +0100
 
     add -q option to blreset.
 
-commit 51f5a91
+commit 51f5a9166427306f37e36406090d69bd39790d10
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Sun Nov 18 11:08:41 2007 +0100
 
     Cleanups.
 
-commit a21488e
+commit a21488ead62944c75e6b8353b05073a92f19fe11
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Thu Nov 15 23:29:10 2007 +0100
 
     nick collision recover fix.
 
-commit d96543f
+commit d96543f1db2973f9005683501d6057348c744b5f
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Thu Nov 15 22:50:51 2007 +0100
 
     Fix double free at init time.
 
-commit 0876e78
+commit 0876e783f37f8cc0e54fbd2b1011712940320f8d
 Author: LoÃ¯c Gomez <opensource@kyoshiro.org>
 Date:   Wed Nov 14 22:03:58 2007 +0100
 
     is_valid_nick fix. small validate_config fix
 
-commit ec68655
+commit ec68655ccd15491ed9658a0cd4758e60adfca335
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Sun Nov 11 07:37:19 2007 +0100
 
     Handle deprecated directives...
 
-commit 1e449da
+commit 1e449da922a292a098e2ffc3d25703e8e73b8fce
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Mon Oct 29 00:38:42 2007 +0100
 
@@ -1989,31 +2244,31 @@ Date:   Mon Oct 29 00:38:42 2007 +0100
     Expired certificates were considered invalid in this mode which does not make
     much sense.
 
-commit 6a0ced8
+commit 6a0ced8929bb54265e6cd54b14d4d3397b680de0
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Mon Oct 29 00:24:48 2007 +0100
 
     Describe basic ca mode in bip.conf.1
 
-commit addfac8
+commit addfac8ffa37edd0e743bc0ff2828e07550d48e6
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Wed Oct 24 20:31:06 2007 +0200
 
     Allow building with SSL.
 
-commit e5d45e7
+commit e5d45e7e64db89740bacf20291c3d1720efc4e52
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Tue Oct 23 00:46:00 2007 +0200
 
     Fix initialisation time bug found by Trou.
 
-commit 664ebb6
+commit 664ebb68a7b9822fbd74e0207337f451cb578e82
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Sun Oct 21 19:35:22 2007 +0200
 
     Destroy unused link after sighup
 
-commit 0abd8a3
+commit 0abd8a386dac44b08a9dc0b1c4acf5744936e15b
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Sun Oct 21 12:31:07 2007 +0200
 
@@ -2022,7 +2277,7 @@ Date:   Sun Oct 21 12:31:07 2007 +0200
     - Better logging
     - Handle historical configs
 
-commit 32e47b9
+commit 32e47b900ca0c0a0badf919f304a59ca89d66d0e
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Sat Oct 20 23:12:22 2007 +0200
 
@@ -2031,13 +2286,13 @@ Date:   Sat Oct 20 23:12:22 2007 +0200
     - dont clear conn_list on end of irc_main and don't add the listener if
     conn_list is not empty at start of irc_main
 
-commit 0a689b1
+commit 0a689b19f8d3bd6c90e1a04a62302bae672e5e12
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Sat Oct 20 22:57:09 2007 +0200
 
     Don't forget to free the buffer...
 
-commit b026214
+commit b026214142f954efb1ab2f772a6963547e0bef78
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Sat Oct 20 21:26:21 2007 +0200
 
@@ -2047,13 +2302,13 @@ Date:   Sat Oct 20 21:26:21 2007 +0200
     - Handle servers you can't connect to the same way as servers that get disconnected. (wrt to reconnection timers)
     - Fix some log message
 
-commit 38148bb
+commit 38148bbdc5c67b8e31975ca4677cbf2100c59f6c
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Sat Oct 6 15:43:38 2007 +0200
 
     Make the thing build without HAVE_SSL
 
-commit dbe633e
+commit dbe633ec5930885c5c8b5c6e0676154653c3fed4
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Sat Oct 6 15:40:56 2007 +0200
 
@@ -2062,7 +2317,7 @@ Date:   Sat Oct 6 15:40:56 2007 +0200
     A few rare snprintf bugs.
     Mostly cosmetic and cleanness stuff.
 
-commit a169ceb
+commit a169ceb693b92d975382a859ac693544158eedc9
 Author: Loïc Gomez <opensource@kyoshiro.org>
 Date:   Fri Sep 28 18:18:31 2007 +0200
 
@@ -2071,7 +2326,7 @@ Date:   Fri Sep 28 18:18:31 2007 +0200
     - fix bug: ON_CONNECT_SEND can be multiword
     - add unified header/footer to each command reply
 
-commit 572f0a7
+commit 572f0a74f83ef7a430056efe7f622efab2479a86
 Author: Loïc Gomez <opensource@kyoshiro.org>
 Date:   Fri Sep 28 17:52:41 2007 +0200
 
@@ -2081,13 +2336,13 @@ Date:   Fri Sep 28 17:52:41 2007 +0200
     - fix adm_print_connection, channels with backlog wrongly printed with "key"
     flag
 
-commit dab337d
+commit dab337dfb832aaec703e87eca51be78980624861
 Author: Loïc Gomez <opensource@kyoshiro.org>
 Date:   Fri Sep 28 13:21:05 2007 +0200
 
     fix order in bip.conf.1
 
-commit d3a5c40
+commit d3a5c40a40eeccd8958a6a8c9af48e82f023735a
 Author: Loïc Gomez <opensource@kyoshiro.org>
 Date:   Fri Sep 28 13:20:32 2007 +0200
 
@@ -2096,19 +2351,19 @@ Date:   Fri Sep 28 13:20:32 2007 +0200
     add bip_use_notice option to user-level configuration.
     fix typo in bip_notify()
 
-commit 72b0282
+commit 72b028221d6e04c6756ef4f571668cb35a596e83
 Author: Loïc Gomez <opensource@kyoshiro.org>
 Date:   Fri Sep 28 10:43:34 2007 +0200
 
     adm_reply -> bip_notify
 
-commit dd49be1
+commit dd49be1755ae6bd735065c7c983d19ca36f11a56
 Author: Loïc Gomez <opensource@kyoshiro.org>
 Date:   Thu Sep 27 14:44:25 2007 +0200
 
     define some defaults
 
-commit 12ea45b
+commit 12ea45b13242122708d1ed3032e28005c1a6f26a
 Author: Loïc Gomez <opensource@kyoshiro.org>
 Date:   Thu Sep 27 14:12:27 2007 +0200
 
@@ -2120,39 +2375,39 @@ Date:   Thu Sep 27 14:12:27 2007 +0200
     check_rlimits: change explain text
     Git-explicit version
 
-commit 2090349
+commit 2090349f9c9f1732fa5348faf9f506fae892f916
 Author: Loïc Gomez <opensource@kyoshiro.org>
 Date:   Thu Sep 27 01:08:10 2007 +0200
 
     add backlog option to channels.
 
-commit 45e9688
+commit 45e9688c45d2d66a599860a6eea46ca791b8157c
 Author: Loïc Gomez <opensource@kyoshiro.org>
 Date:   Wed Sep 26 22:21:01 2007 +0200
 
     changelog
 
-commit e5ed7c9
+commit e5ed7c92ae8d7db46e288dc9570448da5199ec49
 Author: Loïc Gomez <opensource@kyoshiro.org>
 Date:   Wed Sep 26 22:18:50 2007 +0200
 
     add ssl_check_mode option to the connection block (requested by Trou)
     die if ssl_check_mode is unset while the network needs SSL.
 
-commit 9669371
+commit 96693716fb1415a2afd0c0fb80716ad4fd335d90
 Author: Loïc Gomez <opensource@kyoshiro.org>
 Date:   Wed Sep 26 22:08:59 2007 +0200
 
     fix SSL
 
-commit 5aec780
+commit 5aec7804afd049530af4438c90d88df053326220
 Author: Loïc Gomez <opensource@kyoshiro.org>
 Date:   Wed Sep 26 21:22:44 2007 +0200
 
     src/log: fix backlogging again, memlog was distrubing the process
     src/connection: change some log levels, errors are errors, not debug info...
 
-commit 6ab2bb5
+commit 6ab2bb51466d20b436d2105ff09a28480e97076b
 Author: Loïc Gomez <opensource@kyoshiro.org>
 Date:   Wed Sep 26 14:45:30 2007 +0200
 
@@ -2177,13 +2432,13 @@ Date:   Wed Sep 26 14:45:30 2007 +0200
     * src: lower RECONN_TIMER + add RECONN_TIMER_MAX option
     * src/bip: code some validate_config
 
-commit d888825
+commit d888825da5441221b14d528324cc2383c201d534
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Thu Sep 13 17:24:57 2007 +0200
 
     Raise LAGOUT_TIME to 480.
 
-commit ba4b9b9
+commit ba4b9b99413e2f80548ccf0fd2a6c927e0948a0a
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Thu Sep 13 17:02:00 2007 +0200
 
@@ -2191,26 +2446,26 @@ Date:   Thu Sep 13 17:02:00 2007 +0200
     
     Hell, that's lame.
 
-commit 7967a47
+commit 7967a47be0a05db4a6c433b9b2eacc2fa3e83305
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Sun Sep 9 11:24:21 2007 +0200
 
     Add log_free prototype.
 
-commit e9e9549
+commit e9e9549228894795fefce12b4ebb734f339b327f
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Sat Sep 8 23:51:45 2007 +0200
 
     Reinit logs for a given connection on well chosen times.
 
-commit a00a146
+commit a00a14619342083bcccbb43bb89c713b39a89aa6
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Fri Sep 7 01:05:55 2007 +0200
 
     Add some reply when running commands.
     Remove commented code
 
-commit d7e870f
+commit d7e870fe67a56913b59b98945e4b554d686401ae
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Tue Sep 4 00:24:50 2007 +0200
 
@@ -2220,20 +2475,20 @@ Date:   Tue Sep 4 00:24:50 2007 +0200
     Move utility macros in src/util.h
     Reorganiize initialisation functions.
 
-commit 995b3f0
+commit 995b3f071aa0e7df03be1a086b9b4942fcf0f409
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Mon Sep 3 12:01:13 2007 +0200
 
     Re-open main logfile to allow rotate.
     Trivial fix.
 
-commit a5f8902
+commit a5f890223250767b4e7d73fc24c07f46ad90e838
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Sun Sep 2 18:26:27 2007 +0200
 
     Drop autostuff noise. Add boostrap to regenerate it.
 
-commit 909fe5e
+commit 909fe5e1c1b3871a510c9ba647100d7c0f6dbf97
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Sun Sep 2 14:59:19 2007 +0200
 
@@ -2241,323 +2496,323 @@ Date:   Sun Sep 2 14:59:19 2007 +0200
     Move backlog options to user statment.
     Drop ircise, to go towards real SIGHUP support.
 
-commit 7c4667b
+commit 7c4667bf1d42cc002ea41e0ee93f0ca7081081b1
 Author: Arnaud Cornet <arnaud.cornet@gmail.com>
 Date:   Sun Aug 19 09:59:57 2007 +0200
 
     Fix crash on startup
 
-commit aa40fef
+commit aa40fef29aa5f5ed9030657771611d3dfc5f8c8a
 Author: nohar <nohar>
 Date:   Fri Jul 20 14:45:33 2007 +0000
 
     Close cleanly. Bug repported by netnut.
 
-commit 6273cf2
+commit 6273cf2d59ca531c3612bacbd8133f031294d47a
 Author: nohar <nohar>
 Date:   Sun Jul 1 12:43:09 2007 +0000
 
     Add configuration directive to be able not to log bip information (not irc related, that is)
 
-commit 46bc59b
+commit 46bc59b0a6650e6e6977a8e18b42347e9a4b4736
 Author: nohar <nohar>
 Date:   Tue Jun 26 07:37:51 2007 +0000
 
     Compile fix by trou.
 
-commit 0546c4b
+commit 0546c4baa24d60280d2f08703b512c441ea28ed0
 Author: nohar <nohar>
 Date:   Thu Jun 14 08:48:04 2007 +0000
 
     Set socket flags setting.
 
-commit 5bffd8e
+commit 5bffd8efb8ec616d395bea95a0360990e07dfc45
 Author: nohar <nohar>
 Date:   Thu May 31 22:09:24 2007 +0000
 
     some stuff TODO
 
-commit 56fd224
+commit 56fd224916a9bfac6b2c7278a56a4aacbbc30f6d
 Author: nohar <nohar>
 Date:   Sat May 26 10:31:44 2007 +0000
 
     Lot's of cleanups.
 
-commit ad9c4d7
+commit ad9c4d7021c42455727b40c727e301657c090928
 Author: kyoshiro <kyoshiro>
 Date:   Wed May 23 20:55:09 2007 +0000
 
     create mandatory directories
 
-commit fbd8991
+commit fbd899145f83c5caa847e3b2333da6b6057eddb7
 Author: nohar <nohar>
 Date:   Wed May 23 19:35:22 2007 +0000
 
     Add comment in conf sample file.
 
-commit e4e0e8d
+commit e4e0e8d9fc9941d63f59352642d868da8319e8c0
 Author: nohar <nohar>
 Date:   Wed May 23 19:34:12 2007 +0000
 
     Comment typo fix.
 
-commit 88df6fb
+commit 88df6fb0cf9655f6541c1eea32d20c1494e5dc60
 Author: nohar <nohar>
 Date:   Wed May 23 19:32:54 2007 +0000
 
     And fix.
 
-commit 735743a
+commit 735743a32158db928665e1ff522457b262ef0728
 Author: nohar <nohar>
 Date:   Wed May 23 19:29:56 2007 +0000
 
     Add comment in sample.
 
-commit f7bc5e4
+commit f7bc5e4d7e0e000fa7b1f86ed68c86b3c796110b
 Author: nohar <nohar>
 Date:   Wed Apr 25 07:41:13 2007 +0000
 
     add bug in BUGS.
 
-commit bd80457
+commit bd804576d9783b5c861316164e931ba1df73b804
 Author: nohar <nohar>
 Date:   Wed Apr 25 07:35:13 2007 +0000
 
     Add BUGS.
 
-commit cc21d62
+commit cc21d625220134b1ffd00ebdab17de79364cb197
 Author: kyoshiro <kyoshiro>
 Date:   Sat Mar 24 12:47:09 2007 +0000
 
     fix password not quoted
 
-commit 220de6e
+commit 220de6e088d520bc6ace359032c6434deb1189d5
 Author: kyoshiro <kyoshiro>
 Date:   Sat Mar 24 11:58:58 2007 +0000
 
     fixes
 
-commit c41cc8c
+commit c41cc8c15514639436eafaab8ce810d1aa12d90c
 Author: kyoshiro <kyoshiro>
 Date:   Fri Mar 23 21:45:03 2007 +0000
 
     todo faq
     ssl network sample
 
-commit c0b86c5
+commit c0b86c5e2c7d253900cdea7d3a38e22e30cff5dd
 Author: nohar <nohar>
 Date:   Tue Feb 27 21:02:27 2007 +0000
 
     Say somegthing in changelog about a release.
 
-commit 957c9a7
+commit 957c9a7329892d0ac77b5be79ecd4b5460270c27
 Author: nohar <nohar>
 Date:   Tue Feb 27 20:51:47 2007 +0000
 
     Remove duplicate token definition.
 
-commit 211700c
+commit 211700c5504a98f5a05d56eac0b8bf40388608e6
 Author: kyoshiro <kyoshiro>
 Date:   Sun Feb 25 22:47:42 2007 +0000
 
     add license information
 
-commit b056bea
+commit b056bea2233795d5ff12e1b28524804ead16019b
 Author: kyoshiro <kyoshiro>
 Date:   Sun Feb 25 22:35:32 2007 +0000
 
     only lacks current real config load
 
-commit b5f1b68
+commit b5f1b68893d82cc7cd73382e073d722ef704d588
 Author: kyoshiro <kyoshiro>
 Date:   Sun Feb 25 21:45:03 2007 +0000
 
     bipgenconfig: essential functionnalities should work.
     Still needs config serialize and current config parse/load
 
-commit a60bcec
+commit a60bcec69f9ffe243b4b52c4bb428f82be5104dd
 Author: nohar <nohar>
 Date:   Mon Feb 19 22:49:54 2007 +0000
 
     Allow case insensitive TRUST command.
 
-commit 0d79c41
+commit 0d79c41d4c7859ae4b90a89f0e489de622c52ec5
 Author: nohar <nohar>
 Date:   Sat Feb 17 10:54:21 2007 +0000
 
     Use backlog_ prefix for all backlog config directives.
 
-commit d957d13
+commit d957d132e343432ad84a22acc11cfac3bdd16bc2
 Author: kyoshiro <kyoshiro>
 Date:   Sun Feb 11 23:33:20 2007 +0000
 
     config script nearly finished
 
-commit 458abaf
+commit 458abaf45211f7bec3e99c080f9bc1048ecdb2a9
 Author: nohar <nohar>
 Date:   Sat Feb 10 14:05:37 2007 +0000
 
     Fix fd leak. Delay reconnections.
 
-commit fd87c58
+commit fd87c58cef3f638d148ce327e1f3f68e7d10fb3b
 Author: nohar <nohar>
 Date:   Thu Feb 8 23:14:06 2007 +0000
 
     A fix for rbot on join.
     Give up more gracefully on error when dumping oidentd
 
-commit 052ec2c
+commit 052ec2cfbb8cb941d010c3bc1362891cd17a555d
 Author: nohar <nohar>
 Date:   Thu Feb 8 23:03:49 2007 +0000
 
     Missing ';'
 
-commit 40b9b08
+commit 40b9b085c1aa0ee575f94ef2333eb87760b6a4b8
 Author: nohar <nohar>
 Date:   Thu Feb 8 22:56:30 2007 +0000
 
     Keep the changelog up to date, fix year for 2007 modifications.
 
-commit faaeb70
+commit faaeb703fdab670fdb850ee18a0a19fe7c8b0464
 Author: nohar <nohar>
 Date:   Thu Feb 8 22:53:48 2007 +0000
 
     Loglevel cleanups.
 
-commit 199c62b
+commit 199c62bca853cf1d66080530b7ae20b40b890ef7
 Author: nohar <nohar>
 Date:   Thu Feb 8 19:12:20 2007 +0000
 
     Merge in Trou's oidentd patch.
 
-commit eb69ec7
+commit eb69ec7bc72820080c925a59ef14ba18234e0023
 Author: kyoshiro <kyoshiro>
 Date:   Fri Feb 2 23:02:09 2007 +0000
 
     rename script
 
-commit fdc917b
+commit fdc917b0450582016bceda7e7f983fd436e2388b
 Author: kyoshiro <kyoshiro>
 Date:   Fri Feb 2 23:01:41 2007 +0000
 
     remove POSIX dependency
 
-commit 7bf0187
+commit 7bf018748f8fb2fa3eeb78ca5879fd8c7b6ba70a
 Author: kyoshiro <kyoshiro>
 Date:   Fri Feb 2 22:45:51 2007 +0000
 
     bip configuration+make cert script (perl)
 
-commit 396dbd0
+commit 396dbd0cce606e5f41e9cdf4bb674c61b253ddb4
 Author: nohar <nohar>
 Date:   Thu Feb 1 22:07:10 2007 +0000
 
     Fix AUTHORS
 
-commit bd86d50
+commit bd86d50c143c6d56361a301d4f1e7b28247a6301
 Author: nohar <nohar>
 Date:   Wed Jan 31 20:49:20 2007 +0000
 
     Update bip help message.
 
-commit 965aeb9
+commit 965aeb9f6adb41fb1d92384e8fa9aa47c99ae80c
 Author: nohar <nohar>
 Date:   Sun Jan 28 18:35:30 2007 +0000
 
     Fixed a compile warning.
 
-commit e8775c3
+commit e8775c36c783a162350b7d24db6b012527ab1a97
 Author: kyoshiro <kyoshiro>
 Date:   Sat Jan 27 20:53:03 2007 +0000
 
     add new options to bip.vim syntax file
     add a readme for anti flood systems
 
-commit 2cccffb
+commit 2cccffb30ecd3327ccfe2896fe86eff7da5c97bc
 Author: nohar <nohar>
 Date:   Sat Jan 27 20:47:56 2007 +0000
 
     /me whistles...
 
-commit 931050d
+commit 931050deba4e1da8f90fd403bedf1161414d864a
 Author: nohar <nohar>
 Date:   Sat Jan 27 20:24:55 2007 +0000
 
     This was used for debug only.
 
-commit 27e6f3a
+commit 27e6f3a50f9da0807c945356fec6fabb1b18f513
 Author: nohar <nohar>
 Date:   Sat Jan 27 15:07:24 2007 +0000
 
     Be less demanding on the PONG reply to work with 2ch network.
 
-commit a31562f
+commit a31562f51933cc9d217d45a7048e5f80cd335cbd
 Author: nohar <nohar>
 Date:   Sat Jan 27 12:30:12 2007 +0000
 
     Bug fix in nick channel nick tracking
 
-commit 2855993
+commit 2855993dadadea2f833de232c9ae6c5fd49ddb31
 Author: nohar <nohar>
 Date:   Sat Jan 27 10:16:01 2007 +0000
 
     drop the coucou
 
-commit e6b7672
+commit e6b7672a199f3a6f7413e191ef7c16096d99606e
 Author: nohar <nohar>
 Date:   Fri Jan 26 18:52:21 2007 +0000
 
     New nick mgmt code
 
-commit a2a8e0a
+commit a2a8e0a1939533eb1f601a5dcef5ff4aac1c7106
 Author: nohar <nohar>
 Date:   Fri Jan 12 22:19:29 2007 +0000
 
     blah
 
-commit 9e3d627
+commit 9e3d62764f856779b78483ec55c1414bbd251a48
 Author: nohar <nohar>
 Date:   Fri Jan 12 18:49:14 2007 +0000
 
     backlog_no_timestamp option implemented
 
-commit ccd2274
+commit ccd2274772327daf177844ba0f933827c480abcc
 Author: nohar <nohar>
 Date:   Fri Jan 12 18:34:45 2007 +0000
 
     /msg to -bip is now equivalent to /quote bip.
 
-commit 8b46e5f
+commit 8b46e5f04f8b853c85d03574a9162611552010b5
 Author: nohar <nohar>
 Date:   Sun Jan 7 12:02:36 2007 +0000
 
     Update changelog, I should do that more often.
 
-commit 006f5c0
+commit 006f5c07e5fb5bb20626f42c9ab02f4e2831f8e7
 Author: nohar <nohar>
 Date:   Fri Jan 5 22:20:17 2007 +0000
 
     I forgot that my hash lib function was braindead.
 
-commit 0194ae7
+commit 0194ae7c47a93708654b59fce081b56052af7001
 Author: nohar <nohar>
 Date:   Fri Jan 5 21:27:35 2007 +0000
 
     Update build sys, try 3
 
-commit c77ee1e
+commit c77ee1e963f840176997bb95ee01d32892f39fe2
 Author: nohar <nohar>
 Date:   Fri Jan 5 21:25:32 2007 +0000
 
     Update build sys, try 2
 
-commit 8d1913b
+commit 8d1913b38053b56e14990b225c16e1bf887898f3
 Author: nohar <nohar>
 Date:   Fri Jan 5 21:22:30 2007 +0000
 
     Update build system.
 
-commit 5c17d27
+commit 5c17d27a9582de9ced5a55dc77616ce100b97d3a
 Author: nohar <nohar>
 Date:   Fri Jan 5 21:19:32 2007 +0000
 
@@ -2565,207 +2820,207 @@ Date:   Fri Jan 5 21:19:32 2007 +0000
     
     Should fix hard to trigger bug: fatal("negative who_count").
 
-commit a7d21b2
+commit a7d21b2693a71bcacffcfe70fffc8fe17570c926
 Author: nohar <nohar>
 Date:   Fri Jan 5 21:18:34 2007 +0000
 
     Drop Makefile.in
 
-commit 4e12ff1
+commit 4e12ff1c949245bcd6f17e8fd1bb627ca881cc30
 Author: nohar <nohar>
 Date:   Fri Dec 8 21:08:23 2006 +0000
 
     Hash fonction just for fun.
 
-commit 70ae216
+commit 70ae2161224618dcc1aab3ad632f1f50296d57de
 Author: nohar <nohar>
 Date:   Wed Nov 22 22:06:06 2006 +0000
 
     Fix error message.
 
-commit f6d710b
+commit f6d710bdeec2218fb592911b4eb3bfa5e0e2e9ce
 Author: nohar <nohar>
 Date:   Thu Nov 16 14:34:28 2006 +0000
 
     Fix backlogging display bug. How come nobody ever saw this one ?
     Drop conf.h from svn since it is autogenerated.
 
-commit 13e3294
+commit 13e329450198439b7586c7e39ee65cfe607e96e9
 Author: nohar <nohar>
 Date:   Thu Nov 16 13:36:24 2006 +0000
 
     YAY! a readme file !
 
-commit 2e8c820
+commit 2e8c820dbbd45d1a339004fdc656038e16454e7b
 Author: kyoshiro <kyoshiro>
 Date:   Wed Nov 15 21:13:51 2006 +0000
 
     lex/conf.y cleanups
     vim syntax, manpage, sample conf file updates
 
-commit 91f3623
+commit 91f362391bad11f86970a74fd535d54c7e8aca97
 Author: kyoshiro <kyoshiro>
 Date:   Wed Nov 15 16:18:56 2006 +0000
 
     Add a script to generate bip.pem
 
-commit afa77d1
+commit afa77d12b5a8e7604808cf83d591ab1179ff1424
 Author: nohar <nohar>
 Date:   Sun Nov 12 18:08:49 2006 +0000
 
     Implement ban reply redirrection to the requesting client only.
 
-commit ae65aba
+commit ae65ababf111a8a4f629169271b1cdd633289ea9
 Author: nohar <nohar>
 Date:   Sun Nov 12 13:22:32 2006 +0000
 
     Fixed empty line bug.
 
-commit 98dcc2e
+commit 98dcc2e4d4cdc06505f238579b075a70fd29f66d
 Author: nohar <nohar>
 Date:   Sat Oct 21 12:06:31 2006 +0000
 
     bl_msg_only
 
-commit 7aa6305
+commit 7aa6305280f9ce045820ce7ded083ec933fdaee9
 Author: nohar <nohar>
 Date:   Sat Oct 21 10:36:56 2006 +0000
 
     proper daemonize
 
-commit 38f84ed
+commit 38f84edc01741e6f08c27efded1f43acb7db2bec
 Author: nohar <nohar>
 Date:   Mon Sep 25 12:08:31 2006 +0000
 
     Debug away msg when no client on.
 
-commit c13c581
+commit c13c58157bac08986694fea408c6aa5dea2ad96c
 Author: nohar <nohar>
 Date:   Sat Sep 23 14:13:27 2006 +0000
 
     Untested ipv6 support for fake ident with oidentd.
 
-commit f02ce0f
+commit f02ce0fb0379813b6dbc0e57df1ff4b7b709b90e
 Author: nohar <nohar>
 Date:   Wed Sep 20 20:30:25 2006 +0000
 
     Typo in man page.
 
-commit 28d3961
+commit 28d396112d653753e2a4044e06ee52fc4bde219b
 Author: nohar <nohar>
 Date:   Wed Sep 20 20:27:14 2006 +0000
 
     Rights fix, working multiple on connect send.
 
-commit e3410af
+commit e3410afe934fcd04545789ffe1a587c46a4c7074
 Author: nohar <nohar>
 Date:   Mon Sep 18 18:05:17 2006 +0000
 
     Now it even build
 
-commit 925bee5
+commit 925bee51c8edc44adf46056d3461f5910103520f
 Author: nohar <nohar>
 Date:   Mon Sep 18 16:06:23 2006 +0000
 
     Untested no_client_away_msg support.
 
-commit a4fe5d0
+commit a4fe5d08616fdcad77a7692ace358dec81b23bf6
 Author: nohar <nohar>
 Date:   Thu Aug 31 07:57:39 2006 +0000
 
     TODO file update
 
-commit acb4b95
+commit acb4b9570dcf0a37549336a9a80197d9c8692d53
 Author: nohar <nohar>
 Date:   Wed Jul 12 18:10:32 2006 +0000
 
     add a pid_file in bip.conf sample.
 
-commit 509d8bb
+commit 509d8bb11740bf06045bd48b93a4ee59526d7aa8
 Author: nohar <nohar>
 Date:   Mon Jul 10 22:19:25 2006 +0000
 
     update changelog entry
 
-commit 5e3a763
+commit 5e3a7631d9c57b8af158360dd15ffb9fbf1be7ed
 Author: nohar <nohar>
 Date:   Mon Jul 3 22:14:02 2006 +0000
 
     todo update
 
-commit ac6d1ea
+commit ac6d1eaa7c07a8885749c48cbd09aedb1b0f0271
 Author: nohar <nohar>
 Date:   Sun Jul 2 13:51:43 2006 +0000
 
     Drop freenode from config file
 
-commit e2e889d
+commit e2e889d640a9f444559d60e05723c8d35c74e239
 Author: nohar <nohar>
 Date:   Sun Jul 2 13:32:00 2006 +0000
 
     getopt bugfix
 
-commit dace584
+commit dace58405fca4cda67efd5b9c521456e75d051d9
 Author: nohar <nohar>
 Date:   Sun Jul 2 13:24:43 2006 +0000
 
     add -s option to set bip homedir
 
-commit cd098c8
+commit cd098c85ba72875623308694245ca2eabd90300f
 Author: nohar <nohar>
 Date:   Sun Jul 2 13:02:55 2006 +0000
 
     SSL Cert path computation fix
 
-commit 2ba9cca
+commit 2ba9ccac5c2c9585eabd35fc811931485e400260
 Author: nohar <nohar>
 Date:   Sun Jul 2 12:57:23 2006 +0000
 
     buf manipulation fixes
 
-commit b4d73d2
+commit b4d73d22da24f6d9a17c7024f7113bf348e87664
 Author: kyoshiro <kyoshiro>
 Date:   Sun Jul 2 12:44:22 2006 +0000
 
     oops
 
-commit c1f0792
+commit c1f07926f36ceb6199fd3b47c6698f5dd77cb048
 Author: kyoshiro <kyoshiro>
 Date:   Sun Jul 2 12:35:32 2006 +0000
 
     Enhance /bip list a bit...
 
-commit f73f69b
+commit f73f69b6e726db15206aab4953ed8f565d81302f
 Author: nohar <nohar>
 Date:   Sun Jul 2 12:04:51 2006 +0000
 
     Never forget the changelog
 
-commit 71108cb
+commit 71108cbe935a1a4bd4ff7111a0d1a2fe0d149c4d
 Author: nohar <nohar>
 Date:   Sun Jul 2 11:50:20 2006 +0000
 
     New /bip commands
 
-commit fa9b404
+commit fa9b404fd15644ff825e64d5196c0a371351f393
 Author: nohar <nohar>
 Date:   Thu Jun 22 12:13:34 2006 +0000
 
     remove useless tabs
 
-commit 9795b11
+commit 9795b1145b2d5965a05d46e084a891da31e90138
 Author: nohar <nohar>
 Date:   Tue Jun 20 11:31:22 2006 +0000
 
     Add a fatal.
 
-commit 6435739
+commit 643573969de38118b653e534e9a507aea3895ab6
 Author: nohar <nohar>
 Date:   Thu Jun 8 18:55:51 2006 +0000
 
     Fixed date in changelog
 
-commit f80cdd8
+commit f80cdd85e0b445e3743dcbe0aa55c24d164cd010
 Author: nohar <nohar>
 Date:   Thu Jun 8 18:55:26 2006 +0000
 
@@ -2773,139 +3028,139 @@ Date:   Thu Jun 8 18:55:26 2006 +0000
     - fix nick desync between client and server
     - fix possible null deference
 
-commit e7a1036
+commit e7a10369c3f344e9399485b9e14144b525cc938a
 Author: nohar <nohar>
 Date:   Sun Apr 23 16:38:57 2006 +0000
 
     Fix for bad bug when client closes and server not connected with away_nick option.
 
-commit 35fa025
+commit 35fa0257928838c537594dd1dbe88be548a08e0b
 Author: nohar <nohar>
 Date:   Thu Apr 20 12:51:46 2006 +0000
 
     Note for later: stop smoking.
 
-commit baad17c
+commit baad17c4d9a3f5ceba376f1680c5a3a27f483d82
 Author: nohar <nohar>
 Date:   Thu Apr 20 12:49:50 2006 +0000
 
     This should have been fixed already.
 
-commit df62973
+commit df62973affb29c299fd7031c8054d94adf3c96d1
 Author: nohar <nohar>
 Date:   Wed Mar 8 18:26:04 2006 +0000
 
     log the release
 
-commit 041d790
+commit 041d7909a2fc1315b5db39d56bf5d22f71ae3606
 Author: nohar <nohar>
 Date:   Tue Mar 7 21:35:09 2006 +0000
 
     don't forget to update the changelog
 
-commit 1b22c1a
+commit 1b22c1acf63d2835dd5bc35f59f245d3a9ca68f1
 Author: nohar <nohar>
 Date:   Tue Mar 7 21:33:10 2006 +0000
 
     count one mode arg on +e
 
-commit 7c26143
+commit 7c261439775135b32833be2e362614439e09c4ac
 Author: nohar <nohar>
 Date:   Mon Mar 6 18:25:31 2006 +0000
 
     fix typo
 
-commit 47d82fd
+commit 47d82fdd2a91d5835f8649f22202b4ba73ab4329
 Author: nohar <nohar>
 Date:   Tue Feb 21 07:48:12 2006 +0000
 
     Who patch fix
 
-commit 4055764
+commit 4055764e819cb0bb70f41020f89eb349b04d7b67
 Author: nohar <nohar>
 Date:   Sun Feb 5 11:10:33 2006 +0000
 
     Merged lappz patch for better who reply handling
 
-commit 8aa77d2
+commit 8aa77d202ab8c0260c2e80eff3e8c701ca658ad2
 Author: nohar <nohar>
 Date:   Fri Feb 3 13:01:02 2006 +0000
 
     Don't mess source and debian stuff
 
-commit 6fa60fc
+commit 6fa60fc4964ae0875d0a3288465bc7ad29930fef
 Author: nohar <nohar>
 Date:   Thu Feb 2 09:31:23 2006 +0000
 
     Add a password protected channel in sample file.
 
-commit 0805023
+commit 08050235ed4527eb829d889e6a00d21b11a2dbdc
 Author: nohar <nohar>
 Date:   Thu Feb 2 09:00:42 2006 +0000
 
     fixes SEGV if no HOME environment var
 
-commit ebc7ec7
+commit ebc7ec7f4e3f94cf3da26b5887316e21c85345e3
 Author: nohar <nohar>
 Date:   Tue Jan 31 19:14:37 2006 +0000
 
     debian's copyright in sync
 
-commit cba063a
+commit cba063a0a5b71b392341c991f6bec6b2f9572c18
 Author: nohar <nohar>
 Date:   Tue Jan 31 17:24:53 2006 +0000
 
     new missing file and autoheader
 
-commit c8890d7
+commit c8890d7febdfa82c194b53c05ea82543ba391f4f
 Author: nohar <nohar>
 Date:   Sun Jan 29 21:23:43 2006 +0000
 
     debian stuff
 
-commit 6ab6922
+commit 6ab69228ac25e21f0ef83b0796300f67153fc8c2
 Author: nohar <nohar>
 Date:   Sun Jan 29 21:16:34 2006 +0000
 
     this file is for automake
 
-commit 293812e
+commit 293812ec64fc09269027da4edb27906021b9890b
 Author: nohar <nohar>
 Date:   Sun Jan 29 21:14:20 2006 +0000
 
     Bump version to 0.5.1, go with a newer automake
 
-commit 02734b5
+commit 02734b52e887629f002b99ab54e2128ce630313e
 Author: nohar <nohar>
 Date:   Fri Dec 30 22:56:25 2005 +0000
 
     blackmore repported this error in sample => no_backlog is backlog
 
-commit 64970e0
+commit 64970e041fb04b4c568f59654a5fe0688524816e
 Author: nohar <nohar>
 Date:   Wed Dec 28 13:18:29 2005 +0000
 
     jake_@freenode spotted this one
 
-commit de0d5ef
+commit de0d5efc3459739be3fbf215652db900a74736e7
 Author: nohar <nohar>
 Date:   Wed Dec 14 22:11:38 2005 +0000
 
     bipmkpass => bipmkpw in bin.conf sample
 
-commit 5574a6d
+commit 5574a6d335131d28e6265802dc8ab0fa65fec06d
 Author: nohar <nohar>
 Date:   Mon Dec 12 19:03:02 2005 +0000
 
     a few deleted whitespaces + Trou's patch: allows to trust when not connected / allow self-signed certs when in basic ssl mode / permit connection to serveurs w/o a motd
 
-commit 6a1ec27
+commit 6a1ec2724b66aa2b8c5aadcbcee558f144c3f2c7
 Author: nohar <nohar>
 Date:   Sun Nov 20 17:07:26 2005 +0000
 
     boulette quequette!
 
-commit 1e6f059
+commit 1e6f0593fb1ef9cb096289b52bcc05580e358c09
 Author: kyoshiro <kyoshiro>
 Date:   Thu Nov 17 17:55:12 2005 +0000
 
@@ -2915,485 +3170,485 @@ Date:   Thu Nov 17 17:55:12 2005 +0000
     log info when connecting to a server
     default log level to INFO
 
-commit ad86ed4
+commit ad86ed411de5b6ffbb78c6dff755eece8f0d1afc
 Author: nohar <nohar>
 Date:   Thu Nov 17 15:36:19 2005 +0000
 
     typos
 
-commit fc058e0
+commit fc058e09d6912a30f9ec54bb6f2d1a74cd71df38
 Author: nohar <nohar>
 Date:   Thu Nov 17 14:26:56 2005 +0000
 
     relicencing: add a exception clause to GPL to allow redistribution linked to OpenSSL
 
-commit b039415
+commit b039415b93bb04a5072eecb126e6aab3aa206799
 Author: nohar <nohar>
 Date:   Wed Nov 16 18:34:25 2005 +0000
 
     voice storage bugfix, probably
 
-commit 486f28d
+commit 486f28db9aaed516bdb02d24cffd6e50b5272d25
 Author: nohar <nohar>
 Date:   Wed Oct 19 08:04:50 2005 +0000
 
     merged debian packaging stuff, fixed a name spelling in authors
 
-commit f4ae1ef
+commit f4ae1effc8f99a73493094ba6ebb2621c4e847b1
 Author: nohar <nohar>
 Date:   Tue Oct 18 08:00:55 2005 +0000
 
     man fixe, author fixes
 
-commit 73226eb
+commit 73226ebfa90829d36245a8c485d4fa55202df6f7
 Author: kyoshiro <kyoshiro>
 Date:   Tue Oct 11 16:59:45 2005 +0000
 
     manpage format fixes
 
-commit 709bb6b
+commit 709bb6b7e506589d080641cafdca71a03abfa6b2
 Author: nohar <nohar>
 Date:   Tue Oct 11 08:49:27 2005 +0000
 
     few bip.conf.1 fixes
 
-commit c6e9246
+commit c6e9246adb1d2716ff3783974eff9d8fb13ef046
 Author: kyoshiro <kyoshiro>
 Date:   Mon Oct 10 21:56:39 2005 +0000
 
     1st version of bip.conf manpage
     needs reformatting and some spell checking maybe
 
-commit 54492bc
+commit 54492bc4ae3758b0a14ba37c1ef0f333eaa8a73b
 Author: nohar <nohar>
 Date:   Mon Oct 10 15:31:20 2005 +0000
 
     bipmkpw man page
 
-commit 758a800
+commit 758a80030b209f3438d14e0820d2bc58a13e2572
 Author: nohar <nohar>
 Date:   Mon Oct 10 12:18:47 2005 +0000
 
     configure.in fix and bip man added
 
-commit c27294e
+commit c27294e084e10063e280e0772ade94eb0e0fcc95
 Author: nohar <nohar>
 Date:   Sun Oct 9 12:40:38 2005 +0000
 
     tiny fixes, debian/ mostly
 
-commit f4f0cda
+commit f4f0cda8491d776a49fecfc410a31cb20f51c827
 Author: nohar <nohar>
 Date:   Sun Oct 9 11:47:20 2005 +0000
 
     cleanup for release
 
-commit f754669
+commit f75466972c0e2f7e532323442eb9e8a061558c1b
 Author: nohar <nohar>
 Date:   Thu Sep 15 22:23:26 2005 +0000
 
     Maybe i'll manage to fix this one day
 
-commit 53eaf0d
+commit 53eaf0d767e672663d785d9b2e12b0aabc01f2c5
 Author: nohar <nohar>
 Date:   Fri Sep 2 12:50:59 2005 +0000
 
     Try to detect client side socket kernel buffer fillup
 
-commit fd91cba
+commit fd91cba6d01d3162b94b6fd396d8f2fb4a77235c
 Author: nohar <nohar>
 Date:   Sat Aug 27 13:25:57 2005 +0000
 
     pretty sure kyo's bug is fixed now
 
-commit 3398282
+commit 339828202fef1df698331790f7551cde3002f0ff
 Author: nohar <nohar>
 Date:   Sat Aug 27 08:24:55 2005 +0000
 
     small fix, maybe fixes kyo's bug
 
-commit e245735
+commit e245735f7107119211251b26d8bc59f88a8470e1
 Author: nohar <nohar>
 Date:   Thu Aug 25 08:17:10 2005 +0000
 
     merged YS' elite cert management patch
 
-commit e32c1c1
+commit e32c1c1f1dd588be44e2db264a2891087a1cf40b
 Author: nohar <nohar>
 Date:   Wed Aug 24 22:54:46 2005 +0000
 
     I was on crack this day
 
-commit b3aa4c7
+commit b3aa4c73dc3f1d52f297376482db6fa334b0eb8c
 Author: kyoshiro <kyoshiro>
 Date:   Tue Aug 23 08:53:13 2005 +0000
 
     fix away_nick not used at server connect when follow_nick is defined
 
-commit 04e17c8
+commit 04e17c835979baa08ed8895ef0ce7a260bf5eac6
 Author: nohar <nohar>
 Date:   Thu Aug 18 07:57:46 2005 +0000
 
     Have client rejoin on connect/reconnect
 
-commit 2afd09e
+commit 2afd09e3dea4f784ee180bf03f2ba325eb6dc4f7
 Author: nohar <nohar>
 Date:   Tue Aug 16 14:03:33 2005 +0000
 
     merge blackmore's configure.in patch one type and a small connection close fix
 
-commit 574841d
+commit 574841d9e37292c94de6e23f463269c62586fd97
 Author: nohar <nohar>
 Date:   Sat Aug 6 16:11:21 2005 +0000
 
     remove extra printf
 
-commit 4c2aa74
+commit 4c2aa74c36143c93e4c36e024e6d897d8b992570
 Author: nohar <nohar>
 Date:   Sat Aug 6 11:47:09 2005 +0000
 
     segv bugfix
 
-commit 75458e0
+commit 75458e014bec79ed45d832a06e25ded36f04bbc4
 Author: nohar <nohar>
 Date:   Thu Aug 4 12:40:09 2005 +0000
 
     MAMADOO chat sux
 
-commit 76002fe
+commit 76002fe2dd021ffddead2346faffa674a8e7abb2
 Author: nohar <nohar>
 Date:   Thu Aug 4 07:59:38 2005 +0000
 
     Jere proved me that shit DOES happen. Now I know
 
-commit 26edb7a
+commit 26edb7a22930fc85750b1834fbe2f3201ad9681d
 Author: nohar <nohar>
 Date:   Tue Aug 2 10:11:47 2005 +0000
 
     be consistant irc.proxy.net => irc.bip.net
 
-commit 4f38128
+commit 4f3812865beb5d6308a910944a550c8087c63f7b
 Author: nohar <nohar>
 Date:   Mon Aug 1 15:13:35 2005 +0000
 
     autoconf/make sux
 
-commit cdcf967
+commit cdcf96758d5bf483b7e11531daacb88ea4e56fe3
 Author: nohar <nohar>
 Date:   Mon Aug 1 15:08:18 2005 +0000
 
     drop -Werror 'cause of flex
 
-commit 69562cd
+commit 69562cdabc4630ce3ef82c0b555c0b5e9c089e55
 Author: nohar <nohar>
 Date:   Mon Aug 1 11:43:17 2005 +0000
 
     revert lex compile-without-a-warning hack
 
-commit b4deba4
+commit b4deba4b8c91bf08e1a701fd7ef540cef601af0f
 Author: nohar <nohar>
 Date:   Mon Aug 1 11:41:14 2005 +0000
 
     automake/auotconf gory stuff
 
-commit 9c7eba2
+commit 9c7eba2f6a28ac32e147aa6702f5b95a93b24ebf
 Author: guillot <guillot>
 Date:   Mon Aug 1 11:24:10 2005 +0000
 
     fixed compilation warnings
 
-commit 0e6af5b
+commit 0e6af5bcf6de7a345f81a41d08256efb8276d531
 Author: nohar <nohar>
 Date:   Mon Aug 1 11:16:39 2005 +0000
 
     lame bug found by jj
 
-commit 2c4b77f
+commit 2c4b77fab04ebd8365e8d68abfb9b73159dda94b
 Author: nohar <nohar>
 Date:   Mon Aug 1 09:15:25 2005 +0000
 
     Backlog and logging fixes
 
-commit 8df2b01
+commit 8df2b019dfb160a4094ca96ae7f706361441c748
 Author: nohar <nohar>
 Date:   Mon Jul 25 08:27:03 2005 +0000
 
     Kick instead of part when server disconnects to keep window open in irssi
 
-commit 783405e
+commit 783405e504cd824b9a46f7fd90f416c9795b7c3c
 Author: guillot <guillot>
 Date:   Tue Jul 12 22:24:04 2005 +0000
 
     rewrite of log_beautify, did strange things...
 
-commit 7f5750b
+commit 7f5750b3b4d86b3327919fe31893886d7cdfe94e
 Author: guillot <guillot>
 Date:   Tue Jul 12 19:31:59 2005 +0000
 
     minor update of flood control
     enabled more secure prompting for the highly critical "bipmkpw" util
 
-commit 5722685
+commit 5722685126e9d2a7b7b21dcff344591e4667671e
 Author: guillot <guillot>
 Date:   Tue Jul 12 19:30:10 2005 +0000
 
     removed useless check disallowing backlog_lines = 0 with always_backlog
 
-commit 482420e
+commit 482420e8843a51ce011979b6d65da206f218cc96
 Author: guillot <guillot>
 Date:   Tue Jul 12 19:24:26 2005 +0000
 
     updated comments to reflect the new semantic
 
-commit c97237b
+commit c97237be03078faaa8efdf39a0ebc4cf4d85b3dc
 Author: nohar <nohar>
 Date:   Sat Jul 9 12:57:15 2005 +0000
 
     some info in sample conf
 
-commit 3b9af8d
+commit 3b9af8d5bd09c99c31511bff8011a4dab0fa6642
 Author: nohar <nohar>
 Date:   Sat Jul 9 12:55:01 2005 +0000
 
     new auth mechanism
 
-commit d1f0055
+commit d1f0055b6831f0b812f0e95812b155026b843563
 Author: nohar <nohar>
 Date:   Thu Jun 23 08:01:54 2005 +0000
 
     fix replay of backlog line starting with '('
 
-commit 466ec98
+commit 466ec98adbf056f9c5b565d898c6e3af5c88dba0
 Author: nohar <nohar>
 Date:   Sat Jun 4 14:54:17 2005 +0000
 
     YS's fixs for in ssl checkstore
 
-commit 38e046b
+commit 38e046b99e7bb726522d82d1b3e09cfa20a56383
 Author: nohar <nohar>
 Date:   Sat Jun 4 14:00:23 2005 +0000
 
     boot lex.c out of svn repo
 
-commit 3a51245
+commit 3a51245c1454fe6783158c1409ecfb3918e84035
 Author: nohar <nohar>
 Date:   Sat Jun 4 11:05:54 2005 +0000
 
     YS' SSL certification check patch merged
 
-commit 6135a13
+commit 6135a13810f4300119eae2342cd93fff95a3bab2
 Author: nohar <nohar>
 Date:   Sat Jun 4 10:39:04 2005 +0000
 
     fatal("internal log_client_none_connected") fix; /me backlog with freenode fixed
 
-commit 36e809b
+commit 36e809b8898d7d42c77e53e8462fc8245299eb17
 Author: nohar <nohar>
 Date:   Mon May 30 18:35:49 2005 +0000
 
     channel order in conf honnored
 
-commit 811d7cb
+commit 811d7cb04831b0717de5c69f4a48abdee9ec2372
 Author: nohar <nohar>
 Date:   Mon May 30 18:01:00 2005 +0000
 
     blreset_on_talk, plus a fix in log_reset
 
-commit 8f09db3
+commit 8f09db3184402342a89c7a42988d0aa632612931
 Author: nohar <nohar>
 Date:   Mon May 30 13:20:17 2005 +0000
 
     log ircmask on quit
 
-commit cb2f3a5
+commit cb2f3a5e1e237bd100eb8ebc933b537756c7e16e
 Author: nohar <nohar>
 Date:   Sun May 29 23:00:30 2005 +0000
 
     /bip blreset implemented
 
-commit db676b3
+commit db676b3221fb944afe2035832a18743621e73c1d
 Author: nohar <nohar>
 Date:   Sun May 29 13:42:50 2005 +0000
 
     better queries management, when multiple clients on same link
 
-commit 0de53a2
+commit 0de53a249940a00e4ce78b534ee0bdd527164134
 Author: nohar <nohar>
 Date:   Sat May 28 23:08:54 2005 +0000
 
     fix queries backlog
 
-commit 3aeb6fc
+commit 3aeb6fc9fffd4e2ba8f63b265e85cb51dc366b50
 Author: nohar <nohar>
 Date:   Sat May 28 13:23:51 2005 +0000
 
     looping on cpu on throttle fixed
 
-commit 822f720
+commit 822f720e0e42c3253c73b88676087d94feefef16
 Author: nohar <nohar>
 Date:   Fri May 27 16:50:26 2005 +0000
 
     QUIT message when quitting
 
-commit 14cf13c
+commit 14cf13cfb6a6966d35348fa64e2de18deaa81f28
 Author: nohar <nohar>
 Date:   Fri May 27 15:00:11 2005 +0000
 
     fix: wait_event now waits when there is no socket active (that happens when we to nothing but wait for a reconnect timeout to trigger)
 
-commit d9a149b
+commit d9a149b4dd2075fad4433d6524f17e79663141d3
 Author: nohar <nohar>
 Date:   Fri May 27 10:25:31 2005 +0000
 
     use connect timestamp instead of reconnect
 
-commit 04dc452
+commit 04dc4526cc02d1f319dd99e71224e73d5776891c
 Author: nohar <nohar>
 Date:   Thu May 26 15:36:15 2005 +0000
 
     Conf cleanup, PING colon in reply
 
-commit 0c375a4
+commit 0c375a44426df54311882a716cfdc4f91f9e5862
 Author: nohar <nohar>
 Date:   Mon May 23 23:05:11 2005 +0000
 
     gory throttle avoidance. may drop
 
-commit 29cea3e
+commit 29cea3ef41b238ce93f6ac58684b8bdb80357cbb
 Author: nohar <nohar>
 Date:   Mon May 23 22:55:04 2005 +0000
 
     guinness DEFINITELY *IS* good for codaz
 
-commit a573932
+commit a5739325b657f59a8e7de48f785e8f9d9fe039f7
 Author: nohar <nohar>
 Date:   Mon May 23 22:51:33 2005 +0000
 
     tonight, guinness is my inspiration
 
-commit abd979f
+commit abd979fb01661147c8c6a710fc03b57b8de1285a
 Author: nohar <nohar>
 Date:   Mon May 23 06:27:26 2005 +0000
 
     Damn old backlog bug finally fixed. Happiness. Joy.
 
-commit 152e532
+commit 152e5324d53440832ec63c15214ed11d3cfa3d77
 Author: nohar <nohar>
 Date:   Sat May 21 14:35:22 2005 +0000
 
     bipmkpw compiles again
 
-commit 5ad0a47
+commit 5ad0a47e6859c6033e062e9b0eb2a1f2e98414b8
 Author: nohar <nohar>
 Date:   Sat May 21 14:23:05 2005 +0000
 
     don't touch bip.log if log = false
 
-commit ed8f084
+commit ed8f084daedf86901e22829d1831150d33492340
 Author: nohar <nohar>
 Date:   Sat May 21 13:44:09 2005 +0000
 
     Log/backread cleanup, plus small fixes
 
-commit 3a46247
+commit 3a46247bd475fcb3c7a587d62a827ecd0bd86356
 Author: nohar <nohar>
 Date:   Thu May 19 20:55:11 2005 +0000
 
     better log file format, log options, with backlog with memory based backlog
 
-commit 5e939ec
+commit 5e939ecd4dc0a30f66cd686a9daad6b617b9ebac
 Author: kyoshiro <kyoshiro>
 Date:   Wed May 18 23:31:14 2005 +0000
 
     update todo, important !
     fix ssl not timeouting with some sort of bogus SSL sockets...
 
-commit de0d75b
+commit de0d75b181d299d47cde188d8f1444cd9abacf43
 Author: nohar <nohar>
 Date:   Tue May 17 12:52:12 2005 +0000
 
     Don't log privmsg before 001
 
-commit a1b84c6
+commit a1b84c67b14f1da813b82648ddd2a53c28f57857
 Author: nohar <nohar>
 Date:   Tue May 17 09:27:09 2005 +0000
 
     renamed bip.syslog to bip.log, changed backread verbosification, still seeking for the very rare backlog formatting bug
 
-commit 43384d8
+commit 43384d8bd5d80c38f0635e12818c4c673803045f
 Author: nohar <nohar>
 Date:   Sun May 15 22:46:28 2005 +0000
 
     better loggin on auth error
 
-commit e9884c5
+commit e9884c5b0307a8b21605e336e07a351a09eac0b8
 Author: nohar <nohar>
 Date:   Sat May 14 08:08:37 2005 +0000
 
     backlog enhancement + verbosification fix
 
-commit 103a9f0
+commit 103a9f036909cb2717a8bb479fc9a71b22d7483f
 Author: kyoshiro <kyoshiro>
 Date:   Fri May 13 13:58:24 2005 +0000
 
     fix oidentd spoof
     remove old unsued spoof functions
 
-commit 9a005cb
+commit 9a005cbb80cd790dbd1690e15082b633633bbff4
 Author: nohar <nohar>
 Date:   Fri May 13 10:28:15 2005 +0000
 
     sexy backlog (untested)
 
-commit 0a9a619
+commit 0a9a61954f7bb63b9082f46b1e3a1a79665f7a68
 Author: nohar <nohar>
 Date:   Fri May 13 08:43:50 2005 +0000
 
     backlog leak fix, backlog verbosification for debug, sign fix
 
-commit a48019b
+commit a48019b5fde01fd42f6911e2a0f99c34ec9f98c5
 Author: nohar <nohar>
 Date:   Thu May 12 08:29:27 2005 +0000
 
     oidentd suppport
 
-commit f66513d
+commit f66513d22477bf96ef4582961bc61b2f35162a2e
 Author: kyoshiro <kyoshiro>
 Date:   Wed May 11 14:09:20 2005 +0000
 
     add functions to determine local/remote ip/port from a connection_t object
 
-commit d1e92bf
+commit d1e92bf535d1fe6cd77db74a602f56f6bf76c578
 Author: kyoshiro <kyoshiro>
 Date:   Wed May 11 12:26:21 2005 +0000
 
     Update vim file
 
-commit f5c54c6
+commit f5c54c662a743978c3fc0417878fd13d53b13efa
 Author: nohar <nohar>
 Date:   Sun May 8 21:09:11 2005 +0000
 
     cosmetic backlog bugfix
 
-commit 67abb60
+commit 67abb60976d286b19bdf4dc81d12efb86abd643b
 Author: nohar <nohar>
 Date:   Wed May 4 08:13:43 2005 +0000
 
     give a proper name to genpwent
 
-commit 81ffe1b
+commit 81ffe1b550254465f19aefc492a9182c58fea4a8
 Author: nohar <nohar>
 Date:   Sun May 1 22:29:31 2005 +0000
 
     fix for early RST on new connection to proxy
 
-commit 8da1c83
+commit 8da1c833d86f05b1c8c549c14b88c7fc2005ceb5
 Author: nohar <nohar>
 Date:   Thu Apr 28 08:30:43 2005 +0000
 
     This is starting just fine ;)
 
-commit 665d2ec
+commit 665d2ec5af6e8a97461df7dbc31e5540464ad6fb
 Author: nohar <nohar>
 Date:   Thu Apr 28 08:26:44 2005 +0000
 
