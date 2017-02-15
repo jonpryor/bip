@@ -1,0 +1,20 @@
+Notes about systemd unit files for bip.
+
+Distro specific commandline configuration is provided by installing a script
+named. A default script named bip_env.sh is provided.
+
+This should write /run/sysconfig/bip based on configuration
+information such as in /etc/sysconfig/bip or /etc/defaults/bip. It is run once
+by bip-config.service.
+
+Distro specific path for bip_env.sh script must be set using a
+bip-config.service.d/distrib.conf unit file drop-in:
+[Service]
+ExecStart=/path/to/bip_env.sh
+
+bip_env.sh try some default paths for the default configuration file: either
+/etc/default/bip or /etc/sysconfig/bip.
+Optionaly, the default configuration file path can be set too:
+[Service]
+ExecStart=/path/to/bip_env.sh
+Environment=BIP_DEFAULT_CONFIG='/path/to/default/bip'
