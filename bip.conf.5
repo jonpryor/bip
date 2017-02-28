@@ -418,6 +418,24 @@ The channel key if needed.
 Enable or disable backlogging of this particular channel.
 Setting this to true will NOT enable the backlog system, see the User section.
 
+.SH IRC CLIENT CONFIGURATION
+.P
+On your IRC client, setup as many IRC servers as connections defined in your
+\fBconnection\fP section.
+.P
+Host and port must match values defined in \fBip\fP and \fBport\fP global
+option. The password must be \fIusername:password:connectionname\fR where:
+
+.RS
+.IP \(bu 4
+username is the \fIname\fR defined in the \fIuser\fR section;
+.IP \(bu 4
+password is the clear text value of the \fIpassword\fR corresponding to the
+hashed password defined in the \fIuser\fR section;
+.IP \(bu 4
+connectionname is the \fIname\fR defined in \fIconnection\fR sub-section.
+.RE
+
 .SH SEE ALSO
 
 bip, bipmkpw
