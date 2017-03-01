@@ -881,11 +881,18 @@ static int validate_config(bip_t *bip)
 		}
 	}
 
-	hash_it_init(&bip->users, &it);
-	hash_it_next(&it);
-	if (hash_it_item(&it) && !strstr(conf_log_format, "%u"))
-		mylog(LOG_WARN, "log_format does not contain %%u, all users'"
-			" logs will be mixed !");
+	if (!strstr(conf_log_format, "%u")) {
+		hash_it_init(&bip->users, &it);
+		if (hash_it_item(&it)) {
+			// hash contains at least one element
+			hash_it_next(&it);
+			if (hash_it_item(&it)) {
+				// hash contains at least two elements
+				mylog(LOG_WARN, "log_format does not contain %%u, all users'"
+					" logs will be mixed !");
+			}
+		}
+	}
 	return r;
 }
 
