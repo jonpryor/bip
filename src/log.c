@@ -440,8 +440,8 @@ void log_join(log_t *logdata, const char *ircmask, const char *channel)
 	log_write(logdata, channel, logdata->buffer);
 }
 
-void log_part(log_t *logdata, const const char *ircmask, const char *channel,
-		const const char *message)
+void log_part(log_t *logdata, const char *ircmask, const char *channel,
+		const char *message)
 {
 	if (message)
 		snprintf(logdata->buffer, LOGLINE_MAXLEN,
