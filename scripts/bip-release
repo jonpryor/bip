@@ -40,15 +40,15 @@ if [ -n "$release_version" ]; then
 	set_version "${release_version}"
 	make_distcheck || exit 1
 
-	git commit -a -m "Update version and ChangeLog for bip-${release_version} release."
+	git commit -a --gpg-sign -m "Update version and ChangeLog for bip-${release_version} release."
 	TAG_COMMENT="Release ${release_version}"
 	if [ -n "${release_name}" ]; then
 		TAG_COMMENT="${TAG_COMMENT} '${release_name}'"
 	fi
-	git tag -s -m "${TAG_COMMENT}" release-${release_version}
+	git tag --sign -m "${TAG_COMMENT}" release-${release_version}
 
 	set_version "${release_version}-git"
-	git commit -a -m "Add -git to version string."
+	git commit -a --gpg-sign -m "Add -git to version string."
 
 	echo "See bip-${release_version}.tar.gz"
 else
