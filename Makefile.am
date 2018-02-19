@@ -24,4 +24,5 @@ dist_examples_DATA = samples/bip.conf samples/bip.vim
 EXTRA_DIST = \
 	BUGS \
 	scripts/bip-release \
-	scripts/bipgenconfig
+	scripts/bipgenconfig \
+	systemd
