@@ -92,6 +92,7 @@ static void hash_binary(char *hex, unsigned char **password, unsigned int *seed)
 	sscanf(hex + 2 * 3, "%02x", &buf);
 	*seed |= buf;
 
+	MAYFREE(*password);
 	*password = md5;
 }
 
