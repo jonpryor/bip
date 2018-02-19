@@ -92,6 +92,7 @@ static void hash_binary(char *hex, unsigned char **password, unsigned int *seed)
 	sscanf(hex + 2 * 3, "%02x", &buf);
 	*seed |= buf;
 
+	MAYFREE(*password);
 	*password = md5;
 }
 
@@ -705,16 +706,6 @@ static int add_user(bip_t *bip, list_t *data, struct historical_directives *hds)
 		u->blreset_on_talk = DEFAULT_BLRESET_ON_TALK;
 		u->blreset_connection = DEFAULT_BLRESET_CONNECTION;
 		u->bip_use_notice = DEFAULT_BIP_USE_NOTICE;
-	} else {
-		FREE(u->name);
-		FREE(u->password);
-		FREE(u->default_nick);
-		FREE(u->default_username);
-		FREE(u->default_realname);
-#ifdef HAVE_LIBSSL
-		FREE(u->ssl_check_store);
-		FREE(u->ssl_client_certfile);
-#endif
 	}
 
 	u->backlog = hds->backlog;
@@ -881,11 +872,18 @@ static int validate_config(bip_t *bip)
 		}
 	}
 
-	hash_it_init(&bip->users, &it);
-	hash_it_next(&it);
-	if (hash_it_item(&it) && !strstr(conf_log_format, "%u"))
-		mylog(LOG_WARN, "log_format does not contain %%u, all users'"
-			" logs will be mixed !");
+	if (!strstr(conf_log_format, "%u")) {
+		hash_it_init(&bip->users, &it);
+		if (hash_it_item(&it)) {
+			// hash contains at least one element
+			hash_it_next(&it);
+			if (hash_it_item(&it)) {
+				// hash contains at least two elements
+				mylog(LOG_WARN, "log_format does not contain %%u, all users'"
+					" logs will be mixed !");
+			}
+		}
+	}
 	return r;
 }
 
