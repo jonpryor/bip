@@ -706,16 +706,6 @@ static int add_user(bip_t *bip, list_t *data, struct historical_directives *hds)
 		u->blreset_on_talk = DEFAULT_BLRESET_ON_TALK;
 		u->blreset_connection = DEFAULT_BLRESET_CONNECTION;
 		u->bip_use_notice = DEFAULT_BIP_USE_NOTICE;
-	} else {
-		FREE(u->name);
-		FREE(u->password);
-		FREE(u->default_nick);
-		FREE(u->default_username);
-		FREE(u->default_realname);
-#ifdef HAVE_LIBSSL
-		FREE(u->ssl_check_store);
-		FREE(u->ssl_client_certfile);
-#endif
 	}
 
 	u->backlog = hds->backlog;
