@@ -29,9 +29,8 @@ char *default_path(const char *biphome, const char *filename, const char *desc)
 
 void assert_path_exists(char *path)
 {
-	FILE* f;
-	if ((f = fopen(path, "r")) == NULL)
-		fatal("Unable to open file %s for reading", path);
-	else
-		fclose(f);
+	struct stat st_buf;
+
+	if (stat(path, &st_buf) != 0)
+		fatal("Path %s doesn't exist (%s)", path, strerror(errno));
 }
