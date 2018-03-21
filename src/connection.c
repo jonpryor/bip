@@ -15,6 +15,7 @@
 #include <sys/time.h>
 #include <time.h>
 #include "connection.h"
+#include "path_util.h"
 
 extern int errno;
 #ifdef HAVE_LIBSSL
@@ -24,6 +25,7 @@ static int ssl_cx_idx;
 extern FILE *conf_global_log_file;
 static BIO *errbio = NULL;
 extern char *conf_ssl_certfile;
+extern char *conf_biphome;
 extern char *conf_client_ciphers;
 extern char *conf_client_dh_file;
 static int SSLize(connection_t *cn, int *nc);
@@ -1136,7 +1138,6 @@ static int ctx_set_dh(SSL_CTX *ctx)
 	FILE *f;
 	int ret;
 
-	/* Should not fail: already checked in main function */
 	if ((f = fopen(conf_client_dh_file, "r")) == NULL) {
 		mylog(LOG_ERROR, "Unable to open DH parameters (%s): %s",
 				conf_client_dh_file, strerror(errno));
@@ -1209,11 +1210,25 @@ connection_t *accept_new(connection_t *cn)
 				return NULL;
 			}
 
-			if (!ctx_set_dh(sslctx)) {
-				mylog(LOG_ERROR, "SSL Unable to load DH "
-						"parameters");
-				connection_free(conn);
-				return NULL;
+			if (!conf_client_dh_file) {
+				// try with a default path but don't fail if it doesn't exist
+				conf_client_dh_file = default_path(conf_biphome, "dh.pem",
+						"DH parameters");
+
+				struct stat st_buf;
+				if (stat(conf_client_dh_file, &st_buf) != 0) {
+					free(conf_client_dh_file);
+					conf_client_dh_file = NULL;
+				}
+			}
+
+			if (conf_client_dh_file) {
+				if (!ctx_set_dh(sslctx)) {
+					mylog(LOG_ERROR, "SSL Unable to load DH "
+							"parameters");
+					connection_free(conn);
+					return NULL;
+				}
 			}
 
 			if (!SSL_CTX_use_certificate_chain_file(sslctx,
