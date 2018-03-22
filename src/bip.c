@@ -1332,11 +1332,9 @@ int main(int argc, char **argv)
 				"readable / writable. Please fix the modes.",
 				conf_ssl_certfile);
 
-		if (!conf_client_dh_file) {
-			conf_client_dh_file = default_path(conf_biphome, "dh.pem",
-					"DH parameters");
+		if (conf_client_dh_file) {
+			assert_path_exists(conf_client_dh_file);
 		}
-		assert_path_exists(conf_client_dh_file);
 	}
 #endif
 

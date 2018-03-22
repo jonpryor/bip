@@ -24,7 +24,7 @@ char *default_path(const char *biphome, const char *filename, const char *desc)
 	conf_file[strlen(biphome)] = '/';
 	conf_file[strlen(biphome) + 1] = '\0';
 	strcat(conf_file, filename);
-	mylog(LOG_INFO, "Using default %s: %s", desc, conf_file);
+	mylog(LOG_INFO, "Default %s: %s", desc, conf_file);
 	return conf_file;
 }
 
