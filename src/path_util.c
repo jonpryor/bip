@@ -18,10 +18,11 @@
 char *default_path(const char *biphome, const char *filename, const char *desc)
 {
 	char *conf_file;
-	// '/' and NULL
+	// '/' and \0
 	conf_file = bip_malloc(strlen(biphome) + strlen(filename) + 2);
 	strcpy(conf_file, biphome);
 	conf_file[strlen(biphome)] = '/';
+	conf_file[strlen(biphome) + 1] = '\0';
 	strcat(conf_file, filename);
 	mylog(LOG_INFO, "Using default %s: %s", desc, conf_file);
 	return conf_file;
