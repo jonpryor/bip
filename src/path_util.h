@@ -11,6 +11,9 @@
 #ifndef PATH_UTIL_H
 #define PATH_UTIL_H
 
+#include <errno.h>
+#include <sys/stat.h>
+
 /* return path of filename located in bip home directory */
 char *default_path(const char *biphome, const char *filename, const char *desc);
 /* exit program if path doesn't exist */
