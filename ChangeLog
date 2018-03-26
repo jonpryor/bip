@@ -1,3 +1,67 @@
+commit eaed46da1485ea81556ad255d7d56dc33daf1913 (G)
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@libregerbil.fr>
+Date:   Thu Mar 22 02:37:38 2018 +0100
+
+    Merge branch 'path_test_use_stat'
+
+commit 025689d8074b13f5229ee99b95190437194bae53 (G)
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@libregerbil.fr>
+Date:   Thu Mar 22 02:37:23 2018 +0100
+
+    Merge branch 'dh_param_not_mandatory'
+
+commit 948b41ef7a09b751df22bbd1c8f28b7bbe405a18 (G)
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@libregerbil.fr>
+Date:   Thu Mar 22 02:37:10 2018 +0100
+
+    Merge branch 'fix_path_construction_issue'
+
+commit 7834471f78c1af516df4bdbc193a805582e9f7fa (G)
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@libregerbil.fr>
+Date:   Wed Mar 21 11:32:46 2018 +0100
+
+    default value isn't used when path doesn't exist
+
+commit 13b2e3763541fc5045bbc09f14a5b0aae51558d0 (G)
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@libregerbil.fr>
+Date:   Wed Mar 21 11:12:21 2018 +0100
+
+    DH parameters are not always required
+    
+    for example ECDHE ciphers doesn't require DH parameters.
+    
+    Closes #499
+
+commit 3afb16d795073d2aff9e2253619757a4e1e6e77c (G)
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@libregerbil.fr>
+Date:   Wed Mar 21 11:54:20 2018 +0100
+
+    checking path: use stat
+    
+    fopen was used because it's stdlib but stat is already used in other
+    parts
+
+commit 348737fab5c6529ba636056d40ec42f2cb18dd96 (G)
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@libregerbil.fr>
+Date:   Wed Mar 21 11:07:56 2018 +0100
+
+    Fix path construction
+    
+    Thanks to Renzokuken for pointing that !
+    Closes #610
+
+commit 385be75f7e904394dc4c9cccca9656c20c4c44f4 (G)
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@libregerbil.fr>
+Date:   Mon Feb 19 20:26:34 2018 +0100
+
+    Add -git to version string.
+
+commit 8ceebf1fd882f855d46a3d1d45dddbf50a357111 (G)
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@libregerbil.fr>
+Date:   Mon Feb 19 20:25:59 2018 +0100
+
+    Update version and ChangeLog for bip-0.9.0-rc2 release.
+
 commit 901f54eff0f647442923f2ccf6f470f22e4c5ffe (G)
 Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@libregerbil.fr>
 Date:   Mon Feb 19 20:09:25 2018 +0100
