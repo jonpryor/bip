@@ -57,8 +57,8 @@ static void connecting_data_free(struct connecting_data *t)
 
 void connection_close(connection_t *cn)
 {
-	mylog(LOG_DEBUG, "Connection close asked. FD:%d ",
-			(long)cn->handle);
+	mylog(LOG_DEBUG, "Connection close asked. FD:%d (status: %d)",
+			(long)cn->handle, cn->connected);
 	if (cn->connected != CONN_DISCONN && cn->connected != CONN_ERROR) {
 		cn->connected = CONN_DISCONN;
 		if (close(cn->handle) == -1)
@@ -630,7 +630,7 @@ static int check_event_except(fd_set *fds, connection_t *cn)
 		return 0;
 
 	if (cn_is_in_error(cn)) {
-		mylog(LOG_ERROR, "Error on fd %d (state %d)",
+		mylog(LOG_ERROR, "Error on fd %d (except, state %d)",
 				cn->handle, cn->connected);
 		return 1;
 	}
@@ -648,7 +648,7 @@ static int check_event_read(fd_set *fds, connection_t *cn)
 	int ret;
 
 	if (cn_is_in_error(cn)) {
-		mylog(LOG_ERROR, "Error on fd %d (state %d)",
+		mylog(LOG_ERROR, "Error on fd %d (read, state %d)",
 				cn->handle, cn->connected);
 		return 1;
 	}
@@ -702,7 +702,7 @@ static void connection_connected(connection_t *c)
 static int check_event_write(fd_set *fds, connection_t *cn, int *nc)
 {
 	if (cn_is_in_error(cn)) {
-		mylog(LOG_ERROR, "Error on fd %d (state %d)",
+		mylog(LOG_ERROR, "Error on fd %d (write, state %d)",
 				cn->handle, cn->connected);
 		return 1;
 	}
