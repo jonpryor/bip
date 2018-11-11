@@ -10,6 +10,7 @@ AC_CONFIG_HEADERS([src/config.h])
 
 # Checks for programs
 AC_PROG_CC
+AC_PROG_RANLIB
 AM_PROG_CC_C_O
 AC_PROG_INSTALL
 AM_PROG_LEX
@@ -121,7 +122,7 @@ AS_IF([test "x$enable_pie" != "xno"], [
 	fi
 ])
 
-AC_CONFIG_FILES([Makefile])
+AC_CONFIG_FILES([Makefile src/Makefile])
 AC_OUTPUT
 
 AS_IF([test "x$with_openssl" != "xno"], [
