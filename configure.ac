@@ -69,6 +69,7 @@ AC_ARG_ENABLE([oidentd], AS_HELP_STRING([--enable-oidentd],
   [Enable oidentd support (bip overwrites ~/.oidentd.conf with this on!)]))
 AC_ARG_ENABLE([pie], AS_HELP_STRING([--disable-pie],
   [Do not build a position independent executable]))
+AC_ARG_ENABLE([tests], AS_HELP_STRING([--enable-tests], [Build tests]))
 
 AM_CONDITIONAL(DEBUG, test x$enable_debug = xyes)
 AS_IF([test "x$enable_debug" = "xyes"], [
@@ -122,7 +123,12 @@ AS_IF([test "x$enable_pie" != "xno"], [
 	fi
 ])
 
-AC_CONFIG_FILES([Makefile src/Makefile])
+AS_IF([test "x$enable_tests" != "xno"], [
+       PKG_CHECK_MODULES([CHECK], [check >= 0.9.6])
+])
+
+
+AC_CONFIG_FILES([Makefile src/Makefile tests/Makefile])
 AC_OUTPUT
 
 AS_IF([test "x$with_openssl" != "xno"], [
@@ -131,3 +137,6 @@ echo OPENSSL: yes
 echo DEBUG: $enable_debug $backtrace
 echo OIDENTD: $enable_oidentd
 echo PIE: $enable_pie
+AS_IF([test "x$enable_tests" != "xno"], [
+echo TESTS: $enable_tests
+])

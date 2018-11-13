@@ -1,4 +1,4 @@
-SUBDIRS = src
+SUBDIRS = src . tests
 
 dist_man_MANS = bip.1 bip.conf.5 bipmkpw.1
 

@@ -213,15 +213,3 @@ void irc_line_free(struct line *l)
 		free(l->origin);
 	free(l);
 }
-
-void irc_line_free_args(char **elemv, int elemc)
-{
-	int i;
-
-	if (elemc == 0)
-		return;
-	for (i = 0; i < elemc; i++)
-		free(elemv[i]);
-	free(elemv);
-}
-
