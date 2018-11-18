@@ -15,16 +15,6 @@ AC_PROG_YACC
 m4_ifndef([PKG_PROG_PKG_CONFIG], [m4_fatal([Please install pkg-config.])])
 PKG_PROG_PKG_CONFIG
 
-AC_ARG_ENABLE([oidentd], AS_HELP_STRING([--enable-oidentd],
-  [Enable oidentd support (bip overwrites ~/.oidentd.conf with this on!)]))
-
-AM_CONDITIONAL(OIDENTD, test x$enable_identd = xyes)
-AS_IF([test "x$enable_oidentd" = "xyes"], [
-	AC_DEFINE([HAVE_OIDENTD], [], [Have bip edit ~/.oidentd.conf])
-], [
-    	enable_oidentd=no
-])
-
 PKG_CHECK_MODULES(OPENSSL, [libssl >= 0.9.8 libcrypto >= 0.9.8], [with_openssl=yes], [with_openssl=no])
 
 AC_CACHE_CHECK([whether $CC accepts PIE flags], [ap_cv_cc_pie], [
@@ -62,6 +52,5 @@ AC_CONFIG_FILES([Makefile src/Makefile])
 AC_OUTPUT
 
 echo OPENSSL: $with_openssl
-echo OIDENTD: $enable_oidentd
 echo PIE: $enable_pie
 echo TESTS: $enable_tests

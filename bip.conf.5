@@ -157,6 +157,10 @@ Defines the file where BIP's pid will be stored. BIP checks if this file exists
 and if the pid is still alive upon startup. If true, BIP refuses to start.
 
 .TP
+\fBwrite_oidentd_file\fP (default: \fIfalse\fR)
+Must be set to true to overwrite oidentd configs.
+
+.TP
 \fBoidentd_file\fP (default: \fI<bipdir>/.oidentd.conf\fR)
 oidentd configuration file (if oidentd enabled).
 
