@@ -15,25 +15,8 @@ AC_PROG_YACC
 m4_ifndef([PKG_PROG_PKG_CONFIG], [m4_fatal([Please install pkg-config.])])
 PKG_PROG_PKG_CONFIG
 
-# Deal with parameters
-AC_ARG_ENABLE([debug], AS_HELP_STRING([--enable-debug], [Enable debug build]))
-AC_ARG_WITH([openssl], AS_HELP_STRING([--without-openssl],
-  [Disable SSL using OpenSSL]))
 AC_ARG_ENABLE([oidentd], AS_HELP_STRING([--enable-oidentd],
   [Enable oidentd support (bip overwrites ~/.oidentd.conf with this on!)]))
-AC_ARG_ENABLE([pie], AS_HELP_STRING([--disable-pie],
-  [Do not build a position independent executable]))
-
-AM_CONDITIONAL(DEBUG, test x$enable_debug = xyes)
-AS_IF([test "x$enable_debug" = "xyes"], [
-	AC_CHECK_FUNC(backtrace_symbols_fd, [
-		AC_DEFINE(HAVE_BACKTRACE, [], [Use glibc backtrace on fatal()])
-		LDFLAGS="-rdynamic $LDFLAGS"
-		backtrace="(with backtrace)"
-	])
-], [
-	enable_debug=no
-])
 
 AM_CONDITIONAL(OIDENTD, test x$enable_identd = xyes)
 AS_IF([test "x$enable_oidentd" = "xyes"], [
@@ -68,14 +51,17 @@ PKG_CHECK_MODULES([CHECK], [check >= 0.9.6], [
 		   enable_tests=yes
 		   ], [ enable_tests=no ])
 
+AC_CHECK_FUNC(backtrace_symbols_fd, [
+        AC_DEFINE(HAVE_BACKTRACE, [], [Use glibc backtrace on fatal()])
+        LDFLAGS="-rdynamic $LDFLAGS"
+        backtrace="(with backtrace)"
+])
+
 
 AC_CONFIG_FILES([Makefile src/Makefile])
 AC_OUTPUT
 
-AS_IF([test "x$with_openssl" != "xno"], [
-echo OPENSSL: yes
-])
-echo DEBUG: $enable_debug $backtrace
+echo OPENSSL: $with_openssl
 echo OIDENTD: $enable_oidentd
 echo PIE: $enable_pie
 echo TESTS: $enable_tests

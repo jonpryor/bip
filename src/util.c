@@ -210,8 +210,7 @@ void mylog(int level, char *fmt, ...)
 
 #ifdef HAVE_BACKTRACE
 #include <execinfo.h>
-
-void print_trace(void)
+void dump_trace(void)
 {
 	void *array[32];
 	size_t size;
@@ -232,7 +231,7 @@ void fatal(char *fmt, ...)
 	va_end(ap);
 
 #ifdef HAVE_BACKTRACE
-	print_trace();
+	dump_trace();
 #endif
 
 	exit(200);
