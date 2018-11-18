@@ -1,67 +1,19 @@
 AC_PREREQ([2.69])
-AC_INIT([Bip Sexy IRC Proxy], [0.9.0-rc3-git],
-  [http://bip.milkypond.org/projects/bip/activity], [bip],
-  [http://bip.milkypond.org/])
-AM_INIT_AUTOMAKE([subdir-objects])
+AC_INIT([Bip IRC Proxy],[0.9.0-rc3-git],[http://bip.milkypond.org/projects/bip/activity],[bip],[http://bip.milkypond.org/])
+AM_INIT_AUTOMAKE([foreign -Wall -Werror])
 AM_MAINTAINER_MODE
-m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES])
-AC_CONFIG_SRCDIR([src/bip.h])
+
 AC_CONFIG_HEADERS([src/config.h])
 
 # Checks for programs
 AC_PROG_CC
+AM_PROG_AR
 AC_PROG_RANLIB
-AM_PROG_CC_C_O
 AC_PROG_INSTALL
 AM_PROG_LEX
 AC_PROG_YACC
-# AC_PROG_YACC falls back to YACC = "yacc" if bison or byacc are not found,
-# but it does not mean it is present
-AS_IF([test x"$YACC" = "xyacc"], [
-  AC_CHECK_PROG([YACC_EXISTS], [yacc], [yes], [no])
-  AS_IF([test x"$YACC_EXISTS" != xyes], [
-    YACC=${am_missing_run}yacc
-  ])
-])
-
-# Checks for header files.
-AC_FUNC_ALLOCA
-AC_CHECK_HEADERS([arpa/inet.h fcntl.h inttypes.h libintl.h limits.h malloc.h \
-                  netdb.h netinet/in.h stddef.h stdint.h stdlib.h string.h \
-                  sys/socket.h sys/time.h termios.h unistd.h])
-
-# Checks for typedefs, structures, and compiler characteristics.
-AC_C_INLINE
-AC_TYPE_INT16_T
-AC_TYPE_INT32_T
-AC_TYPE_INT8_T
-AC_TYPE_PID_T
-AC_TYPE_SIZE_T
-AC_TYPE_SSIZE_T
-AC_TYPE_UINT16_T
-AC_TYPE_UINT32_T
-AC_TYPE_UINT8_T
-
-AX_C___ATTRIBUTE__
-AH_BOTTOM([
-/* Unused attributes such as function parameters (GCC extension) */
-#ifdef HAVE___ATTRIBUTE__
-# define UNUSED(ATTRIBUTE) ATTRIBUTE __attribute__((unused))
-#else
-# define UNUSED(ATTRIBUTE) ATTRIBUTE
-#endif])
-
-# Checks for library functions.
-AC_FUNC_FORK
-AC_FUNC_MALLOC
-AC_FUNC_MKTIME
-AC_FUNC_REALLOC
-AC_CHECK_FUNCS(clock_gettime ftruncate gethostname gettimeofday localtime_r memmove)
-AC_CHECK_FUNCS(memset mkdir select socket strcasecmp strchr strcspn strdup strerror)
-AC_CHECK_FUNCS(strrchr strstr)
 
 # Deal with parameters
-
 AC_ARG_ENABLE([debug], AS_HELP_STRING([--enable-debug], [Enable debug build]))
 AC_ARG_WITH([openssl], AS_HELP_STRING([--without-openssl],
   [Disable SSL using OpenSSL]))

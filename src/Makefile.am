@@ -20,5 +20,3 @@ bip_LDADD = libbip.a
 bipmkpw_SOURCES = bipmkpw.c md5.c util.c
 AM_YFLAGS= -d
 BUILT_SOURCES = conf.c conf.h lex.c
-
-AM_CFLAGS=-Wall -Wextra -Werror

@@ -11,14 +11,13 @@
  * See the file "COPYING" for the exact licensing terms.
  */
 
-#define _XOPEN_SOURCE 500
-
 #include "config.h"
 #include "log.h"
 #include "irc.h"
 #include "util.h"
 #include <sys/time.h>
 #include <stdio.h>
+#include <string.h>
 
 extern int errno;
 extern int log_level;
@@ -713,7 +712,7 @@ void log_reset_all(log_t *logdata)
 		if (ischannel(*hash_it_key(&hi)))
 			log_reset(store);
 		else
-			list_add_last(&drop, strdup(hash_it_key(&hi)));
+			list_add_last(&drop, bip_strdup(hash_it_key(&hi)));
 	}
 
 	char *name;

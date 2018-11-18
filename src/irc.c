@@ -51,8 +51,8 @@ static void ls_set_nick(struct link_server *ircs, char *nick);
 static void server_set_chanmodes(struct link_server *l, const char *chanmodes);
 static void server_set_prefix(struct link_server *l, const char *prefix);
 static void server_init_modes(struct link_server *s);
-static int get_index(const char* str, char car);
-static int fls(int v);
+static int bip_get_index(const char* str, char car);
+static int bip_fls(int v);
 
 #ifdef HAVE_OIDENTD
 #define OIDENTD_FILENAME ".oidentd.conf"
@@ -137,7 +137,7 @@ list_t *channel_name_list(struct link_server *server, struct channel *c)
 
 		// prepend symbol corresponding to the usermode
 		int msb;
-		if ((msb = fls(ovmask))) {
+		if ((msb = bip_fls(ovmask))) {
 			str[len] = server->prefixes[msb - 1];
 			str[++len] = 0;
 		}
@@ -314,8 +314,9 @@ static int irc_352(struct link_server *server, struct line *line)
 	return OK_COPY_WHO;
 }
 
-static int irc_315(struct link_server *server, UNUSED(struct line *l))
+static int irc_315(struct link_server *server, struct line *l)
 {
+	(void)l;
 	struct link *link = LINK(server);
 	if (link->who_client) {
 		if (link->who_client->who_count == 0) {
@@ -1400,7 +1401,7 @@ static int irc_353(struct link_server *server, struct line *line)
 		long int ovmask = 0;
 		/* some ircds (e.g. unreal) may display several flags for the
                    same nick */
-		while ((index = get_index(server->prefixes, *names))) {
+		while ((index = bip_get_index(server->prefixes, *names))) {
 			ovmask |= 1 << index;
 			names++;
 		}
@@ -1446,8 +1447,9 @@ static int irc_367(struct link_server *server, struct line *l)
 }
 
 /* same as irc_315 */
-static int irc_368(struct link_server *server, UNUSED(struct line *l))
+static int irc_368(struct link_server *server, struct line *l)
 {
+	(void)l;
 	struct link *link = LINK(server);
 	if (link->who_client) {
 		if (link->who_client->who_count == 0) {
@@ -1683,7 +1685,7 @@ static int irc_mode_channel(struct link_server *s, struct channel *channel,
 				channel->key = NULL;
 			}
 		}
-	} else if ((index = get_index(s->usermodes, *mode))) {
+	} else if ((index = bip_get_index(s->usermodes, *mode))) {
 		nick = irc_line_elem(line, cur_arg + 3);
 
 		if (!hash_includes(&channel->ovmasks, nick))
@@ -2713,7 +2715,7 @@ static void server_set_prefix(struct link_server *s, const char *modes)
 }
 
 // Return the position (*1 based*) of car in str, else -1
-static int get_index(const char* str, char car)
+static int bip_get_index(const char* str, char car)
 {
 	char *cur;
 	if ((cur = strchr(str, car)))
@@ -2722,7 +2724,7 @@ static int get_index(const char* str, char car)
 		return 0;
 }
 
-static int fls(int v)
+static int bip_fls(int v)
 {
 	unsigned int r = 0;
 	while (v >>= 1)
