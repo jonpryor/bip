@@ -12,10 +12,13 @@ libbip_a_SOURCES = conf.y lex.l \
 	tuple.h \
 	util.c util.h
 
+libbip_a_CFLAGS = ${OPENSSL_CFLAGS}
+
 bin_PROGRAMS = bip bipmkpw
 
 bip_SOURCES = bip_main.c
-bip_LDADD = libbip.a
+bip_LDADD = libbip.a ${OPENSSL_LIBS}
+
 
 bipmkpw_SOURCES = bipmkpw.c md5.c util.c
 AM_YFLAGS= -d
