@@ -15,7 +15,11 @@ AC_PROG_YACC
 m4_ifndef([PKG_PROG_PKG_CONFIG], [m4_fatal([Please install pkg-config.])])
 PKG_PROG_PKG_CONFIG
 
-PKG_CHECK_MODULES(OPENSSL, [libssl >= 0.9.8 libcrypto >= 0.9.8], [with_openssl=yes], [with_openssl=no])
+PKG_CHECK_MODULES(OPENSSL, [libssl >= 0.9.8 libcrypto >= 0.9.8], [
+			    with_openssl=yes
+			    AC_DEFINE([HAVE_LIBSSL], [1],
+						       [Build SSL support])
+			    ], [ with_openssl=no ])
 
 AC_CACHE_CHECK([whether $CC accepts PIE flags], [ap_cv_cc_pie], [
 	save_CFLAGS=$CFLAGS
