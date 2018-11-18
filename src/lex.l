@@ -108,6 +108,7 @@ list_t *parse_conf(FILE *file, int *err)
 "on_connect_send"	{ return LEX_ON_CONNECT_SEND; }
 "no_client_away_msg"	{ return LEX_NO_CLIENT_AWAY_MSG; }
 "pid_file"		{ return LEX_PID_FILE; }
+"write_oidentd"		{ return LEX_WRITE_OIDENTD; }
 "oidentd_file"		{ return LEX_OIDENTD_FILE; }
 "bip_use_notice"	{ return LEX_BIP_USE_NOTICE; }
 "client_side_ssl_pem"	{ return LEX_CSS_PEM; }

@@ -33,6 +33,7 @@
 #include "defaults.h"
 
 #define S_CONF "bip.conf"
+#define OIDENTD_FILENAME ".oidentd.conf"
 
 extern int sighup;
 extern char *conf_log_root;
@@ -217,7 +218,6 @@ int main(int argc, char **argv)
 		strcat(conf_biphome, "/.bip");
 	}
 
-#ifdef HAVE_OIDENTD
 	if (!bip.oidentdpath) {
 		bip.oidentdpath = bip_malloc(strlen(conf_biphome) + 1 +
 				strlen(OIDENTD_FILENAME) + 1);
@@ -225,7 +225,6 @@ int main(int argc, char **argv)
 		strcat(bip.oidentdpath, "/");
 		strcat(bip.oidentdpath, OIDENTD_FILENAME);
 	}
-#endif
 
 	if (!confpath) {
 		confpath = bip_malloc(strlen(conf_biphome) + 1 +
@@ -236,7 +235,7 @@ int main(int argc, char **argv)
 	}
 	conf = fopen(confpath, "r");
 	if (!conf)
-		fatal("config file not found");
+		fatal("config file not found (%s)", confpath);
 
 	r = fireup(&bip, conf);
 	fclose(conf);
