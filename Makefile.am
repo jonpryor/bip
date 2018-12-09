@@ -1,4 +1,7 @@
-SUBDIRS = src . tests
+if COND_WANT_TESTS
+  MAYBE_TESTS = tests
+endif
+SUBDIRS = src . $(MAYBE_TESTS)
 
 dist_man_MANS = bip.1 bip.conf.5 bipmkpw.1
 
