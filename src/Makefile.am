@@ -17,9 +17,11 @@ libbip_a_CFLAGS = ${OPENSSL_CFLAGS}
 bin_PROGRAMS = bip bipmkpw
 
 bip_SOURCES = bip_main.c
+bip_CFLAGS = ${OPENSSL_CFLAGS}
 bip_LDADD = libbip.a ${OPENSSL_LIBS}
 
 
 bipmkpw_SOURCES = bipmkpw.c md5.c util.c
+bipmkpw_CFLAGS = ${OPENSSL_CFLAGS}
 AM_YFLAGS= -d
 BUILT_SOURCES = conf.c conf.h lex.c
