@@ -1493,7 +1493,8 @@ static int SSLize(connection_t *cn, int *nc)
 	}
 
 	if (err2 == SSL_ERROR_SYSCALL) {
-		/* socked died */
+		mylog(LOG_ERROR, "Error with socket during ssl handshake.");
+		connection_close(cn);
 		cn->connected = CONN_ERROR;
 		return 1;
 	}
