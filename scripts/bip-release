@@ -25,7 +25,7 @@ make_distcheck() {
 	# prepare sources
 	autoreconf -i -Wall
 	# Create makefile, use all possible options
-	./configure --enable-oidentd
+	./configure
 	# run distcheck
 	if ! make ${MAKEOPTS} distcheck; then
 	    echo "'make distcheck' fails, please try again." >&2

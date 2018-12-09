@@ -35,18 +35,18 @@ I. INSTALLATION
     Just issue:
 
     From bip-X.Y.Z.tar.gz package:
-    # ./configure --enable-oidentd && make
+    # ./configure && make
 
     From repository:
     #  autoreconf -i -Wall
-    # ./configure --enable-maintainer-mode --enable-oidentd && make
+    # ./configure --enable-maintainer-mode && make
 
     If openssl and its developement files are installed, bip should build with
     SSL support. After a successful build the bip binary can be found in
     ./src/bip.
 
     By default, "-Werror" is used. If you encounter warnings, you could try:
-    # CFLAGS="-Wno-error" ./configure --enable-oidentd && make
+    # CFLAGS="-Wno-error" ./configure && make
 
 
 II. CONFIGURATION
@@ -190,10 +190,10 @@ IV. USING BIP
       a default_username set to "myuser", he would appear as ~myuser@yourhost,
       which may be sufficient for most networks.
 
-      If the network you're on is a bit more requiring, you can set up an
-      oidentd server on your host, and (if not already) compile bip with
-      oidentd spoofing support (--enable-oidentd option of the configure
-      script). Let's say bip is the system user running bip, you should add to
+      If the network you're on is a bit more demanding, you can set up an
+      oidentd server on your host, and enable oidentd spoofing support
+      ('write_oidentd = true;' option in bip configuration file). Let's
+      say bip is the system user running bip, you should add to
       your /etc/oidentd.conf :
 
         user "bip" {
