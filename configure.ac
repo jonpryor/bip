@@ -40,10 +40,7 @@ if test "$ap_cv_cc_pie" = "yes"; then
 	enable_pie=yes
 fi
 
-PKG_CHECK_MODULES([CHECK], [check >= 0.9.6], [
-		   AC_CONFIG_FILES([tests/Makefile])
-		   enable_tests=yes
-		   ], [ enable_tests=no ])
+PKG_CHECK_MODULES([CHECK], [check >= 0.9.6], [enable_tests=yes], [enable_tests=no])
 AM_CONDITIONAL([COND_WANT_TESTS], [test "$enable_tests" = yes])
 
 AC_CHECK_FUNC(backtrace_symbols_fd, [
@@ -53,7 +50,7 @@ AC_CHECK_FUNC(backtrace_symbols_fd, [
 ])
 
 
-AC_CONFIG_FILES([Makefile src/Makefile])
+AC_CONFIG_FILES([Makefile src/Makefile tests/Makefile])
 AC_OUTPUT
 
 echo OPENSSL: $with_openssl
