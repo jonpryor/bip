@@ -162,7 +162,7 @@ void conf_die(bip_t *bip, char *fmt, ...)
 /* RACE CONDITION! */
 int do_pid_stuff(void)
 {
-	char hname[1024];
+	char hname[512];
 	char longpath[1024];
 	FILE *f;
 	int fd;
@@ -172,10 +172,12 @@ try_again:
 	f = fopen(conf_pid_file, "r");
 	if (f)
 		goto pid_is_there;
-	if (gethostname(hname, 1023) == -1)
+	if (gethostname(hname, 511) == -1)
 		fatal("%s %s", "gethostname", strerror(errno));
+	hname[511] = 0;
 	snprintf(longpath, 1023, "%s.%s.%ld", conf_pid_file, hname,
 			(long unsigned int)getpid());
+	longpath[1023] = 0;
 	if ((fd = open(longpath, O_CREAT|O_WRONLY, S_IWUSR|S_IRUSR)) == -1)
 		fatal("Cannot write to PID file (%s) %s", longpath,
 				strerror(errno));
