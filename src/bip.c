@@ -163,9 +163,11 @@ void conf_die(bip_t *bip, char *fmt, ...)
 int do_pid_stuff(void)
 {
 	char hname[512];
-	char longpath[1024];
 	FILE *f;
 	int fd;
+	// size is conf_pid_file + hname max + %ld max + two '.'.
+	int longpath_max = strlen(conf_pid_file) + 512 + 3 + 20;
+	char *longpath = bip_malloc(longpath_max + 1);
 
 try_again:
 	fd = -1;
@@ -175,9 +177,9 @@ try_again:
 	if (gethostname(hname, 511) == -1)
 		fatal("%s %s", "gethostname", strerror(errno));
 	hname[511] = 0;
-	snprintf(longpath, 1023, "%s.%s.%ld", conf_pid_file, hname,
+	snprintf(longpath, longpath_max - 1, "%s.%s.%ld", conf_pid_file, hname,
 			(long unsigned int)getpid());
-	longpath[1023] = 0;
+	longpath[longpath_max] = 0;
 	if ((fd = open(longpath, O_CREAT|O_WRONLY, S_IWUSR|S_IRUSR)) == -1)
 		fatal("Cannot write to PID file (%s) %s", longpath,
 				strerror(errno));
@@ -191,6 +193,7 @@ try_again:
 		}
 	}
 	unlink(longpath);
+	free(longpath);
 	return fd;
 pid_is_there:
 	{
@@ -232,6 +235,7 @@ pid_is_there:
 					" %s.", conf_pid_file);
 		exit(2);
 	}
+	free(longpath);
 	return 0;
 }
 
