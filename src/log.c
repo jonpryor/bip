@@ -83,7 +83,7 @@ int check_dir_r(char *dirname)
 		int slash_ok = 1;
 		while (*tmp == '/') {
 			if (slash_ok) {
-				strncpy(dir + count, "/", 1);
+				strncpy(dir + count, "/", 2);
 				count++;
 				slash_ok = 0;
 			}
