@@ -25,3 +25,5 @@ bipmkpw_SOURCES = bipmkpw.c md5.c util.c
 bipmkpw_CFLAGS = ${OPENSSL_CFLAGS}
 AM_YFLAGS= -d
 BUILT_SOURCES = conf.c conf.h lex.c
+
+AM_CFLAGS=-Wall -Wextra -Werror
