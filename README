@@ -38,7 +38,7 @@ I. INSTALLATION
     # ./configure && make
 
     From repository:
-    #  autoreconf -i -Wall
+    #  autoreconf -i
     # ./configure --enable-maintainer-mode && make
 
     If openssl and its developement files are installed, bip should build with
