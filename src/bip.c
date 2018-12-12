@@ -346,10 +346,10 @@ static int add_network(bip_t *bip, list_t *data)
 	}
 #endif
 	if (n->serverc == 0) {
+		conf_die(bip, "No server in network: %s", n->name);
 		hash_remove_if_exists(&bip->networks, name);
 		free(n->name);
 		free(n);
-		conf_die(bip, "No sever in network: %s", n->name);
 		n = NULL;
 		return 0;
 	}
