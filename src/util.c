@@ -122,9 +122,7 @@ char *timestamp(void)
 	time(&tv);
 	tm = localtime(&tv);
 
-	snprintf(ts, 20, "%02d-%02d-%04d %02d:%02d:%02d", tm->tm_mday,
-			tm->tm_mon + 1, tm->tm_year + 1900, tm->tm_hour,
-			tm->tm_min, tm->tm_sec);
+	strftime(ts, 20, "%d-%m-%Y %H:%M:%S", tm);
 	return ts;
 }
 
@@ -137,9 +135,7 @@ char *hrtime(time_t s)
 		return "never";
 	tm = localtime(&s);
 
-	snprintf(ts, 20, "%02d-%02d-%04d %02d:%02d:%02d", tm->tm_mday,
-			tm->tm_mon + 1, tm->tm_year + 1900, tm->tm_hour,
-			tm->tm_min, tm->tm_sec);
+	strftime(ts, 20, "%d-%m-%Y %H:%M:%S", tm);
 	return ts;
 }
 

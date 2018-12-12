@@ -144,10 +144,10 @@ char *log_build_filename(log_t *logdata, const char *destination)
 
 	time(&s);
 	now = localtime(&s);
-	snprintf(year, 5, "%04d", now->tm_year + 1900);
-	snprintf(day, 3, "%02d", now->tm_mday);
-	snprintf(month, 3, "%02d", now->tm_mon + 1);
-	snprintf(hour, 3, "%02d", now->tm_hour);
+	strftime(year, 5, "%Y", now);
+	strftime(day, 3, "%d", now);
+	strftime(month, 3, "%m", now);
+	strftime(hour, 3, "%H", now);
 	snprintf(logfile, MAX_PATH_LEN, "%s/%s", conf_log_root,
 			conf_log_format);
 	replace_var(logfile, "%u", logdata->user->name, MAX_PATH_LEN);
