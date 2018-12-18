@@ -2033,6 +2033,9 @@ void irc_client_close(struct link_client *ic)
 			log_client_none_connected(LINK(ic)->log);
 		}
 		irc_client_free(ic);
+	} else if (TYPE(ic) == IRC_TYPE_TRUST_CLIENT) {
+		unbind_from_link(ic);
+		irc_client_free(ic);
 	} else if (TYPE(ic) == IRC_TYPE_LOGING_CLIENT) {
 		irc_client_free(ic);
 	}
