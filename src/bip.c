@@ -1613,7 +1613,6 @@ int adm_trust(struct link_client *ic, struct line *line)
 				"connecting your client again.\r\n");
 
 		LINK(ic)->recon_timer = 1; /* Speed up reconnection... */
-		unbind_from_link(ic);
 		return OK_CLOSE;
 	}
 	return OK_FORGET;
