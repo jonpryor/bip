@@ -2512,7 +2512,8 @@ prot_err:
 	if (linel)
 		list_free(linel);
 	if (lc) {
-		if (TYPE(lc) == IRC_TYPE_LOGING_CLIENT)
+		if (TYPE(lc) == IRC_TYPE_LOGING_CLIENT || TYPE(lc) ==
+				IRC_TYPE_TRUST_CLIENT)
 			list_remove(&bip->connecting_client_list, lc);
 		irc_close(lc);
 	}
