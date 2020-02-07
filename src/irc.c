@@ -631,7 +631,7 @@ static char *get_str_elem(char *str, int num)
 		if (c - cur < 1)
 			return NULL;
 		ret = bip_malloc(c - cur + 1);
-		strncpy(ret, cur, c - cur);
+		memcpy(ret, cur, c - cur);
 		ret[c - cur] = 0;
 		return ret;
 	}
@@ -640,7 +640,7 @@ static char *get_str_elem(char *str, int num)
 		if (c - cur < 1)
 			return NULL;
 		ret = bip_malloc(c - cur + 1);
-		strncpy(ret, cur, c - cur);
+		memcpy(ret, cur, c - cur);
 		ret[c - cur] = 0;
 		return ret;
 	}
