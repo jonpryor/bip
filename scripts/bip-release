@@ -14,7 +14,7 @@ release_name="$2"
 set_version() {
 	local release_version
 	release_version="${1}"
-	sed -i -e '/^AC_INIT/s/\(, \[\)[^]]*/\1'${release_version}'/' configure.ac
+	sed -i -e '/^AC_INIT/s/\(,\[\)[^]]*/\1'${release_version}'/' configure.ac
 }
 
 get_version() {
