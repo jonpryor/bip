@@ -1,28 +1,421 @@
-commit eaed46da1485ea81556ad255d7d56dc33daf1913 (G)
+commit 92a1f07c76e69396973fc4015f3285fc5681bb40 (G)
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@libregerbil.fr>
+Date:   Mon May 18 04:43:59 2020 +0200
+
+    bip-release: update regex
+    
+    Related: c0fafe669d08170b171601d49cf5542a68692a71
+
+commit 63453bad41681d8c7c98ee279f80a16312deb7e5 (G)
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@libregerbil.fr>
+Date:   Mon May 18 04:04:06 2020 +0200
+
+    Update INSTALL file which refers to README
+    
+    for specific instructions.
+
+commit 92819d87eae8ec8076d67a647adbd81d3c29e8b8 (G)
+Author: Adam Williamson <awilliam@redhat.com>
+Date:   Fri Feb 7 11:20:45 2020 -0800
+
+    Fix stringop-truncation error (thanks DJ Delorie)
+    
+    See https://bugzilla.redhat.com/show_bug.cgi?id=1799189. bip build fails
+    on current Fedora Rawhide GCC and glibc. DJ Delorie says "The warning is
+    correct; the code is copying up to the NUL on purpose, then copying the
+    NUL in a separate command.  Not sure why." Tom Hughes suggests this as
+    the fix.
+
+commit c9cc64f2e1932339ddd08d39261331f6b6ceee71 (N)
+Author: Arnaud Cornet <arnaud.cornet@gmail.com>
+Date:   Tue Dec 25 10:13:54 2018 -0500
+
+    Be more consistent when freeing incomplete clients.
+    
+    Cleanup IRC_TYPE_TRUST_CLIENT clients from the connecting client list
+    the same way as IRC_TYPE_LOGING_CLIENT.
+
+commit 0044826084a135dc853a3d0643f28cb284723e90 (N)
+Author: Arnaud Cornet <arnaud.cornet@gmail.com>
+Date:   Mon Dec 24 16:58:59 2018 -0500
+
+    Don't unbind succesful trusting clients twice.
+    
+    Complements commit 60122ef160bc2bacbd78f7907390a6743bc0c64d.
+
+commit 60122ef160bc2bacbd78f7907390a6743bc0c64d (N)
+Author: Arnaud Cornet <arnaud.cornet+github@gmail.com>
+Date:   Mon Dec 17 22:33:19 2018 -0500
+
+    Unbind clients of type IRC_TYPE_TRUST_CLIENT.
+    
+    The clients connection was nulled in irc_closed, but the clients were
+    not removed from the link, which caused a segfault on successful
+    connection.
+    
+    https://projects.duckcorp.org/issues/637
+
+commit 814d54c676d5827f6ea37c1cd2d6e846d080c13c (Y)
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@libregerbil.fr>
+Date:   Wed Dec 12 03:02:21 2018 +0100
+
+    use strftime instead of snprintf wherever possible
+
+commit a86b73ab03711b1bc8eb8b2d0a2dd47aac813413 (Y)
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@libregerbil.fr>
+Date:   Wed Dec 12 02:05:14 2018 +0100
+
+    reuse AM_CFLAGS wherever needed
+
+commit e5005cea341fea813c44f5e8d7b411bfec6be4be (N)
+Author: Arnaud Cornet <arnaud.cornet+github@gmail.com>
+Date:   Tue Dec 11 19:46:38 2018 -0500
+
+    Cleanup the network properly when we fail to load.
+
+commit 16f2be6ac268809b67e204463dfbdfcb9a52b023 (N)
+Author: Arnaud Cornet <arnaud.cornet+github@gmail.com>
+Date:   Tue Dec 11 19:37:36 2018 -0500
+
+    Give up loading invalid configurations.
+    
+    Bip does not know how to deal with a network with no server. Simply
+    prevent loading such bad configs.
+    Fixes: https://projects.duckcorp.org/issues/611
+
+commit 09053fc5f037e5b29a599681e89627983b744bfe (Y)
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@libregerbil.fr>
+Date:   Tue Dec 11 11:12:08 2018 +0100
+
+    CFLAGS: use -W{all,extra,error} by default again
+
+commit 1f8a8763cb1ba01ed8eeb28515b890b97de89c9b (Y)
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@libregerbil.fr>
+Date:   Tue Dec 11 11:09:25 2018 +0100
+
+    '-Wall -Werror' automake switches are used by default
+    
+    since c0fafe669d08170b171601d49cf5542a68692a71
+
+commit c93a7e841a62b8b47a3fb98ce529d39052f140b5 (Y)
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@libregerbil.fr>
+Date:   Mon Dec 10 00:38:29 2018 +0100
+
+    Fix a typo
+
+commit 843cf3738e117119c506cc447baf251b1921d5b9 (Y)
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@libregerbil.fr>
+Date:   Mon Dec 10 00:17:14 2018 +0100
+
+    oidentd is a runtime option: update doc & script
+
+commit 65406960aa54239607b527603479e9e03ba54552 (N)
+Author: Arnaud Cornet <arnaud.cornet@gmail.com>
+Date:   Sun Dec 9 20:05:40 2018 -0500
+
+    Merge remote-tracking branch 'origin/master'
+
+commit df5508eed053c72cda91ae7dfe3d216512695336 (N)
+Author: Arnaud Cornet <arnaud.cornet@gmail.com>
+Date:   Sun Dec 9 19:52:46 2018 -0500
+
+    Deal more gracefully with long home directories.
+    
+    This is a better fix for:
+    https://projects.duckcorp.org/issues/636
+
+commit 87192685f55856d2c28021963ab2c308e21faddc (N)
+Author: Arnaud Cornet <arnaud.cornet@gmail.com>
+Date:   Sun Dec 9 19:40:36 2018 -0500
+
+    Fix gcc-8 warning.
+    
+    Change weird use of strncpy where we know we will truncate and use an
+    extra byte copy instead.
+
+commit d2dcb0adb1aa8c2c4526aa6ad650483b0e02ab7d (N)
+Author: Arnaud Cornet <arnaud.cornet@gmail.com>
+Date:   Sun Dec 9 19:27:56 2018 -0500
+
+    Fix warning with gcc-8.
+    
+    Fixes: https://projects.duckcorp.org/issues/636
+
+commit 02c55a37b2cd9561a57ed3869ca147cbb1644ff3 (Y)
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@libregerbil.fr>
+Date:   Wed May 30 03:34:12 2018 +0200
+
+    add debug log & differentiate error messages
+
+commit e224f067c1d26c067ed80cd9f94377dbbb878933 (Y)
+Author: Arnaud Cornet <arnaud.cornet@gmail.com>
+Date:   Sun Dec 9 16:06:18 2018 -0500
+
+    Fix the conditional build of tests again.
+    
+    Per [1], you always output the optional directory Makefile.
+    
+    [1] https://www.gnu.org/software/automake/manual/html_node/Subdirectories-with-AM_005fCONDITIONAL.html#Subdirectories-with-AM_005fCONDITIONAL
+
+commit 936b76690596a37fa1c4143f1ca382ccfa974770 (Y)
+Author: Arnaud Cornet <arnaud.cornet@gmail.com>
+Date:   Sun Dec 9 15:08:58 2018 -0500
+
+    Make the tests subdirectory optional.
+    
+    Otherwise build breaks when check is not installed.
+
+commit caf979a4c5b0205068b61ba6628bb679823068fd (Y)
+Author: Arnaud Cornet <arnaud.cornet@gmail.com>
+Date:   Sun Dec 9 14:27:59 2018 -0500
+
+    Close descriptor when SSL reports a system error.
+    
+    Avoids leaking fd when connections are closed abruptly.
+
+commit 513a6582ad2cb395e40b5597b38fcdbb8751b695 (Y)
+Author: Arnaud Cornet <arnaud.cornet@gmail.com>
+Date:   Sun Dec 9 14:04:43 2018 -0500
+
+    Add CFLAGS needed for openssl.
+    
+    Otherwise building fails in platforms with esoteric openssl locations.
+
+commit ba5cef017cdd5cb579589c7c0f3f8b8938532a62 (Y)
+Author: Arnaud Cornet <arnaud.cornet@gmail.com>
+Date:   Fri Nov 30 09:00:51 2018 -0500
+
+    Fix test automake file to link openssl.
+
+commit 2bf967bacc58192c92604462b7a5ee704b98a605 (Y)
+Author: Arnaud Cornet <arnaud.cornet+github@gmail.com>
+Date:   Sun Nov 18 15:37:46 2018 -0500
+
+    Add missing OpenSSL CFLAGS/LDFLAGs to build.
+    
+    Those were removed by mistake in the previous autotool refactor.
+
+commit 34a92dedb1609bf816b9e11c7993160a87560463 (Y)
+Author: Arnaud Cornet <arnaud.cornet+github@gmail.com>
+Date:   Sun Nov 18 15:07:16 2018 -0500
+
+    Remove OIDENTD build options.
+    
+    Instead support a runtime option.
+    Note that existing oidentd users will have to add write_oidentd = true
+    in their config to keep existing behavior.
+
+commit 7844716af5d1c655989afbfc0c3cc12665e3884b (Y)
+Author: Arnaud Cornet <arnaud.cornet+github@gmail.com>
+Date:   Sun Nov 18 14:30:17 2018 -0500
+
+    Fewer configure options.
+    
+    Use pkg-config to detect openssl.
+    Eagerly use backtrace if provided by libc.
+
+commit 87f34153303becc9eeef5d331992b67557ce9a46 (Y)
+Author: Arnaud Cornet <arnaud.cornet+github@gmail.com>
+Date:   Sun Nov 18 14:23:06 2018 -0500
+
+    Fewer build options.
+    
+    Eagerly depend on openssl and check, build degraded without.
+
+commit c0fafe669d08170b171601d49cf5542a68692a71 (Y)
+Author: Arnaud Cornet <arnaud.cornet@gmail.com>
+Date:   Sun Nov 18 09:10:16 2018 -0500
+
+    Simplify autotools configuration.
+
+commit a80e74bbdc84862342441e0c5bfb3c22faf4d534 (Y)
+Author: Arnaud Cornet <arnaud.cornet@gmail.com>
+Date:   Sun Nov 18 08:19:26 2018 -0500
+
+    Add .clang-format file.
+
+commit fabaec9d807e9ac106790f282953ffa5c3aa055a (Y)
+Author: Arnaud Cornet <arnaud.cornet@gmail.com>
+Date:   Sun Nov 18 08:18:42 2018 -0500
+
+    More files in .gitignore
+
+commit e222e1c986ef136b31d98dd444d3ea96827b4bea (Y)
+Author: Arnaud Cornet <arnaud.cornet@gmail.com>
+Date:   Sun Nov 18 08:15:31 2018 -0500
+
+    Add .gitignore.
+
+commit 0b8269e2d31a6aaabeae850b168cc990621dbbbd (N)
+Author: Arnaud Cornet <arnaud.cornet@gmail.com>
+Date:   Sun Dec 9 16:06:18 2018 -0500
+
+    Fix the conditional build of tests again.
+    
+    Per [1], you always output the optional directory Makefile.
+    
+    [1] https://www.gnu.org/software/automake/manual/html_node/Subdirectories-with-AM_005fCONDITIONAL.html#Subdirectories-with-AM_005fCONDITIONAL
+
+commit e27b84f15e9e841a7771d86f73640eaaa8c3cbcf (N)
+Author: Arnaud Cornet <arnaud.cornet@gmail.com>
+Date:   Sun Dec 9 15:08:58 2018 -0500
+
+    Make the tests subdirectory optional.
+    
+    Otherwise build breaks when check is not installed.
+
+commit 4d7f2437779464e54353b19f26a001b63883a6ef (N)
+Author: Arnaud Cornet <arnaud.cornet@gmail.com>
+Date:   Sun Dec 9 14:27:59 2018 -0500
+
+    Close descriptor when SSL reports a system error.
+    
+    Avoids leaking fd when connections are closed abruptly.
+
+commit 2fd3418a9e37b34808bbcdd449be4309d54328a8 (N)
+Author: Arnaud Cornet <arnaud.cornet@gmail.com>
+Date:   Sun Dec 9 14:04:43 2018 -0500
+
+    Add CFLAGS needed for openssl.
+    
+    Otherwise building fails in platforms with esoteric openssl locations.
+
+commit b963308e6c8d7b34c17016cb8a2ee5e5c14d64a4 (N)
+Author: Arnaud Cornet <arnaud.cornet@gmail.com>
+Date:   Fri Nov 30 09:00:51 2018 -0500
+
+    Fix test automake file to link openssl.
+
+commit fbde1552870226687ed1e0d6b9b584c987bc0173 (N)
+Author: Arnaud Cornet <arnaud.cornet+github@gmail.com>
+Date:   Sun Nov 18 15:37:46 2018 -0500
+
+    Add missing OpenSSL CFLAGS/LDFLAGs to build.
+    
+    Those were removed by mistake in the previous autotool refactor.
+
+commit 012b21a68b5cc0532a621996abe3d011b2e89b66 (N)
+Author: Arnaud Cornet <arnaud.cornet+github@gmail.com>
+Date:   Sun Nov 18 15:07:16 2018 -0500
+
+    Remove OIDENTD build options.
+    
+    Instead support a runtime option.
+    Note that existing oidentd users will have to add write_oidentd = true
+    in their config to keep existing behavior.
+
+commit 40233ff9388d4f85fdf348c379e2ebf289d85904 (N)
+Author: Arnaud Cornet <arnaud.cornet+github@gmail.com>
+Date:   Sun Nov 18 14:30:17 2018 -0500
+
+    Fewer configure options.
+    
+    Use pkg-config to detect openssl.
+    Eagerly use backtrace if provided by libc.
+
+commit 7dec6b3072341aa338d4cc3952879df57e5aa09b (N)
+Author: Arnaud Cornet <arnaud.cornet+github@gmail.com>
+Date:   Sun Nov 18 14:23:06 2018 -0500
+
+    Fewer build options.
+    
+    Eagerly depend on openssl and check, build degraded without.
+
+commit 27f1cf988bdc421c285461bd91e4ae1995356db8 (N)
+Author: Arnaud Cornet <arnaud.cornet@gmail.com>
+Date:   Sun Nov 18 09:10:16 2018 -0500
+
+    Simplify autotools configuration.
+
+commit 1e80291b9c091635b9016cb4f4532d8ca0d76331 (N)
+Author: Arnaud Cornet <arnaud.cornet@gmail.com>
+Date:   Sun Nov 18 08:19:26 2018 -0500
+
+    Add .clang-format file.
+
+commit 362ec25e4bec19f079a91a10358ac43220c77411 (N)
+Author: Arnaud Cornet <arnaud.cornet@gmail.com>
+Date:   Sun Nov 18 08:18:42 2018 -0500
+
+    More files in .gitignore
+
+commit f4ac33f63c376970fe59f962e35940e949c51c4c (N)
+Author: Arnaud Cornet <arnaud.cornet@gmail.com>
+Date:   Sun Nov 18 08:15:31 2018 -0500
+
+    Add .gitignore.
+
+commit aa35b372b47c7736a9efa6c6703ed1ffd23b1c36 (Y)
+Author: Arnaud Cornet <arnaud.cornet@gmail.com>
+Date:   Mon Nov 12 22:55:58 2018 -0500
+
+    Add unit tests.
+    
+    Add an optional build dependency on check and add an initial test case.
+
+commit 34711f765339e3ec8548c06665feb5da713a649e (Y)
+Author: Arnaud Cornet <arnaud.cornet@gmail.com>
+Date:   Sun Nov 11 18:16:14 2018 -0500
+
+    Move automake file in src subdir, isolate main.
+    
+    In preparation for adding a unit test directory, move Makefile.am in
+    src, and build a static libbip before linking a binary.
+
+commit 53dafd9590ff110b81e1847d01d53b9b022554d2 (N)
+Author: Arnaud Cornet <arnaud.cornet@gmail.com>
+Date:   Mon Nov 12 22:55:58 2018 -0500
+
+    Add unit tests.
+    
+    Add an optional build dependency on check and add an initial test case.
+
+commit 057107a2332e73ddbc969d2e74a29d8f8f5c36ee (N)
+Author: Arnaud Cornet <arnaud.cornet@gmail.com>
+Date:   Sun Nov 11 18:16:14 2018 -0500
+
+    Move automake file in src subdir, isolate main.
+    
+    In preparation for adding a unit test directory, move Makefile.am in
+    src, and build a static libbip before linking a binary.
+
+commit b75345d6b552a3d06b21c843219393245ab7c4d3 (Y)
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@libregerbil.fr>
+Date:   Tue Mar 27 00:14:12 2018 +0200
+
+    Add -git to version string.
+
+commit cf144594a00ba2820ede56c328489a30a6d80b37 (Y)
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@libregerbil.fr>
+Date:   Tue Mar 27 00:13:57 2018 +0200
+
+    Update version and ChangeLog for bip-0.9.0-rc3 release.
+
+commit eaed46da1485ea81556ad255d7d56dc33daf1913 (Y)
 Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@libregerbil.fr>
 Date:   Thu Mar 22 02:37:38 2018 +0100
 
     Merge branch 'path_test_use_stat'
 
-commit 025689d8074b13f5229ee99b95190437194bae53 (G)
+commit 025689d8074b13f5229ee99b95190437194bae53 (Y)
 Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@libregerbil.fr>
 Date:   Thu Mar 22 02:37:23 2018 +0100
 
     Merge branch 'dh_param_not_mandatory'
 
-commit 948b41ef7a09b751df22bbd1c8f28b7bbe405a18 (G)
+commit 948b41ef7a09b751df22bbd1c8f28b7bbe405a18 (Y)
 Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@libregerbil.fr>
 Date:   Thu Mar 22 02:37:10 2018 +0100
 
     Merge branch 'fix_path_construction_issue'
 
-commit 7834471f78c1af516df4bdbc193a805582e9f7fa (G)
+commit 7834471f78c1af516df4bdbc193a805582e9f7fa (Y)
 Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@libregerbil.fr>
 Date:   Wed Mar 21 11:32:46 2018 +0100
 
     default value isn't used when path doesn't exist
 
-commit 13b2e3763541fc5045bbc09f14a5b0aae51558d0 (G)
+commit 13b2e3763541fc5045bbc09f14a5b0aae51558d0 (Y)
 Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@libregerbil.fr>
 Date:   Wed Mar 21 11:12:21 2018 +0100
 
@@ -32,7 +425,7 @@ Date:   Wed Mar 21 11:12:21 2018 +0100
     
     Closes #499
 
-commit 3afb16d795073d2aff9e2253619757a4e1e6e77c (G)
+commit 3afb16d795073d2aff9e2253619757a4e1e6e77c (Y)
 Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@libregerbil.fr>
 Date:   Wed Mar 21 11:54:20 2018 +0100
 
@@ -41,7 +434,7 @@ Date:   Wed Mar 21 11:54:20 2018 +0100
     fopen was used because it's stdlib but stat is already used in other
     parts
 
-commit 348737fab5c6529ba636056d40ec42f2cb18dd96 (G)
+commit 348737fab5c6529ba636056d40ec42f2cb18dd96 (Y)
 Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@libregerbil.fr>
 Date:   Wed Mar 21 11:07:56 2018 +0100
 
@@ -50,25 +443,25 @@ Date:   Wed Mar 21 11:07:56 2018 +0100
     Thanks to Renzokuken for pointing that !
     Closes #610
 
-commit 385be75f7e904394dc4c9cccca9656c20c4c44f4 (G)
+commit 385be75f7e904394dc4c9cccca9656c20c4c44f4 (Y)
 Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@libregerbil.fr>
 Date:   Mon Feb 19 20:26:34 2018 +0100
 
     Add -git to version string.
 
-commit 8ceebf1fd882f855d46a3d1d45dddbf50a357111 (G)
+commit 8ceebf1fd882f855d46a3d1d45dddbf50a357111 (Y)
 Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@libregerbil.fr>
 Date:   Mon Feb 19 20:25:59 2018 +0100
 
     Update version and ChangeLog for bip-0.9.0-rc2 release.
 
-commit 901f54eff0f647442923f2ccf6f470f22e4c5ffe (G)
+commit 901f54eff0f647442923f2ccf6f470f22e4c5ffe (Y)
 Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@libregerbil.fr>
 Date:   Mon Feb 19 20:09:25 2018 +0100
 
     Merge branch 'username_disallow_duplicate'
 
-commit 96f0403a2ab2f5df63b4e1f584a1bd9879be1339 (G)
+commit 96f0403a2ab2f5df63b4e1f584a1bd9879be1339 (Y)
 Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@libregerbil.fr>
 Date:   Mon Feb 19 20:08:26 2018 +0100
 
@@ -77,55 +470,55 @@ Date:   Mon Feb 19 20:08:26 2018 +0100
     MOVE_STRING macro is used in order to initialize parameters, this
     macro calls free when necessary.
 
-commit 83d7f2acbe3ef464815b8f73e35fd8fc252a0421 (G)
+commit 83d7f2acbe3ef464815b8f73e35fd8fc252a0421 (Y)
 Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@libregerbil.fr>
 Date:   Mon Feb 19 20:07:38 2018 +0100
 
     Add missing call to MAYFREE
 
-commit dbe19d938775121e8557068fd3254894f2178684 (G)
+commit dbe19d938775121e8557068fd3254894f2178684 (Y)
 Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
 Date:   Wed Mar 1 14:14:35 2017 +0100
 
     Handle no defined users
 
-commit 903a88e58977cde81b894d106354bbd74fc26a99 (G)
+commit 903a88e58977cde81b894d106354bbd74fc26a99 (Y)
 Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@libregerbil.fr>
 Date:   Mon Feb 19 19:59:06 2018 +0100
 
     Merge branch 'systemd'
 
-commit 866552e102d4918735daa9c48eaef764ca201799 (G)
+commit 866552e102d4918735daa9c48eaef764ca201799 (Y)
 Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
 Date:   Wed Mar 1 09:18:23 2017 +0100
 
     sample conf: on_connect_send can be used more than once
 
-commit aad87daa9e65a5cab8bf0157c22a1593dbdaad9c (G)
+commit aad87daa9e65a5cab8bf0157c22a1593dbdaad9c (Y)
 Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
 Date:   Tue Feb 28 16:23:21 2017 +0100
 
     sample conf: reformat
 
-commit 6d3bff19693047e752b9e649a03946402d6bfdf8 (G)
+commit 6d3bff19693047e752b9e649a03946402d6bfdf8 (Y)
 Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
 Date:   Tue Feb 28 16:22:53 2017 +0100
 
     sample conf: remove trailing spaces
 
-commit 97e19a52158ae25352fa84b4b5f29379904aa088 (G)
+commit 97e19a52158ae25352fa84b4b5f29379904aa088 (Y)
 Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
 Date:   Tue Feb 28 16:21:52 2017 +0100
 
     sample conf: comment the whole file
 
-commit a31cbe45fabc4970faef2522e63ad24e619150ad (G)
+commit a31cbe45fabc4970faef2522e63ad24e619150ad (Y)
 Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
 Date:   Tue Feb 28 16:17:34 2017 +0100
 
     bipmkpw man page: mention bip man page
 
-commit 072a17b55b61ef95148fdcd4ab467038b88d74fd (G)
+commit 072a17b55b61ef95148fdcd4ab467038b88d74fd (Y)
 Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
 Date:   Tue Feb 28 16:11:19 2017 +0100
 
@@ -134,49 +527,49 @@ Date:   Tue Feb 28 16:11:19 2017 +0100
     - follow man-pages conventions
     - HTML output produced by groff is more readable
 
-commit cdbf22cdb7d40ac25e30ff7b4ae93fb108f14647 (G)
+commit cdbf22cdb7d40ac25e30ff7b4ae93fb108f14647 (Y)
 Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
 Date:   Tue Feb 28 16:10:03 2017 +0100
 
     bip.conf manpage: mention default of ciphers related options
 
-commit 3b9f683d31c8ba928df636c554e5cafc0c12cdec (G)
+commit 3b9f683d31c8ba928df636c554e5cafc0c12cdec (Y)
 Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
 Date:   Tue Feb 28 16:08:03 2017 +0100
 
     bip.conf manpage: fix doc of 'ip' option
 
-commit 09152a1a7d479e0c76c9ae2fea75ddeb9bb0f0ff (G)
+commit 09152a1a7d479e0c76c9ae2fea75ddeb9bb0f0ff (Y)
 Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
 Date:   Tue Feb 28 16:07:07 2017 +0100
 
     bip.conf manpage: new section 'IRC CLIENT CONF'
 
-commit 11482caa95fafe5201107060ac334ad6b03f4275 (G)
+commit 11482caa95fafe5201107060ac334ad6b03f4275 (Y)
 Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
 Date:   Tue Feb 28 16:02:25 2017 +0100
 
     bip.conf manpage: add a SYNOPSIS section
 
-commit b474f55e8ae7c57ee4dbfe71f1b64dc8e42139e5 (G)
+commit b474f55e8ae7c57ee4dbfe71f1b64dc8e42139e5 (Y)
 Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
 Date:   Tue Feb 28 16:00:49 2017 +0100
 
     bip manpage: mention -s switch in SYNOPSIS section
 
-commit af46159275c3e533a4c02326ffa80a673a4bcdc3 (G)
+commit af46159275c3e533a4c02326ffa80a673a4bcdc3 (Y)
 Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
 Date:   Thu Feb 23 16:56:17 2017 +0100
 
     Sample config file: add default values
 
-commit e52df8d08615f55d58011a720aadaecd1769a104 (G)
+commit e52df8d08615f55d58011a720aadaecd1769a104 (Y)
 Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
 Date:   Wed Feb 15 16:41:59 2017 +0100
 
     sample.conf: use /run instead of /var/run
 
-commit 3f4a260a54b6bf8812310c3d3c320d559b8c0374 (G)
+commit 3f4a260a54b6bf8812310c3d3c320d559b8c0374 (Y)
 Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@gmx.fr>
 Date:   Wed Feb 15 16:03:15 2017 +0100
 
@@ -190,13 +583,13 @@ Date:   Wed Feb 15 16:03:15 2017 +0100
     - Environment=BIP_DEFAULT_CONFIG='/path/to/default/bip'
     using a unit file drop-in bip-config.service.d/<distrib>.conf
 
-commit 554c372452692a88a7d8aeee93f6f4f4d41b6e96 (G)
+commit 554c372452692a88a7d8aeee93f6f4f4d41b6e96 (Y)
 Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@libregerbil.fr>
 Date:   Wed Jul 26 03:41:10 2017 +0200
 
     Sign commits created by release script
 
-commit 2ecd82f0112e6d57e8651296d624975aa56e03a4 (G)
+commit 2ecd82f0112e6d57e8651296d624975aa56e03a4 (Y)
 Author: Adam Williamson <awilliam@redhat.com>
 Date:   Tue Jul 25 13:08:38 2017 -0700
 
