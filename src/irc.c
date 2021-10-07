@@ -2481,8 +2481,8 @@ void bip_on_event(bip_t *bip, connection_t *conn)
 
 		line = irc_line_new_from_string(line_s);
 		if (!line) {
-			mylog(LOG_ERROR, "[%s] Error in protocol, closing...",
-					link_name(lc));
+			mylog(LOG_ERROR, "[%s] Can not parse line. Link type: %d. "
+					"closing...", link_name(lc), TYPE(lc));
 			free(line_s);
 			goto prot_err_lines;
 		}
@@ -2491,8 +2491,8 @@ void bip_on_event(bip_t *bip, connection_t *conn)
 		irc_line_free(line);
 		free(line_s);
 		if (r == ERR_PROTOCOL) {
-			mylog(LOG_ERROR, "[%s] Error in protocol, closing...",
-					link_name(lc));
+			mylog(LOG_ERROR, "[%s] Error in protocol. Link type: %d closing...",
+					link_name(lc), TYPE(lc));
 			goto prot_err_lines;
 		}
 		if (r == ERR_AUTH)
