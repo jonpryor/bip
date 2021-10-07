@@ -54,6 +54,12 @@ struct channel {
 #define IRC_TYPE_LOGGING_CLIENT (2)
 #define IRC_TYPE_TRUST_CLIENT (3)
 
+enum BLTimestamp {
+	BLTSNone = 0,
+	BLTSTime,
+	BLTSDateTime,
+};
+
 struct bipuser {
 	/** client connection static data **/
 
@@ -74,9 +80,10 @@ struct bipuser {
 	int backlog_lines;
 	int always_backlog:1;
 	int bl_msg_only:1;
-	int backlog_no_timestamp:1;
 	int blreset_on_talk:1;
 	int blreset_connection:1;
+
+	enum BLTimestamp backlog_timestamp;
 
 #ifdef HAVE_LIBSSL
 	int ssl_check_mode;
