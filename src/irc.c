@@ -1235,7 +1235,7 @@ static void irc_copy_cli(struct link_client *src, struct link_client *dest,
 	return;
 }
 
-static int irc_dispatch_loging_client(bip_t *bip, struct link_client *ic,
+static int irc_dispatch_logging_client(bip_t *bip, struct link_client *ic,
 		struct line *line)
 {
 	if (irc_line_count(line) == 0)
@@ -1260,8 +1260,8 @@ int irc_dispatch(bip_t *bip, struct link_any *l, struct line *line)
 	case IRC_TYPE_CLIENT:
 		return irc_dispatch_client(bip, (struct link_client*)l, line);
 		break;
-	case IRC_TYPE_LOGING_CLIENT:
-		return irc_dispatch_loging_client(bip, (struct link_client*)l,
+	case IRC_TYPE_LOGGING_CLIENT:
+		return irc_dispatch_logging_client(bip, (struct link_client*)l,
 				line);
 		break;
 #ifdef HAVE_LIBSSL
@@ -1984,7 +1984,7 @@ static struct link_client *irc_accept_new(connection_t *conn)
 
 	ircc = bip_calloc(sizeof(struct link_client), 1);
 	CONN(ircc) = newconn;
-	TYPE(ircc) = IRC_TYPE_LOGING_CLIENT;
+	TYPE(ircc) = IRC_TYPE_LOGGING_CLIENT;
 	CONN(ircc)->user_data = ircc;
 	return ircc;
 }
@@ -2036,7 +2036,7 @@ void irc_client_close(struct link_client *ic)
 	} else if (TYPE(ic) == IRC_TYPE_TRUST_CLIENT) {
 		unbind_from_link(ic);
 		irc_client_free(ic);
-	} else if (TYPE(ic) == IRC_TYPE_LOGING_CLIENT) {
+	} else if (TYPE(ic) == IRC_TYPE_LOGGING_CLIENT) {
 		irc_client_free(ic);
 	}
 }
@@ -2481,8 +2481,8 @@ void bip_on_event(bip_t *bip, connection_t *conn)
 
 		line = irc_line_new_from_string(line_s);
 		if (!line) {
-			mylog(LOG_ERROR, "[%s] Error in protocol, closing...",
-					link_name(lc));
+			mylog(LOG_ERROR, "[%s] Can not parse line. Link type: %d. "
+					"closing...", link_name(lc), TYPE(lc));
 			free(line_s);
 			goto prot_err_lines;
 		}
@@ -2491,8 +2491,8 @@ void bip_on_event(bip_t *bip, connection_t *conn)
 		irc_line_free(line);
 		free(line_s);
 		if (r == ERR_PROTOCOL) {
-			mylog(LOG_ERROR, "[%s] Error in protocol, closing...",
-					link_name(lc));
+			mylog(LOG_ERROR, "[%s] Error in protocol. Link type: %d closing...",
+					link_name(lc), TYPE(lc));
 			goto prot_err_lines;
 		}
 		if (r == ERR_AUTH)
@@ -2512,7 +2512,7 @@ prot_err:
 	if (linel)
 		list_free(linel);
 	if (lc) {
-		if (TYPE(lc) == IRC_TYPE_LOGING_CLIENT || TYPE(lc) ==
+		if (TYPE(lc) == IRC_TYPE_LOGGING_CLIENT || TYPE(lc) ==
 				IRC_TYPE_TRUST_CLIENT)
 			list_remove(&bip->connecting_client_list, lc);
 		irc_close(lc);

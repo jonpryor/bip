@@ -51,7 +51,7 @@ struct channel {
 
 #define IRC_TYPE_CLIENT (0)
 #define IRC_TYPE_SERVER (1)
-#define IRC_TYPE_LOGING_CLIENT (2)
+#define IRC_TYPE_LOGGING_CLIENT (2)
 #define IRC_TYPE_TRUST_CLIENT (3)
 
 struct bipuser {
