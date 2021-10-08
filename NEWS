@@ -4,6 +4,13 @@ Visible changes:
   instead. The allowed values for this new parameter are: "none", "time",
   "datetime". "time" is the default value and allow to keep the default
   behavior.
+- allow to set TLS ciphers: for bip client side (client_side_ciphers),
+  globally for all connections (ssl_default_ciphers) and foreach connection
+  (ssl_ciphers).
+- allow to set DH parameter used for clients SSL connections with the new
+  client_side_dh_param parameter.
+- Add write_oidentd_file parameter. Existing oidentd users must use
+  'write_oidentd = true' in their config to keep existing behavior.
 
 2009-01-24 (0.8.x)
 Visible changes:
