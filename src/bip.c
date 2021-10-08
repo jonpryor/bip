@@ -625,12 +625,22 @@ static int get_tuple_nvalue(list_t *tuple_l, int lex)
 	return -1;
 }
 
+enum BLTimestamp lex_backlog_timestamp(char * tdata) {
+	if (strcmp(tdata, "time") == 0) {
+		return BLTSTime;
+	} else if (strcmp(tdata, "datetime") == 0) {
+		return BLTSDateTime;
+	} else {
+		return BLTSNone;
+	}
+}
+
 struct historical_directives {
 	int always_backlog;
 	int backlog;
 	int bl_msg_only;
 	int backlog_lines;
-	int backlog_no_timestamp;
+	enum BLTimestamp backlog_timestamp;
 	int blreset_on_talk;
 };
 
@@ -658,7 +668,7 @@ static int add_user(bip_t *bip, list_t *data, struct historical_directives *hds)
 		u->always_backlog = DEFAULT_ALWAYS_BACKLOG;
 		u->bl_msg_only = DEFAULT_BL_MSG_ONLY;
 		u->backlog_lines = DEFAULT_BACKLOG_LINES;
-		u->backlog_no_timestamp = DEFAULT_BACKLOG_NO_TIMESTAMP;
+		u->backlog_timestamp = DEFAULT_BACKLOG_TIMESTAMP;
 		u->blreset_on_talk = DEFAULT_BLRESET_ON_TALK;
 		u->blreset_connection = DEFAULT_BLRESET_CONNECTION;
 		u->bip_use_notice = DEFAULT_BIP_USE_NOTICE;
@@ -668,7 +678,7 @@ static int add_user(bip_t *bip, list_t *data, struct historical_directives *hds)
 	u->always_backlog = hds->always_backlog;
 	u->bl_msg_only = hds->bl_msg_only;
 	u->backlog_lines = hds->backlog_lines;
-	u->backlog_no_timestamp = hds->backlog_no_timestamp;
+	u->backlog_timestamp = hds->backlog_timestamp;
 	u->blreset_on_talk = hds->blreset_on_talk;
 
 	while ((t = list_remove_first(data))) {
@@ -706,7 +716,10 @@ static int add_user(bip_t *bip, list_t *data, struct historical_directives *hds)
 			u->backlog_lines = t->ndata;
 			break;
 		case LEX_BACKLOG_NO_TIMESTAMP:
-			u->backlog_no_timestamp = t->ndata;
+			u->backlog_timestamp = t->ndata ? BLTSNone : BLTSTime;
+			break;
+		case LEX_BACKLOG_TIMESTAMP:
+			u->backlog_timestamp = lex_backlog_timestamp(t->pdata);
 			break;
 		case LEX_BLRESET_ON_TALK:
 			u->blreset_on_talk = t->ndata;
@@ -929,7 +942,7 @@ int fireup(bip_t *bip, FILE *conf)
 	SET_HV(hds.backlog, BACKLOG);
 	SET_HV(hds.bl_msg_only, BL_MSG_ONLY);
 	SET_HV(hds.backlog_lines, BACKLOG_LINES);
-	SET_HV(hds.backlog_no_timestamp, BACKLOG_NO_TIMESTAMP);
+	SET_HV(hds.backlog_timestamp, BACKLOG_TIMESTAMP);
 	SET_HV(hds.blreset_on_talk, BLRESET_ON_TALK);
 #undef SET_HV
 
@@ -1010,7 +1023,10 @@ int fireup(bip_t *bip, FILE *conf)
 			hds.backlog_lines = t->ndata;
 			break;
 		case LEX_BACKLOG_NO_TIMESTAMP:
-			hds.backlog_no_timestamp = t->ndata;
+			hds.backlog_timestamp = t->ndata ? BLTSNone : BLTSTime;
+			break;
+		case LEX_BACKLOG_TIMESTAMP:
+			hds.backlog_timestamp = lex_backlog_timestamp(t->pdata);
 			break;
 		case LEX_BLRESET_ON_TALK:
 			hds.blreset_on_talk = t->ndata;
@@ -1352,9 +1368,10 @@ noroom:
 		   STRORNULL(u->default_nick), STRORNULL(u->default_username),
 		   STRORNULL(u->default_realname));
 	if (u->backlog) {
-		bip_notify(ic, "Backlog enabled, lines: %d, no timestamp: %s,"
+		bip_notify(ic, "Backlog enabled, lines: %d, timestamp: %s,"
 			"  messages only: %s", u->backlog_lines,
-			bool2text(u->backlog_no_timestamp),
+			u->backlog_timestamp == BLTSNone ? "none" :
+				(u->backlog_timestamp == BLTSTime ? "time" : "datetime"),
 			bool2text(u->bl_msg_only));
 		bip_notify(ic, "always backlog: %s, reset on talk: %s",
 			bool2text(u->always_backlog),

@@ -90,7 +90,8 @@ list_t *parse_conf(FILE *file, int *err)
 "log_root"		{ return LEX_LOG_ROOT; }
 "log_format"		{ return LEX_LOG_FORMAT; }
 "backlog_lines"		{ return LEX_BACKLOG_LINES; }
-"backlog_no_timestamp"	{ return LEX_BACKLOG_NO_TIMESTAMP; }
+"backlog_timestamp"		{ return LEX_BACKLOG_TIMESTAMP; }
+"backlog_no_timestamp"		{ return LEX_BACKLOG_NO_TIMESTAMP; }
 "backlog"		{ return LEX_BACKLOG; }
 "backlog_always"	{ return LEX_ALWAYS_BACKLOG; }
 "backlog_msg_only"	{ return LEX_BL_MSG_ONLY; }

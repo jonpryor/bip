@@ -853,7 +853,7 @@ char *log_beautify(log_t *logdata, const char *buf, const char *storename,
 	if (!p || !p[0] || !p[1])
 		return _log_wrap(dest, buf);
 	p++;
-	sots = p;
+	sots = logdata->user->backlog_timestamp == BLTSDateTime ? buf : p;
 	p = strchr(p, ' ');
 	if (!p || !p[0] || !p[1])
 		return _log_wrap(dest, buf);
@@ -937,7 +937,7 @@ char *log_beautify(log_t *logdata, const char *buf, const char *storename,
 		strcpy(p, PMSG_ARROW);
 		p += strlen(PMSG_ARROW);
 	}
-	if (logdata->user->backlog_no_timestamp == 0) {
+	if (logdata->user->backlog_timestamp != BLTSNone) {
 		memcpy(p, sots, lots);
 		p += lots;
 		*p++ = '>';
