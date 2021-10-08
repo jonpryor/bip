@@ -1,3 +1,10 @@
+2021-10-08 (0.9.0)
+Visible changes:
+- "backlog_no_timestamp" is deprecated, "backlog_timestamp" should be used
+  instead. The allowed values for this new parameter are: "none", "time",
+  "datetime". "time" is the default value and allow to keep the default
+  behavior.
+
 2009-01-24 (0.8.x)
 Visible changes:
 - One logfile per nick for queries, instead of the messy privates.x.log

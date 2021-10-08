@@ -124,10 +124,11 @@ my %optdesc = (
 			'depends' => 'backlog', 'depval' => 'true',
 			'desc' => 'How much line do you want bip to play back upon client connect' .
 				" {0 => replay everything since backlog's last reset} ?" },
-		'backlog_no_timestamp' => { 'type' => 'b', 'adv' => 0,
+		'backlog_timestamp' => { 'type' => 's', 'adv' => 0,
 			'optional' => 1,
-			'default' => 'false', 'depends' => 'backlog', 'depval' => 'true',
-			'desc' => 'Disable timestamp in backlog ?' },
+			'default' => 'time', 'depends' => 'backlog', 'depval' => 'true',
+			'desc' => 'Use time, datetime or disable prefix in backlog',
+			'values' => ['none', 'time', 'datetime'] },
 		'backlog_msg_only' => { 'type' => 'b', 'adv' => 0,
 			'optional' => 1,
 			'default' => 'false', 'depends' => 'backlog', 'depval' => 'true',
@@ -248,7 +249,7 @@ my %optorder = (
 		undef,
 		'backlog' ,
 		'backlog_lines' ,
-		'backlog_no_timestamp' ,
+		'backlog_timestamp' ,
 		'backlog_msg_only' ,
 		'backlog_always' ,
 		'backlog_reset_on_talk' ,
@@ -313,6 +314,10 @@ sub askOpt {
 		} else {
 			$o = askval($e->{'desc'}, $sel, ($mayempty && ($opt ne 1 ||
 					$e->{'type'} eq 'i' ? 1 : undef)), 1);
+			if (defined $e->{'values'} && !grep(/^$o$/, @{$e->{'values'}})) {
+				print("The allowed values are '@{[ join '\', \'', @{$e->{'values'}} ]}'\n");
+				next;
+			}
 		}
 		if ($o eq undef && $opt eq 0) {
 			print("This value is mandatory, please enter a value\n");
@@ -462,6 +467,11 @@ sub loadConfig {
 		$_->{'server'} = [ values %{$_->{'server'}} ];
 	}
 	foreach my $tcu (@{$cf{'users'}}) {
+		my $backlog_no_timestamp = delete($tcu->{'backlog_no_timestamp'});
+		if (defined $backlog_no_timestamp) {
+			grep(/^$backlog_no_timestamp$/, ('false', 'true')) || return "Invalid value for backlog_no_timestamp: '$backlog_no_timestamp'";
+			$tcu->{'backlog_timestamp'} = $backlog_no_timestamp == 'false' ? 'time' : 'none';
+		}
 		$tcu->{'connection'} = [ values %{$tcu->{'connection'}} ];
 		foreach my $tcc (@{$tcu->{'connection'}}) {
 			$tcc->{'channel'} = [ values %{$tcc->{'channel'}} ];
