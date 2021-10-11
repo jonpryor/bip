@@ -1,3 +1,71 @@
+commit 844395db1a0414014f6cdd178c7c73ef30720f6d (G)
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@libregerbil.fr>
+Date:   Fri Oct 8 19:22:22 2021 +0200
+
+    Update NEWS file: add user facing changes
+
+commit 0c1881b9210794821c71380969c54e1034679f21 (G)
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@libregerbil.fr>
+Date:   Fri Oct 8 18:02:54 2021 +0200
+
+    Deprecate backlog_no_timestamp parameter
+    
+    backlog_timestamp must be used instead.
+    
+    The default behavior is unchanged and can explicitly used with:
+    
+        backlog_timestamp = "time";
+    
+    The "none" value can be used with the backlog_timestamp parameter in
+    order to use the same behavior that the "no" value of the deprecated
+    parameter backlog_no_timestamp provided.
+    
+    The date can now be displayed (in addition to the time) while backlogging:
+    
+        backlog_timestamp = "datetime";
+
+commit 8b343aa5b0aa43441a7bed943bb8338c31b1fcc7 (G)
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@libregerbil.fr>
+Date:   Fri Oct 8 11:57:53 2021 +0200
+
+    Merge branch 'allow-customizing-the-timestamp-format'
+
+commit 2c7b8aa1550fac97d8a203bcf905bf4c7586fe80 (G)
+Author: Thomas Vigouroux <tomvig38@gmail.com>
+Date:   Thu Oct 7 16:16:02 2021 +0200
+
+    Allow customizing the timestamp format
+
+commit 1732209c703397e1a9027784c2af559bc3bca7ac (G)
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@libregerbil.fr>
+Date:   Fri Oct 8 11:48:18 2021 +0200
+
+    Merge branch 'wording_and_typo'
+
+commit 3d732651bc2b957d3553f29bf7903a4bdc651b45 (G)
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@libregerbil.fr>
+Date:   Thu Oct 7 18:06:10 2021 +0200
+
+    Improve wording in error message
+
+commit e6547b8a48e11f7e235d241b2edd3a9360929836 (G)
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@libregerbil.fr>
+Date:   Thu Oct 7 18:04:17 2021 +0200
+
+    Fix a typo (s/LOGING/LOGGING/)
+
+commit 75317ae17ce24e8aafe0358125a632226d3b84fc (G)
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@libregerbil.fr>
+Date:   Mon May 18 04:47:11 2020 +0200
+
+    Add -git to version string.
+
+commit 7362a46a0fc6bf30941d13dbca9dfbd9ed9094ff (G)
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@libregerbil.fr>
+Date:   Mon May 18 04:47:05 2020 +0200
+
+    Update version and ChangeLog for bip-0.9.0-rc4 release.
+
 commit 92a1f07c76e69396973fc4015f3285fc5681bb40 (G)
 Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@libregerbil.fr>
 Date:   Mon May 18 04:43:59 2020 +0200
