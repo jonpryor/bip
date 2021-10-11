@@ -1,3 +1,9 @@
+commit 0e9e61decb5d2cf5aab85ac3de0b2df12c55d92b (G)
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@libregerbil.fr>
+Date:   Mon Oct 11 14:49:17 2021 +0200
+
+    Update version and ChangeLog for bip-0.9.0 release.
+
 commit 844395db1a0414014f6cdd178c7c73ef30720f6d (G)
 Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@libregerbil.fr>
 Date:   Fri Oct 8 19:22:22 2021 +0200
