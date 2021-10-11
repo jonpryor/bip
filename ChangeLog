@@ -1,3 +1,25 @@
+commit 722ed9a8da5470b4b5e75fa140a34cbde409c33b (G)
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@libregerbil.fr>
+Date:   Mon Oct 11 18:06:27 2021 +0200
+
+    ENABLED might not be defined: use a default value
+    
+    For example using ENABLED in /etc/default/bip is DEPRECATED in Debian.
+    
+    Closes #618.
+
+commit df2a9eab17fc39e2f0da3004b4bc150c848c5d61 (G)
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@libregerbil.fr>
+Date:   Mon Oct 11 14:50:25 2021 +0200
+
+    Add -git to version string.
+
+commit d0bb1d4dc0db5f9d50d7e43d6375ff1b77d7273d (G)
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@libregerbil.fr>
+Date:   Mon Oct 11 14:50:19 2021 +0200
+
+    Update version and ChangeLog for bip-0.9.0 release.
+
 commit 0e9e61decb5d2cf5aab85ac3de0b2df12c55d92b (G)
 Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@libregerbil.fr>
 Date:   Mon Oct 11 14:49:17 2021 +0200
