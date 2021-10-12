@@ -1,5 +1,5 @@
 AC_PREREQ([2.69])
-AC_INIT([Bip IRC Proxy],[0.9.2],[http://bip.milkypond.org/projects/bip/activity],[bip],[http://bip.milkypond.org/])
+AC_INIT([Bip IRC Proxy],[0.9.2-git],[http://bip.milkypond.org/projects/bip/activity],[bip],[http://bip.milkypond.org/])
 AM_INIT_AUTOMAKE([foreign subdir-objects -Wall -Werror])
 AM_MAINTAINER_MODE
 
