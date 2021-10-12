@@ -53,12 +53,12 @@ syn region	bipMain		start=/\%^/ end=/\%$/
 
 " Top level elements
 syn keyword	bipKeyword	contained nextgroup=bipBoolV client_side_ssl 
-	\ log log_system
+	\ log log_system write_oidentd
 syn keyword	bipKeyword	contained nextgroup=bipStringV log_root
 	\ log_format oidentd_file pid_file client_side_ssl_pem client_side_ciphers
 	\ client_side_dh_param ssl_default_ciphers
 syn keyword	bipKeyword	contained nextgroup=bipNumericV port log_level
-	\ log_sync_interval
+	\ log_sync_interval reconn_timer
 syn keyword	bipKeyword	contained nextgroup=bipIPV ip
 
 " Network block (level 1)
@@ -79,6 +79,7 @@ syn keyword	bipUKeyword	contained nextgroup=bipNumericV backlog_lines
 syn keyword	bipUKeyword	contained nextgroup=bipBoolV admin
 	\ backlog backlog_reset_on_talk
 	\ backlog_msg_only backlog_always bip_use_notice
+	\ backlog_reset_connection
 " DEPRECATED	\ always_backlog bl_msg_only blreset_on_talk
 " DEPRECATED	\ backlog_no_timestamp
 
@@ -86,8 +87,8 @@ syn keyword	bipUKeyword	contained nextgroup=bipBoolV admin
 syn region	bipConnection	contained matchgroup=Macro
 	\ start=/connection\s*{\s*/ end=/};/
 	\ contains=bipCoKeyword,bipChannel,bipComment,bipEndError,bipWhite
-syn keyword	bipCoKeyword	contained nextgroup=bipBoolV follow_nick
-	\ ignore_first_nick log
+syn keyword	bipCoKeyword	contained nextgroup=bipBoolV autojoin_on_kick
+	\ follow_nick ignore_first_nick log ignore_server_capab
 syn keyword	bipCoKeyword	contained nextgroup=bipStringV name user nick
 	\ network password vhost away_nick on_connect_send realname
 	\ no_client_away_msg ssl_check_mode
