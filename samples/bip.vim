@@ -74,12 +74,13 @@ syn region	bipUser		contained matchgroup=Macro start=/user\s*{\s*/
 	\ contains=bipUKeyword,bipConnection,bipComment,bipEndError,bipWhite
 syn keyword	bipUKeyword	contained nextgroup=bipStringV password name
 	\ default_nick default_user default_realname ssl_check_store
-	\ ssl_check_mode ssl_client_certfile
+	\ ssl_check_mode ssl_client_certfile backlog_timestamp
 syn keyword	bipUKeyword	contained nextgroup=bipNumericV backlog_lines 
 syn keyword	bipUKeyword	contained nextgroup=bipBoolV admin
-	\ backlog_no_timestamp backlog backlog_reset_on_talk
+	\ backlog backlog_reset_on_talk
 	\ backlog_msg_only backlog_always bip_use_notice
 " DEPRECATED	\ always_backlog bl_msg_only blreset_on_talk
+" DEPRECATED	\ backlog_no_timestamp
 
 " Connection block (level 2)
 syn region	bipConnection	contained matchgroup=Macro
