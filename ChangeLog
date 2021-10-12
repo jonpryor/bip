@@ -1,3 +1,47 @@
+commit ef70865450a0b0aab4561f8815630d697dd109dd (G)
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@libregerbil.fr>
+Date:   Tue Oct 12 18:53:26 2021 +0200
+
+    Fix minor issues in bip sample configuration file
+
+commit 9579b5fb3f246cd30a76b618031f7a190f6349c4 (G)
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@libregerbil.fr>
+Date:   Tue Oct 12 18:36:38 2021 +0200
+
+    Add missing keywords in vim syntax file
+    
+    Add autojoin_on_kick, backlog_reset_connection, ignore_server_capab,
+    reconn_timer and write_oidentd keywords.
+
+commit bffdbe8b1969a57f0dec3da7f3bc4f11487f9059 (G)
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@libregerbil.fr>
+Date:   Tue Oct 12 18:18:27 2021 +0200
+
+    backlog_timestamp: update man page & vim syntax
+    
+    Complete 0c1881b9210794821c71380969c54e1034679f21 and
+    2c7b8aa1550fac97d8a203bcf905bf4c7586fe80.
+
+commit a974323a8fb7e846c2d8ab28bd42ab41f7852a56 (G)
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@libregerbil.fr>
+Date:   Tue Oct 12 18:40:21 2021 +0200
+
+    Fix syntax issue in vim syntax file
+    
+    backlog keywords were ignored due to this issue.
+
+commit 12a6dbc352764dbe257a5a1fd4c24bb38ea23b8e (G)
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@libregerbil.fr>
+Date:   Mon Oct 11 18:14:43 2021 +0200
+
+    Add -git to version string.
+
+commit 1816044070374e710a0c015e8c7b0c852dcf1a75 (G)
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@libregerbil.fr>
+Date:   Mon Oct 11 18:14:37 2021 +0200
+
+    Update version and ChangeLog for bip-0.9.1 release.
+
 commit 722ed9a8da5470b4b5e75fa140a34cbde409c33b (G)
 Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@libregerbil.fr>
 Date:   Mon Oct 11 18:06:27 2021 +0200
