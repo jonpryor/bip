@@ -1,4 +1,10 @@
-2021-10-08 (0.9.0)
+2021-10-12 (0.9.2) "for the love of unsubsquirrel"
+- Update and fix minor issues in sample bip and vim configuration files
+
+2021-10-12 (0.9.1) "one more"
+- ENABLED might not be defined: use a default value.
+
+2021-10-08 (0.9.0) "it's never too late"
 Visible changes:
 - "backlog_no_timestamp" is deprecated, "backlog_timestamp" should be used
   instead. The allowed values for this new parameter are: "none", "time",
@@ -11,6 +17,49 @@ Visible changes:
   client_side_dh_param parameter.
 - Add write_oidentd_file parameter. Existing oidentd users must use
   'write_oidentd = true' in their config to keep existing behavior.
+
+2013-10-19 (0.8.9) "If it's really that urgent, why don't you do it yourself?"
+- code fixes
+- buildsys fixes (bison 2.6 compatibility and others)
+- improved TRUST OK command replies when there's no untrusted certificate
+- fixed GCC warnings
+
+2011-04-14 (0.8.8) "spring release"
+- Allow to disable logs by connection.
+- When global option log is disabled, query are not backlogged.
+- Avoid segfault when global option log is false.
+
+2011-01-18 (0.8.7) "bazooka"
+- Fix "FATAL: list_remove: item not found"
+- Fix build errors on armel
+- minor fixes
+
+2010-09-12 (0.8.6) "CVE-2010-3071"
+- Fix for CVE-2010-3071.
+
+2010-08-07 (0.8.5) "Unpacking"
+- Now builds position independant executables
+
+2009-11-15 (0.8.4) "I’ll have the same thing please"
+- Fix build OpenSSL detection issue.
+
+2009-11-15 (0.8.3) "Hey Dublin! What’s the craic?"
+- Fixes a fatal() on gamesurge networks.
+
+2009-08-24 (0.8.2) "Farewell Paris"
+- Fix hanging bip on hanging client connexions.
+
+2009-07-17 (0.8.1) "Ran ran ru in Praha"
+- Fixed an annoying bug that resulted in too much backlog.
+- Fix TRUST command.
+- Close some unused log files.
+
+2009-03-02 (0.8.0) "swelling millionnaire"
+- Cosmetic bug fixes since last rc.
+
+2009-02-02 (0.8.0-rc1) "got booze?"
+- One bug fixed and a client hack added to avoid the "+" or "-" prefix in
+  irssi when connecting irssi and xchat to the same bip connection.
 
 2009-01-24 (0.8.x)
 Visible changes:
@@ -28,6 +77,29 @@ Visible changes:
   autojoin_on_kick = false in a connection block.
 - bip SSL on the client<->bip part now support Ephemeral Diffie Hellman key
   exchange.
+
+2008-10-24 (0.7.5) "But I have promises to keep, And miles to go before I
+ sleep, And miles to go before I sleep."
+- Halfop handling fixed, and a shameful segfault. The segfault may be
+  exploitable by clients, but only after successful login. Please upgrade.
+
+2008-06-28 (0.7.4) "But where is 0.7.3 ?!"
+- Some usefull bugfixes, especially for unreal irc network users.
+
+2008-04-05 (0.7.2) "Enjoy the fish"
+- Contains a compilation fix for OpenBSD.
+
+2008-04-02: bip 0.7.1 "hot mama"
+- Contains a configuration validation fix, and a memory leak fix.
+
+2008-02-16 (0.7.0) "birthday party"
+- The good stuff: sighup support, /bip reload should also work now
+- New commands (allow a user to add a new network without restarting bip for
+  instance)
+- Better user feedback when issuing /bip commands.
+- Lots of new backlog options, some of which can now be set per user instead of
+  globally.
+- And a few fixes on top of that.
 
 2008-02-07  Arnaud Cornet <nohar@t1r.net>
 What's to expect in bip now:
@@ -51,15 +123,33 @@ What's to expect in bip now:
 - Have a bold arrow to highligh your own word on private messages and multiple
   connected clients.
 
-09-12-2007: Bip has now two types of users "admins" and normal user. Some
-commands are reserved to admin. Add a admin = true; statement in your config
-(in user block) accordingly.
+2007-12-09
+- Bip has now two types of users "admins" and normal user. Some commands are
+  reserved to admin. Add a admin = true; statement in your config (in user
+  block) accordingly.
 
-29-10-2007: Certificate validation change. In "basic" mode, expired
-certificates are now accepted as long as they are in store (therefore trusted).
-This makes the basic mode be more SSH like. Some extreme security zealots might
-want to be warned.
+2007-10-29
+- Certificate validation change. In "basic" mode, expired certificates are now
+  accepted as long as they are in store (therefore trusted). This makes the
+  basic mode be more SSH like. Some extreme security zealots might want to be
+  warned.
 
-02-09-2007: as of now log parameters go in the user {} statment. This breaks
-every config and there is no backwrads compatibility as of now.
-Lots of internal changes, expect crashes.
+2007-09-02
+- as of now log parameters go in the user {} statment. This breaks
+  every config and there is no backwrads compatibility as of now.
+- Lots of internal changes, expect crashes.
+
+2007-08-19 (0.6.1)
+- Fixes half closed socket descriptor leak, as well as a potential crash on
+  startup.
+- Bip switches to git. You can clone the public repository with:
+- git clone http://bip.t1r.net/bip.git
+
+2007-02-27 (0.6.0)
+- Includes more commands, more options, more fixes.
+- UPDATE: Thanks to YS for the sexy logo! How rude of me to forget to give
+  proper credits!
+- Bip is developed by Arnaud Cornet and Loïc Gomez and is distributed under
+  the GNU Public License Version 2 (see the AUTHORS file for a list of
+  contributors).
+- BIP IRC channel is on OFTC : irc://irc.oftc.net/bip
