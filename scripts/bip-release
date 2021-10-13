@@ -2,7 +2,7 @@
 
 set -e
 
-if [ ! -d src ] ; then
+if [ ! -d src ] || [ ! -f NEWS ] ; then
 	echo "Please run me in bip sources root." >&2 
 	exit 1
 fi
@@ -37,6 +37,13 @@ make_distcheck() {
 
 git log > ChangeLog
 if [ -n "$release_version" ]; then
+    # Don't forget to update NEWS file before a release
+    expected="$(date --rfc-3339=date) (${release_version})"
+	if [ -n "${release_name}" ]; then
+        expected="${expected} \"${release_name}\""
+    fi
+    head -n 1 NEWS | grep -q "^${expected}$" || (echo "NEWS file doesn't match the expected format (${expected})" && exit 1)
+
 	set_version "${release_version}"
 	make_distcheck || exit 1
 
