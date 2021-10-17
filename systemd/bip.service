@@ -1,5 +1,6 @@
 [Unit]
 Description=Bip IRC Proxy
+Documentation=man:bip(1) man:bip.conf(5)
 Requires=network.target
 
 Wants=bip-config.service
