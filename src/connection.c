@@ -1463,7 +1463,7 @@ static int SSLize(connection_t *cn, int *nc)
 		len = strlen(buf);
 		if (len > 0)
 			buf[len - 1] = '\0';
-		mylog(LOG_DEBUG, "Negociated ciphers: %s", buf);
+		mylog(LOG_DEBUG, "Negotiated ciphers: %s", buf);
 
 		cn->connected = CONN_OK;
 		connection_connected(cn);

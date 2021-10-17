@@ -213,7 +213,7 @@ static void log_reset(logstore_t *store)
 
 void log_reinit(logstore_t *store)
 {
-	mylog(LOG_ERROR, "%s is inconsistant, droping backlog info",
+	mylog(LOG_ERROR, "%s is inconsistent, droping backlog info",
 			store->name);
 	log_reset(store);
 }

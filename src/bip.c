@@ -230,7 +230,7 @@ pid_is_there:
 		if (pid)
 			mylog(LOG_INFO, "pid file found (pid %ld).", pid);
 		mylog(LOG_FATAL,
-				"Another instance of bip is certainly runing.");
+				"Another instance of bip is certainly running.");
 		mylog(LOG_FATAL, "If you are sure this is not the case remove"
 					" %s.", conf_pid_file);
 		exit(2);
@@ -760,7 +760,7 @@ static int add_user(bip_t *bip, list_t *data, struct historical_directives *hds)
 			break;
 #endif
 		default:
-			conf_die(bip, "Uknown keyword in user statement");
+			conf_die(bip, "Unknown keyword in user statement");
 			return 0;
 		}
 		if (t->tuple_type == TUPLE_STR && t->pdata)
@@ -1664,13 +1664,13 @@ void bip_notify(struct link_client *ic, char *fmt, ...)
 void adm_blreset(struct link_client *ic)
 {
 	log_reset_all(LINK(ic)->log);
-	bip_notify(ic, "backlog resetted for this network.");
+	bip_notify(ic, "backlog reset for this network.");
 }
 
 void adm_blreset_store(struct link_client *ic, const char *store)
 {
 	log_reset_store(LINK(ic)->log, store);
-	bip_notify(ic, "backlog resetted for %s.", store);
+	bip_notify(ic, "backlog reset for %s.", store);
 }
 
 void adm_follow_nick(struct link_client *ic, const char *val)

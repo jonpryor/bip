@@ -88,7 +88,7 @@ static void version()
 	printf(
 "Bip IRC Proxy - " PACKAGE_VERSION "\n"
 "Copyright © Arnaud Cornet and Loïc Gomez (2004 - 2008)\n"
-"Distributed under the GNU Public License Version 2\n");
+"Distributed under the GNU General Public License Version 2\n");
 }
 
 static void log_file_setup(void)
