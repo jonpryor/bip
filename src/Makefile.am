@@ -10,7 +10,8 @@ libbip_a_SOURCES = conf.y lex.l \
 	md5.c md5.h \
 	path_util.c path_util.h \
 	tuple.h \
-	util.c util.h
+	util.c util.h \
+	utils/base64.c utils/base64.h
 
 libbip_a_CFLAGS = ${OPENSSL_CFLAGS} $(AM_CFLAGS)
 

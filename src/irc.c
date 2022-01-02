@@ -2,7 +2,8 @@
  * $Id: irc.c,v 1.156 2005/04/21 06:58:50 nohar Exp $
  *
  * This file is part of the bip project
- * Copyright (C) 2004 2005 Arnaud Cornet and Loïc Gomez
+ * Copyright (C) 2004,2005 Arnaud Cornet
+ * Copyright (C) 2004,2005,2022 Loïc Gomez
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,6 +22,7 @@
 #include "log.h"
 #include "connection.h"
 #include "md5.h"
+#include "utils/base64.h"
 
 #define S_CONN_DELAY (10)
 
@@ -67,6 +69,8 @@ static void irc_copy_cli(struct link_client *src, struct link_client *dest,
 static void irc_cli_make_join(struct link_client *ic);
 static void server_setup_reconnect_timer(struct link *link);
 int irc_cli_bip(bip_t *bip, struct link_client *ic, struct line *line);
+static int irc_server_sasl_authenticate(struct link_server *ircs);
+static char *sasl_mechanism_to_text(int sasl_mechanism);
 
 #define LAGOUT_TIME 480
 #define LAGCHECK_TIME (90)
@@ -386,6 +390,92 @@ int irc_dispatch_server(bip_t *bip, struct link_server *server,
 			}
 			ret = OK_FORGET;
 		}
+	} else if (irc_line_elem_equals(line, 0, "CAP")) {
+		if (LINK(server)->sasl_mechanism) {
+			if (irc_line_elem_equals(line, 2, "ACK") && irc_line_elem_equals(line, 3, "sasl")) {
+				// Server is answering our CAP REQ :sasl and is SASL capable
+				char *sasl_mech = sasl_mechanism_to_text(LINK(server)->sasl_mechanism);
+				mylog(LOG_INFO, "[%s] Server is SASL capable, starting %s authentication.",
+					LINK(server)->name, sasl_mech);
+				WRITE_LINE1(CONN(server), NULL, "AUTHENTICATE", sasl_mech);
+				ret = OK_FORGET;
+			} else if (irc_line_elem_equals(line, 2, "NAK") && irc_line_elem_equals(line, 3, "sasl")) {
+				// Server is answering our CAP REQ :sasl and isn't SASL capable
+				mylog(LOG_INFO, "[%s] Server is not SASL capable.", LINK(server)->name);
+				ret = ERR_PROTOCOL;
+			} else {
+				// Unhandled CAP message
+				mylog(LOG_ERROR, "[%s] Unhandled CAP message: %s",
+						LINK(server)->name, irc_line_to_string(line));
+				ret = OK_FORGET;
+			}
+		} else {
+			// Unhandled CAP message
+			mylog(LOG_ERROR, "[%s] Unhandled CAP message: %s", LINK(server)->name,
+					irc_line_to_string(line));
+			ret = OK_FORGET;
+		}
+	} else if (irc_line_elem_equals(line, 0, "AUTHENTICATE")) {
+		if (LINK(server)->sasl_mechanism) {
+			if (irc_line_count(line) == 2 && irc_line_elem_equals(line, 1, "+")) {
+				// Server is waiting for us to authenticate, let's do it
+				mylog(LOG_INFO, "[%s] Server accepted our authentication mechanism.",
+						LINK(server)->name);
+				ret = irc_server_sasl_authenticate(server);
+			} else {
+				// Anything else than "AUTHENTICATE +" is unknown to us
+				mylog(LOG_ERROR, "[%s] Server sent gibberish: %s",
+						LINK(server)->name, irc_line_to_string(line));
+				ret = ERR_PROTOCOL;
+			}
+		} else {
+			// Unhandled AUTHENTICATE message
+			mylog(LOG_ERROR, "[%s] Unhandled AUTHENTICATE message: %s",
+					LINK(server)->name, irc_line_to_string(line));
+			ret = OK_FORGET;
+		}
+	} else if (irc_line_elem_equals(line, 0, "900")) {
+		if (irc_line_count(line) >= 5) {
+			mylog(LOG_INFO, "[%s] Logged in as %s(%s): %s", LINK(server)->name,
+				irc_line_elem(line, 3), irc_line_elem(line, 2), irc_line_elem(line, 4));
+		} else {
+			mylog(LOG_INFO, "[%s] Logged in: %s", LINK(server)->name, irc_line_to_string(line));
+		}
+		ret = OK_FORGET;
+	} else if (irc_line_elem_equals(line, 0, "901")) {
+		if (irc_line_count(line) >= 4) {
+			mylog(LOG_INFO, "[%s] Logged out: %s",
+				LINK(server)->name, irc_line_elem(line, 3));
+		} else {
+			mylog(LOG_INFO, "[%s] Logged out: %s", LINK(server)->name, irc_line_to_string(line));
+		}
+		ret = OK_FORGET;
+	} else if (irc_line_elem_equals(line, 0, "902")) {
+		mylog(LOG_INFO, "[%s] Account unavailable: %s",
+			LINK(server)->name, irc_line_to_string(line));
+		ret = OK_FORGET;
+	} else if (irc_line_elem_equals(line, 0, "903")) {
+		mylog(LOG_INFO, "[%s] SASL authentication successful", LINK(server)->name);
+		WRITE_LINE1(CONN(server), NULL, "CAP", "END");
+		ret = OK_FORGET;
+	} else if (irc_line_elem_equals(line, 0, "904")) {
+		mylog(LOG_ERROR, "[%s] SASL authentication failed", LINK(server)->name);
+		ret = ERR_AUTH;
+	} else if (irc_line_elem_equals(line, 0, "905")) {
+		mylog(LOG_ERROR, "[%s] SASL message too long", LINK(server)->name);
+		ret = ERR_AUTH;
+	} else if (irc_line_elem_equals(line, 0, "906")) {
+		mylog(LOG_ERROR, "[%s] SASL authentication aborted by client",
+			LINK(server)->name);
+		ret = ERR_AUTH;
+	} else if (irc_line_elem_equals(line, 0, "907")) {
+		mylog(LOG_ERROR, "[%s] SASL authentication has already been completed",
+			LINK(server)->name);
+		ret = OK_FORGET;
+	} else if (irc_line_elem_equals(line, 0, "908")) {
+		mylog(LOG_ERROR, "[%s] Server only accepts following authentication mechanisms: %s",
+			LINK(server)->name, irc_line_elem(line, 2));
+		ret = ERR_AUTH;
 	} else if (irc_line_elem_equals(line, 0, "433")) {
 		if (LINK(server)->s_state != IRCS_CONNECTED) {
 			size_t nicklen = strlen(server->nick);
@@ -1927,6 +2017,83 @@ fake:
 #endif
 }
 
+static char *sasl_mechanism_to_text(int sasl_mechanism)
+{
+	switch (sasl_mechanism) {
+	case SASL_AUTH_EXTERNAL:
+		return "EXTERNAL";
+	case SASL_AUTH_PLAIN:
+		return "PLAIN";
+	default:
+		return "UNKOWN_MECHANISM";
+	}
+}
+
+// Per RFC send packets of max 400 chars at a time
+#define SASL_AUTH_CHUNK_SZ 400
+static int irc_server_sasl_authenticate(struct link_server *ircs)
+{
+	char *sasl_username = LINK(ircs)->sasl_username;
+	char *sasl_password = LINK(ircs)->sasl_password;
+
+	if (LINK(ircs)->sasl_mechanism == SASL_AUTH_EXTERNAL) {
+		WRITE_LINE1(CONN(ircs), NULL, "AUTHENTICATE", "+");
+		return OK_FORGET;
+	}
+
+	// Should not happen, but we never know right ?
+	if (!sasl_username || !sasl_password) {
+		mylog(LOG_ERROR, "[%s] Missing SASL username or password.", LINK(ircs)->name);
+		return ERR_AUTH;
+	}
+
+	/*
+	 * Other than EXTERNAL we only support PLAIN.
+	 */
+
+	size_t chunk_chars = SASL_AUTH_CHUNK_SZ;
+	char chunk[SASL_AUTH_CHUNK_SZ + 1];
+	size_t u_len = strlen(sasl_username);
+	size_t p_len = strlen(sasl_password);
+	size_t raw_len = u_len*2 + p_len + 2;
+	size_t enc_len;
+	unsigned char *raw_str = bip_malloc(raw_len + 1);
+	unsigned char *enc_str;
+
+	memcpy(raw_str, sasl_username, u_len);
+	raw_str[u_len] = '\0';
+	memcpy(raw_str + u_len + 1, sasl_username, u_len);
+	raw_str[u_len*2 + 1] = '\0';
+	memcpy(raw_str + u_len*2 + 2, sasl_password, p_len);
+	enc_str = base64_encode(raw_str, raw_len, &enc_len);
+	mylog(LOG_DEBUG, "[%s] Base64 encoded SASL auth token (len %d): %s", LINK(ircs)->name, enc_len, enc_str);
+
+	for (size_t i = 0; i < enc_len; i += chunk_chars) {
+		size_t remaining = enc_len - i;
+		if (remaining < chunk_chars) {
+			memcpy(chunk, &enc_str[i], remaining);
+			chunk[remaining]= '\0';
+		} else {
+			memcpy(chunk, &enc_str[i], chunk_chars);
+			chunk[chunk_chars]= '\0';
+		}
+		mylog(LOG_DEBUG, "[%s] SASL AUTHENTICATE chunk %d, len %d: %s",
+			LINK(ircs)->name, i/chunk_chars, strlen(chunk), chunk);
+		WRITE_LINE1(CONN(ircs), NULL, "AUTHENTICATE", chunk);
+
+		// Send a closing AUTHENTICATE line if last chunk size was exactly 400
+		if (remaining == chunk_chars) {
+			mylog(LOG_DEBUG, "[%s] Last SASL chunk was exactly 400, sending +",
+				LINK(ircs)->name);
+			WRITE_LINE1(CONN(ircs), NULL, "AUTHENTICATE", "+");
+			break;
+		}
+	}
+	free(enc_str);
+
+	return OK_FORGET;
+}
+
 static void irc_server_startup(struct link_server *ircs)
 {
 	char *nick;
@@ -2195,6 +2362,12 @@ connection_t *irc_server_connect(struct link *link)
 
 	list_add_last(&_bip->conn_list, conn);
 	oidentd_dump(_bip);
+
+	if (link->sasl_mechanism) {
+		mylog(LOG_INFO, "[%s] SASL (%s) enabled, sending CAP REQ.",
+			link->name, sasl_mechanism_to_text(link->sasl_mechanism));
+		WRITE_LINE2(conn, NULL, "CAP", "REQ", ":sasl");
+	}
 	irc_server_startup(ls);
 	return conn;
 }
@@ -2635,6 +2808,8 @@ void link_kill(bip_t *bip, struct link *link)
 	MAYFREE(link->username);
 	MAYFREE(link->realname);
 	MAYFREE(link->s_password);
+	MAYFREE(link->sasl_username);
+	MAYFREE(link->sasl_password);
 	MAYFREE(link->connect_nick);
 	MAYFREE(link->vhost);
 #ifdef HAVE_LIBSSL

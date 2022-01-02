@@ -1,4 +1,4 @@
-.TH BIP.CONF 5 "17 October 2021"
+.TH BIP.CONF 5 "2 January 2022"
 
 .SH NAME
 
@@ -401,6 +401,20 @@ only.
 BIP will send that string as the realname part (description in whois result)
 upon connect. If not specified and if \fBdefault_realname\fP is specified in
 the \fBuser\fP section, BIP will use that default realname string.
+
+.TP
+\fBsasl_mechanism\fP
+Tells BIP to use specified SASL mechanism. Currently supported: PLAIN, EXTERNAL.
+PLAIN mechanism requires \fBsasl_username\fP and \fBsasl_password\fP and is the
+default if these are set.
+
+.TP
+\fBsasl_username\fP
+This connection's username to pass on using SASL authentication.
+
+.TP
+\fBsasl_password\fP
+This connection's password to pass on using SASL authentication.
 
 .TP
 \fBsource_port\fP

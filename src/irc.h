@@ -2,7 +2,8 @@
  * $Id: irc.h,v 1.43 2005/04/21 06:58:50 nohar Exp $
  *
  * This file is part of the bip project
- * Copyright (C) 2004 2005 Arnaud Cornet and Loïc Gomez
+ * Copyright (C) 2004,2005 Arnaud Cornet
+ * Copyright (C) 2004,2005,2022 Loïc Gomez
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -106,6 +107,9 @@ struct network
 	struct server *serverv;
 };
 
+#define SASL_AUTH_EXTERNAL 1
+#define SASL_AUTH_PLAIN 2
+
 struct link {
 	char *name;	/* id */
 
@@ -153,6 +157,9 @@ struct link {
 	char *username;
 	char *realname;
 	char *s_password;
+	char *sasl_username;
+	char *sasl_password;
+	int sasl_mechanism;
 	char *connect_nick;
 
 	/* socket creation info */

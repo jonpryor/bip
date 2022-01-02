@@ -5,6 +5,7 @@
  *
  * This file is part of the bip proproject
  * Copyright (C) 2004 Arnaud Cornet
+ * Copyright (C) 2022 Loïc Gomez
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -115,6 +116,9 @@ list_t *parse_conf(FILE *file, int *err)
 "client_side_ssl_pem"	{ return LEX_CSS_PEM; }
 "client_side_ciphers"	{ return LEX_CSS_CIPHERS; }
 "client_side_dh_param"	{ return LEX_DH_PARAM; }
+"sasl_username"	{ return LEX_SASL_USERNAME; }
+"sasl_password"	{ return LEX_SASL_PASSWORD; }
+"sasl_mechanism"	{ return LEX_SASL_MECHANISM; }
 "ignore_server_capab"	{ return LEX_IGNORE_CAPAB; }
 "reconn_timer"		{ return LEX_RECONN_TIMER; }
 \"[^"]*\" 		{

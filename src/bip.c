@@ -2,7 +2,8 @@
  * $Id: bip.c,v 1.39 2005/04/21 06:58:50 nohar Exp $
  *
  * This file is part of the bip project
- * Copyright (C) 2004 2005 Arnaud Cornet and Loïc Gomez
+ * Copyright (C) 2004,2005 Arnaud Cornet
+ * Copyright (C) 2004,2005,2022 Loïc Gomez
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -480,6 +481,22 @@ static int add_connection(bip_t *bip, struct bipuser *user, list_t *data)
 		case LEX_PASSWORD:
 			MOVE_STRING(l->s_password, t->pdata);
 			break;
+		case LEX_SASL_USERNAME:
+			MOVE_STRING(l->sasl_username, t->pdata);
+			break;
+		case LEX_SASL_PASSWORD:
+			MOVE_STRING(l->sasl_password, t->pdata);
+			break;
+		case LEX_SASL_MECHANISM:
+			if (strcmp(t->pdata, "PLAIN") == 0) {
+				l->sasl_mechanism = SASL_AUTH_PLAIN;
+			} else if (strcmp(t->pdata, "EXTERNAL") == 0) {
+				l->sasl_mechanism = SASL_AUTH_EXTERNAL;
+			} else {
+				conf_die(bip, "Unsupported SASL mechanism %s.", t->pdata);
+				return 0;
+			}
+			break;
 		case LEX_VHOST:
 			MOVE_STRING(l->vhost, t->pdata);
 			break;
@@ -594,6 +611,23 @@ static int add_connection(bip_t *bip, struct bipuser *user, list_t *data)
 		}
 		l->realname = bip_strdup(user->default_realname);
 	}
+
+	if (l->sasl_username && !l->sasl_password) {
+		conf_die(bip, "sasl_username set without sasl_password.");
+		return 0;
+	}
+
+	if (!l->sasl_username && l->sasl_password) {
+		conf_die(bip, "sasl_password set without sasl_username.");
+		return 0;
+	}
+
+	if (l->sasl_mechanism == SASL_AUTH_PLAIN && (!l->sasl_username || !l->sasl_password)) {
+		conf_die(bip, "SASL mechanism PLAIN requires username and password.");
+		return 0;
+	}
+	if (l->sasl_username && !l->sasl_mechanism)
+		l->sasl_mechanism = SASL_AUTH_PLAIN;
 
 	l->in_use = 1;
 	return 1;

@@ -91,7 +91,8 @@ syn keyword	bipCoKeyword	contained nextgroup=bipBoolV autojoin_on_kick
 	\ follow_nick ignore_first_nick log ignore_server_capab
 syn keyword	bipCoKeyword	contained nextgroup=bipStringV name user nick
 	\ network password vhost away_nick on_connect_send realname
-	\ no_client_away_msg ssl_check_mode
+	\ no_client_away_msg ssl_check_mode sasl_username sasl_password
+	\ sasl_mechanism
 syn keyword	bipCoKeyword	contained nextgroup=bipNumericV source_port
 
 " Channel elements (lvl 2)
