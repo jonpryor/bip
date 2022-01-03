@@ -33,6 +33,7 @@
 extern int sighup;
 extern bip_t *_bip;
 
+static int irc_generic_error(struct link_server *server, struct line *line);
 static int irc_join(struct link_server *server, struct line *line);
 static int irc_part(struct link_server *server, struct line *line);
 static int irc_mode(struct link_server *server, struct line *line);
@@ -625,6 +626,10 @@ int irc_dispatch_server(bip_t *bip, struct link_server *server,
 		ret = irc_quit(server, line);
 	} else if (irc_line_elem_equals(line, 0, "NICK")) {
 		ret = irc_nick(server, line);
+	} else if (irc_line_is_error(line)) {
+		// IRC errors catchall (for unhandled ones)
+		// logs error to bip.log
+		ret = irc_generic_error(server, line);
 	}
 
 	if (ret == OK_COPY) {
@@ -1446,6 +1451,17 @@ static int origin_is_me(struct line *l, struct link_server *server)
 	}
 	free(nick);
 	return 0;
+}
+
+static int irc_generic_error(struct link_server *server, struct line *line)
+{
+	if (irc_line_count(line) == 4)
+		mylog(LOG_INFO, "[%s] IRC error: %s", LINK(server)->name,
+			irc_line_elem(line, 3));
+	else
+		mylog(LOG_INFO, "[%s] IRC error: %s", LINK(server)->name,
+			irc_line_to_string(line));
+	return OK_COPY;
 }
 
 static int irc_join(struct link_server *server, struct line *line)

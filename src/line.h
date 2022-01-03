@@ -98,6 +98,7 @@ int irc_line_includes(struct line *line, int elem);
 const char *irc_line_elem(struct line *line, int elem);
 int irc_line_count(struct line *line);
 char *irc_line_pop(struct line *l);
+int irc_line_is_error(struct line *line);
 int irc_line_elem_equals(struct line *line, int elem, const char *cmp);
 int irc_line_elem_case_equals(struct line *line, int elem, const char *cmp);
 void irc_line_drop(struct line *line, int elem);
