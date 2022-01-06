@@ -2,7 +2,8 @@
  * $Id: util.c,v 1.60 2005/04/12 19:34:35 nohar Exp $
  *
  * This file is part of the bip project
- * Copyright (C) 2004 2005 Arnaud Cornet and Loïc Gomez
+ * Copyright (C) 2004,2005 Arnaud Cornet
+ * Copyright (C) 2004,2005,2022 Loïc Gomez
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -79,6 +80,82 @@ char *bip_strdup(const char *str)
 	if (!r)
 		memory_fatal();
 	return r;
+}
+
+char *bip_strcat_fit(size_t *remaining, char *str, const char *str2)
+{
+	char *res;
+
+	if (!remaining || !str || !str2) {
+		mylog(LOG_DEBUGVERB, "bip_strcat_fit: got NULL pointer");
+		return NULL;
+	}
+
+	res = memccpy(str, str2, '\0', *remaining);
+	if (!res) {
+		mylog(LOG_DEBUGTOOMUCH, "bip_strcat_fit: memccpy() failed, remaining %lu",
+				*remaining);
+		return NULL;
+	}
+
+	res--;
+	if (res < str) {
+		mylog(LOG_DEBUG, "bip_strcat_fit: memccpy res < str");
+		return NULL;
+	}
+	(*remaining) -= (size_t)(res - str);
+	return res;
+}
+
+#define STRCATF_BUF_MAXLEN 1024
+char *bip_strcatf_fit(size_t *remaining, char *str, const char *fmt, ...)
+{
+	va_list ap;
+	char str2[STRCATF_BUF_MAXLEN + 1];
+	int written;
+	char *res = NULL;
+
+	if (!remaining || !str || !fmt) {
+		mylog(LOG_DEBUGVERB, "bip_strcatf_fit: NULL pointer");
+		return NULL;
+	}
+
+	if (*remaining > STRCATF_BUF_MAXLEN) {
+		mylog(LOG_ERROR, "bip_strcatf_fit: remaining "
+				"is over STRCATF_BUF_MAXLEN");
+	}
+
+	va_start(ap, fmt);
+	str2[*remaining] = '\0';
+	written = vsnprintf(str2, *remaining, fmt, ap);
+	if (written < 0) {
+		mylog(LOG_ERROR, "bip_strcatf_fit: vsnprintf failed with: %s",
+				strerror(errno));
+		return NULL;
+	}
+
+	if ((unsigned)written >= *remaining) {
+		mylog(LOG_DEBUGVERB, "bip_strcatf_fit,vsnprintf: no space left");
+		goto end;
+	}
+
+	res = memccpy(str, str2, '\0', *remaining);
+	if (!res) {
+		mylog(LOG_DEBUGTOOMUCH, "bip_strcatf_fit: memccpy() failed, "
+				"remaining %lu", *remaining);
+		goto end;
+	}
+
+	if (res < str) {
+		mylog(LOG_DEBUG, "bip_strcatf_fit: memccpy res < str");
+		goto end;
+	}
+	res--;
+	(*remaining) -= (size_t)(res - str);
+
+end:
+	va_end(ap);
+	return res;
 }
 
 /*

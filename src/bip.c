@@ -1178,12 +1178,14 @@ void check_rlimits()
 
 #define RET_STR_LEN 256
 #define LINE_SIZE_LIM 70
+
 void adm_print_connection(struct link_client *ic, struct link *lnk,
 		struct bipuser *bu)
 {
 	hash_iterator_t lit;
-	char buf[RET_STR_LEN + 1];
-	int t_written = 0;
+	char buf[LINE_SIZE_LIM + 1];
+	char *bufpos = buf;
+	size_t remaining = LINE_SIZE_LIM;
 
 	if (!bu)
 		bu = lnk->user;
@@ -1194,136 +1196,195 @@ void adm_print_connection(struct link_client *ic, struct link *lnk,
 		(lnk->connect_nick ? lnk->connect_nick : bu->default_nick),
 		(lnk->username ? lnk->username : bu->default_username));
 
-	t_written = snprintf(buf, RET_STR_LEN, "  Options:");
-	if (t_written >= RET_STR_LEN)
-		goto noroom;
+	bufpos = bip_strcat_fit(&remaining, bufpos, "  Options:");
+	// This should not happen, unless LINE_SIZE_LIM is too low
+	if (!bufpos)
+		goto limittoolow;
+
 	if (lnk->follow_nick) {
-		t_written += snprintf(buf + t_written,
-			RET_STR_LEN - t_written, " follow_nick");
-		if (t_written >= RET_STR_LEN)
-			goto noroom;
+		bufpos = bip_strcat_fit(&remaining, bufpos, " follow_nick");
+		if (!bufpos) {
+			buf[LINE_SIZE_LIM] = 0;
+			bip_notify(ic, "%s", buf);
+			remaining = LINE_SIZE_LIM;
+			bufpos = bip_strcat_fit(&remaining, bufpos, "      follow_nick");
+			if (!bufpos)
+				goto limittoolow;
+		}
 	}
 	if (lnk->ignore_first_nick) {
-		t_written += snprintf(buf + t_written,
-			RET_STR_LEN - t_written, " ignore_first_nick");
-		if (t_written >= RET_STR_LEN)
-			goto noroom;
+		bufpos = bip_strcat_fit(&remaining, bufpos, " ignore_first_nick");
+		if (!bufpos) {
+			buf[LINE_SIZE_LIM] = 0;
+			bip_notify(ic, "%s", buf);
+			remaining = LINE_SIZE_LIM;
+			bufpos = bip_strcat_fit(&remaining, bufpos, "      ignore_first_nick");
+			if (!bufpos)
+				goto limittoolow;
+		}
 	}
 	if (lnk->away_nick) {
-		t_written += snprintf(buf + t_written,
-			RET_STR_LEN - t_written, " away_nick=%s",
-			lnk->away_nick);
-		if (t_written >= RET_STR_LEN)
-			goto noroom;
+		bufpos = bip_strcatf_fit(&remaining, bufpos, " away_nick=%s", lnk->away_nick);
+		if (!bufpos) {
+			buf[LINE_SIZE_LIM] = 0;
+			bip_notify(ic, "%s", buf);
+			remaining = LINE_SIZE_LIM;
+			bufpos = bip_strcatf_fit(&remaining, bufpos, "      away_nick=%s", lnk->away_nick);
+			if (!bufpos)
+				goto limittoolow;
+		}
 	}
 	if (lnk->no_client_away_msg) {
-		t_written += snprintf(buf + t_written,
-			RET_STR_LEN - t_written, " no_client_away_msg=%s",
-			lnk->no_client_away_msg);
-		if (t_written >= RET_STR_LEN)
-			goto noroom;
+		bufpos = bip_strcatf_fit(&remaining, bufpos, " no_client_away_msg=%s", lnk->no_client_away_msg);
+		if (!bufpos) {
+			buf[LINE_SIZE_LIM] = 0;
+			bip_notify(ic, "%s", buf);
+			remaining = LINE_SIZE_LIM;
+			bufpos = bip_strcatf_fit(&remaining, bufpos, "      no_client_away_msg=%s", lnk->no_client_away_msg);
+			if (!bufpos)
+				goto limittoolow;
+		}
 	}
 	if (lnk->vhost) {
-		t_written += snprintf(buf + t_written,
-			RET_STR_LEN - t_written, " vhost=%s",
-			lnk->vhost);
-		if (t_written >= RET_STR_LEN)
-			goto noroom;
+		bufpos = bip_strcatf_fit(&remaining, bufpos, " vhost=%s", lnk->vhost);
+		if (!bufpos) {
+			buf[LINE_SIZE_LIM] = 0;
+			bip_notify(ic, "%s", buf);
+			remaining = LINE_SIZE_LIM;
+			bufpos = bip_strcatf_fit(&remaining, bufpos, "      vhost=%s", lnk->vhost);
+			if (!bufpos)
+				goto limittoolow;
+		}
 	}
 	if (lnk->bind_port) {
-		t_written += snprintf(buf + t_written,
-			RET_STR_LEN - t_written, " bind_port=%u",
-			lnk->bind_port);
-		if (t_written >= RET_STR_LEN)
-			goto noroom;
+		bufpos = bip_strcatf_fit(&remaining, bufpos, " bind_port=%s", lnk->bind_port);
+		if (!bufpos) {
+			buf[LINE_SIZE_LIM] = 0;
+			bip_notify(ic, "%s", buf);
+			remaining = LINE_SIZE_LIM;
+			bufpos = bip_strcatf_fit(&remaining, bufpos, "      bind_port=%s", lnk->bind_port);
+			if (!bufpos)
+				goto limittoolow;
+		}
 	}
-noroom: /* that means the line is larger that RET_STR_LEN. We're not likely to
-	   even read such a long line */
-	buf[RET_STR_LEN] = 0;
+	buf[LINE_SIZE_LIM] = 0;
 	bip_notify(ic, "%s", buf);
+	remaining = LINE_SIZE_LIM;
+	bufpos = buf;
 
-	// TODO: on_connect_send
+	list_iterator_t itocs;
+	for (list_it_init(&lnk->on_connect_send, &itocs);
+				list_it_item(&itocs); ) {
+		bufpos = bip_strcatf_fit(&remaining, bufpos, "%s",
+				(char *)list_it_item(&itocs));
+		if (!bufpos) {
+			// if oversized, print and reset
+			buf[LINE_SIZE_LIM] = 0;
+			bip_notify(ic, "%s", buf);
+			remaining = LINE_SIZE_LIM;
+			bufpos = buf;
+			continue;
+		} else {
+			// if ok, go to next item
+			list_it_next(&itocs);
+		}
+	}
+
+	buf[LINE_SIZE_LIM] = 0;
+	bip_notify(ic, "%s", buf);
+	remaining = LINE_SIZE_LIM;
+	bufpos = buf;
+
 
 	// TODO : check channels struct
-	t_written = snprintf(buf, RET_STR_LEN, "  Channels (* with key, ` no backlog)");
-	if (t_written >= RET_STR_LEN)
-		goto noroomchan;
+	bufpos = bip_strcat_fit(&remaining, bufpos, "  Channels (* with key, ` no backlog)");
+	if (!bufpos)
+		goto limittoolow;
+
 	for (hash_it_init(&lnk->chan_infos, &lit); hash_it_item(&lit);
 			hash_it_next(&lit)) {
 		struct chan_info *ch = hash_it_item(&lit);
 
-		t_written += snprintf(buf + t_written, RET_STR_LEN - t_written, " %s%s%s",
+		bufpos = bip_strcatf_fit(&remaining, bufpos, "%s%s%s",
 			ch->name, (ch->key ? "*" : ""),
 			(ch->backlog ? "" : "`"));
-		if (t_written > LINE_SIZE_LIM) {
-			buf[RET_STR_LEN] = 0;
+		if (!bufpos) {
+			buf[LINE_SIZE_LIM] = 0;
 			bip_notify(ic, "%s", buf);
-			t_written = 0;
+			remaining = LINE_SIZE_LIM;
+			bufpos = buf;
 		}
 	}
-noroomchan:
-	buf[RET_STR_LEN] = 0;
-	bip_notify(ic, "%s", buf);
 
-	t_written = snprintf(buf, RET_STR_LEN, "  Status: ");
-	if (t_written >= RET_STR_LEN)
-		goto noroomstatus;
+	buf[LINE_SIZE_LIM] = 0;
+	bip_notify(ic, "%s", buf);
+	remaining = LINE_SIZE_LIM;
+	bufpos = buf;
+
+	bufpos = bip_strcat_fit(&remaining, bufpos, "  Status: ");
+	if (!bufpos)
+		goto limittoolow;
 	switch (lnk->s_state) {
 	case  IRCS_NONE:
-		t_written += snprintf(buf + t_written, RET_STR_LEN - t_written,
-			"not started");
-		if (t_written >= RET_STR_LEN)
-			goto noroomstatus;
+		bufpos = bip_strcat_fit(&remaining, bufpos, "not started");
+		if (!bufpos)
+			goto limittoolow;
 		break;
 	case  IRCS_CONNECTING:
-		t_written += snprintf(buf + t_written, RET_STR_LEN - t_written,
+		bufpos = bip_strcatf_fit(&remaining, bufpos,
 			"connecting... attempts: %d, last: %s",
 			lnk->s_conn_attempt,
 			hrtime(lnk->last_connection_attempt));
-		if (t_written >= RET_STR_LEN)
+		if (!bufpos)
 			goto noroomstatus;
 		break;
 	case  IRCS_CONNECTED:
-		t_written += snprintf(buf + t_written, RET_STR_LEN - t_written,
-			"connected !");
-		if (t_written >= RET_STR_LEN)
-			goto noroomstatus;
+		bufpos = bip_strcat_fit(&remaining, bufpos, "connected !");
+		if (!bufpos)
+			goto limittoolow;
 		break;
 	case  IRCS_WAS_CONNECTED:
-		t_written += snprintf(buf + t_written, RET_STR_LEN - t_written,
+		bufpos = bip_strcatf_fit(&remaining, bufpos,
 			"disconnected, attempts: %d, last: %s",
 			lnk->s_conn_attempt,
 			hrtime(lnk->last_connection_attempt));
-		if (t_written >= RET_STR_LEN)
+		if (!bufpos)
 			goto noroomstatus;
 		break;
 	case  IRCS_RECONNECTING:
-		t_written += snprintf(buf + t_written, RET_STR_LEN - t_written,
+		bufpos = bip_strcatf_fit(&remaining, bufpos,
 			"reconnecting... attempts: %d, last: %s",
 			lnk->s_conn_attempt,
 			hrtime(lnk->last_connection_attempt));
-		if (t_written >= RET_STR_LEN)
+		if (!bufpos)
 			goto noroomstatus;
 		break;
 	case  IRCS_TIMER_WAIT:
-		t_written += snprintf(buf + t_written, RET_STR_LEN - t_written,
+		bufpos = bip_strcatf_fit(&remaining, bufpos,
 			"waiting to reconnect, attempts: %d, last: %s",
 			lnk->s_conn_attempt,
 			hrtime(lnk->last_connection_attempt));
-		if (t_written >= RET_STR_LEN)
+		if (!bufpos)
 			goto noroomstatus;
 		break;
 	default:
-		t_written += snprintf(buf + t_written, RET_STR_LEN - t_written,
-			"unknown");
-		if (t_written >= RET_STR_LEN)
-			goto noroomstatus;
+		bufpos = bip_strcat_fit(&remaining, bufpos, "unknown");
+		if (!bufpos)
+			goto limittoolow;
 		break;
 		// s_conn_attempt recon_timer last_connection_attempt
 	}
-noroomstatus:
-	buf[RET_STR_LEN] = 0;
+	buf[LINE_SIZE_LIM] = 0;
 	bip_notify(ic, "%s", buf);
+	return;
+noroomstatus:
+	buf[LINE_SIZE_LIM] = 0;
+	bip_notify(ic, "%stoo long to print", buf);
+	return;
+limittoolow:
+	bip_notify(ic, "cannot print connection, LINE_SIZE_LIM(%d) "
+		       "is too low (please recompile)", LINE_SIZE_LIM);
+	return;
 }
 
 void adm_list_all_links(struct link_client *ic)
@@ -1359,8 +1420,6 @@ void adm_list_all_connections(struct link_client *ic)
 void adm_info_user(struct link_client *ic, const char *name)
 {
 	struct bipuser *u;
-	char buf[RET_STR_LEN + 1];
-	int t_written = 0;
 
 	bip_notify(ic, "-- User '%s' info", name);
 	u = hash_get(&_bip->users, name);
@@ -1369,20 +1428,7 @@ void adm_info_user(struct link_client *ic, const char *name)
 		return;
 	}
 
-	t_written += snprintf(buf + t_written, RET_STR_LEN - t_written,
-			      "user: %s", u->name);
-	if (t_written >= RET_STR_LEN)
-		goto noroom;
-	if (u->admin) {
-		t_written += snprintf(buf + t_written, RET_STR_LEN - t_written,
-				", is bip admin");
-		if (t_written >= RET_STR_LEN)
-			goto noroom;
-	}
-
-noroom:
-	buf[RET_STR_LEN] = 0;
-	bip_notify(ic, "%s", buf);
+	bip_notify(ic, "user: %s%s", u->name, (u->admin ? ", is bip admin" : ""));
 
 #ifdef HAVE_LIBSSL
 	if (u->ssl_check_store) {
@@ -1421,48 +1467,64 @@ void adm_list_users(struct link_client *ic)
 {
 	hash_iterator_t it;
 	hash_iterator_t lit;
-	char buf[RET_STR_LEN + 1];
+	char buf[LINE_SIZE_LIM + 1];
+	size_t remaining = LINE_SIZE_LIM;
 
 	bip_notify(ic, "-- User list");
 	for (hash_it_init(&_bip->users, &it); hash_it_item(&it);
 			hash_it_next(&it)) {
 		struct bipuser *u = hash_it_item(&it);
 		int first = 1;
-		int t_written = 0;
+		char *bufpos = buf;
 
-		buf[RET_STR_LEN] = 0;
-		t_written += snprintf(buf, RET_STR_LEN, "* %s%s:", u->name,
+		bufpos = bip_strcatf_fit(&remaining, bufpos, "* %s%s:", u->name,
 				(u->admin ? "(admin)": ""));
-		if (t_written >= RET_STR_LEN)
-			goto noroom;
-		for (hash_it_init(&u->connections, &lit); hash_it_item(&lit);
-				hash_it_next(&lit)) {
+		// this should not happen or LINE_SIZE_LIM is really low...
+		if (!bufpos)
+			goto limittoolow;
+		for (hash_it_init(&u->connections, &lit); hash_it_item(&lit); ) {
 			struct link *lnk = hash_it_item(&lit);
 			if (first) {
 				first = 0;
 			} else {
-				t_written += snprintf(buf + t_written,
-						RET_STR_LEN - t_written, ",");
-				if (t_written >= RET_STR_LEN)
-					goto noroom;
+				bufpos = bip_strcat_fit(&remaining, bufpos, ",");
+				// if this is too long for a comma, print and prefix with spaces
+				if (!bufpos) {
+					buf[LINE_SIZE_LIM] = 0;
+					bip_notify(ic, "%s", buf);
+					remaining = LINE_SIZE_LIM;
+					bufpos = bip_strcat_fit(&remaining, buf, "     ");;
+					// this should not happen or LINE_SIZE_LIM is really low...
+					if (!bufpos)
+						goto limittoolow;
+				}
 			}
 
-			t_written += snprintf(buf + t_written,
-					RET_STR_LEN - t_written,
-					" %s", lnk->name);
-			if (t_written >= RET_STR_LEN)
-				goto noroom;
-			if (t_written > LINE_SIZE_LIM) {
-				buf[RET_STR_LEN] = 0;
+			bufpos = bip_strcatf_fit(&remaining, bufpos, " %s", lnk->name);
+			if (!bufpos) {
+				// if this is too long, print and reset
+				buf[LINE_SIZE_LIM] = 0;
 				bip_notify(ic, "%s", buf);
-				t_written = 0;
+				remaining = LINE_SIZE_LIM;
+				bufpos = bip_strcat_fit(&remaining, buf, "     ");;
+				// this should not happen or LINE_SIZE_LIM is really low...
+				if (!bufpos)
+					goto limittoolow;
+			} else {
+				// if all good, go to next entry
+				hash_it_next(&lit);
 			}
 		}
-noroom:
-		buf[RET_STR_LEN] = 0;
+		buf[LINE_SIZE_LIM] = 0;
 		bip_notify(ic, "%s", buf);
+		remaining = LINE_SIZE_LIM;
+		bufpos = buf;
 	}
 	bip_notify(ic, "-- End of User list");
+	return;
+limittoolow:
+	bip_notify(ic, "cannot print users, LINE_SIZE_LIM(%d) "
+			"is too low (please recompile)", LINE_SIZE_LIM);
 }
 
 void adm_list_networks(struct link_client *ic)
@@ -1474,38 +1536,53 @@ void adm_list_networks(struct link_client *ic)
 	for (hash_it_init(&_bip->networks, &it); hash_it_item(&it);
 			hash_it_next(&it)) {
 		struct network *n = hash_it_item(&it);
-		int t_written = 0;
 		int i;
+		char *bufpos = buf;
+		size_t remaining = RET_STR_LEN;
 
-		buf[RET_STR_LEN] = 0;
 #ifdef HAVE_LIBSSL
 		if (n->ssl) {
-			t_written += snprintf(buf, RET_STR_LEN, "- %s*:",
+			bufpos = bip_strcatf_fit(&remaining, bufpos, "- %s*:",
 					n->name);
-			if (t_written >= RET_STR_LEN)
-				goto noroom;
 		} else {
 #endif
-			t_written += snprintf(buf, RET_STR_LEN, "- %s:", n->name);
-			if (t_written >= RET_STR_LEN)
-				goto noroom;
+			bufpos = bip_strcatf_fit(&remaining, bufpos, "- %s:",
+					n->name);
 #ifdef HAVE_LIBSSL
 		}
 #endif
-		for (i = 0; i < n->serverc; i++) {
+		// if we've reached max length, print name and reset
+		// honestly, this should not happen, but for the sake of cleanliness...
+		if (!bufpos) {
+#ifdef HAVE_LIBSSL
+			if (n->ssl) {
+				bip_notify(ic, "- %s*:", n->name);
+			} else {
+#endif
+				bip_notify(ic, "- %s:", n->name);
+#ifdef HAVE_LIBSSL
+			}
+#endif
+			bufpos = buf;
+			remaining = RET_STR_LEN;
+		}
+
+		for (i = 0; i < n->serverc; ) {
 			struct server *serv = i+n->serverv;
-			t_written += snprintf(buf + t_written, RET_STR_LEN
-				- t_written, " %s:%d", serv->host,
-				serv->port);
-			if (t_written >= RET_STR_LEN)
-				goto noroom;
-			if (t_written > LINE_SIZE_LIM) {
+			bufpos = bip_strcatf_fit(&remaining, bufpos, " %s:%d",
+					serv->host, serv->port);
+			if (!bufpos) {
+				// if line is too long, print and reset
 				buf[RET_STR_LEN] = 0;
 				bip_notify(ic, "%s", buf);
-				t_written = 0;
+				remaining = RET_STR_LEN;
+				bufpos = buf;
+				i--;
+			} else {
+				// if ok, go to next server
+				i++;
 			}
 		}
-noroom:
 		buf[RET_STR_LEN] = 0;
 		bip_notify(ic, "%s", buf);
 	}
@@ -1751,8 +1828,9 @@ void set_on_connect_send(struct link_client *ic, char *val)
 void adm_on_connect_send(struct link_client *ic, struct line *line,
 		unsigned int privmsg)
 {
+	size_t remaining = ON_CONNECT_MAX_STRSIZE;
 	char buf[ON_CONNECT_MAX_STRSIZE];
-	int t_written = 0;
+	char *bufpos = buf;
 	int i;
 
 	if (!line) {
@@ -1760,30 +1838,32 @@ void adm_on_connect_send(struct link_client *ic, struct line *line,
 		return;
 	}
 
-	if (irc_line_includes(line, 2))
+	if (!irc_line_includes(line, 2)) {
+		mylog(LOG_DEBUG, "[%s] not enough parameters on /BIP on_connect_send",
+				LINK(ic)->user->name);
 		return;
+	}
 
 	for (i = privmsg + 2; i < irc_line_count(line); i++) {
-		if (t_written) {
-			t_written += snprintf(buf,
-					ON_CONNECT_MAX_STRSIZE - 1 - t_written,
-					" %s", irc_line_elem(line, i));
-			if (t_written >= ON_CONNECT_MAX_STRSIZE)
-				goto noroom;
-		} else {
-			t_written = snprintf(buf, ON_CONNECT_MAX_STRSIZE - 1,
-					"%s", irc_line_elem(line, i));
-			if (t_written >= ON_CONNECT_MAX_STRSIZE)
-				goto noroom;
+		mylog(LOG_DEBUG, "[%s] processing item %d, remaining %ld, %s",
+				LINK(ic)->user->name, i, remaining, buf);
+		if ((unsigned int)i > privmsg + 2)
+			bufpos = bip_strcatf_fit(&remaining, bufpos, " %s",
+					irc_line_elem(line, i));
+		else
+			bufpos = bip_strcat_fit(&remaining, bufpos,
+					(char *)irc_line_elem(line, i));
+		mylog(LOG_DEBUG, "[%s] processed item %d, remaining %ld, %s",
+				LINK(ic)->user->name, i, remaining, buf);
+		if (!bufpos) {
+			bip_notify(ic, "on connect send string too big, not changing.");
+			return;
 		}
 	}
-ok:
+
 	buf[ON_CONNECT_MAX_STRSIZE - 1] = 0;
 	set_on_connect_send(ic, buf);
 	return;
-noroom:
-	bip_notify(ic, "on connect send string too big, truncated");
-	goto ok;
 }
 
 void adm_away_nick(struct link_client *ic, const char *val)
@@ -1958,7 +2038,7 @@ int adm_bip(bip_t *bip, struct link_client *ic, struct line *line, int privmsg)
 
 	mylog(LOG_INFO, "/BIP %s from %s", irc_line_elem(line, privmsg + 1),
 			LINK(ic)->user->name);
-	if (strcasecmp(irc_line_elem(line, privmsg + 1), "RELOAD") == 0) {
+	if (irc_line_elem_case_equals(line, privmsg + 1, "RELOAD")) {
 		if (!admin) {
 			bip_notify(ic, "-- You're not allowed to reload bip");
 			return OK_FORGET;
@@ -1966,7 +2046,7 @@ int adm_bip(bip_t *bip, struct link_client *ic, struct line *line, int privmsg)
 		bip_notify(ic, "-- Reloading bip...");
 		bip->reloading_client = ic;
 		sighup = 1;
-	} else if (strcasecmp(irc_line_elem(line, privmsg + 1), "LIST") == 0) {
+	} else if (irc_line_elem_case_equals(line, privmsg + 1, "LIST")) {
 		if (irc_line_count(line) != privmsg + 3) {
 			bip_notify(ic, "-- LIST command needs one argument");
 			return OK_FORGET;
@@ -1990,10 +2070,10 @@ int adm_bip(bip_t *bip, struct link_client *ic, struct line *line, int privmsg)
 		} else {
 			bip_notify(ic, "-- Invalid LIST request");
 		}
-	} else if (strcasecmp(irc_line_elem(line, privmsg + 1), "INFO") == 0) {
-		if (!irc_line_includes(line, privmsg + 2)) {
-			bip_notify(ic, "-- INFO command needs at least one "
-					"argument");
+	} else if (irc_line_elem_case_equals(line, privmsg + 1, "INFO")) {
+		if (!irc_line_includes(line, privmsg + 3)) {
+			bip_notify(ic, "-- INFO command needs at least two "
+					"arguments");
 			return OK_FORGET;
 		}
 

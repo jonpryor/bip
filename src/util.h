@@ -2,7 +2,8 @@
  * $Id: util.h,v 1.35 2005/04/12 19:34:35 nohar Exp $
  *
  * This file is part of the bip project
- * Copyright (C) 2004 2005 Arnaud Cornet and Loïc Gomez
+ * Copyright (C) 2004,2005 Arnaud Cornet
+ * Copyright (C) 2004,2005,2022 Loïc Gomez
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -175,6 +176,8 @@ void *bip_malloc(size_t size);
 void *bip_calloc(size_t nmemb, size_t size);
 void *bip_realloc(void *ptr, size_t size);
 char *bip_strdup(const char *str);
+char *bip_strcat_fit(size_t *remaining, char *str, const char *str2);
+char *bip_strcatf_fit(size_t *remaining, char *str, const char *str2, ...);
 #define array_each(a, idx, ptr) for ((idx) = 0; \
 		(idx) < (a)->elemc && (((ptr) = array_get((a), (idx))) || 1); \
 		(idx)++)
