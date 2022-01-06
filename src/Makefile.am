@@ -27,4 +27,9 @@ bipmkpw_CFLAGS = ${OPENSSL_CFLAGS} $(AM_CFLAGS)
 AM_YFLAGS= -d
 BUILT_SOURCES = conf.c conf.h lex.c
 
-AM_CFLAGS=-Wall -Wextra -Werror
+AM_CFLAGS=-Wall -Wextra -Werror \
+	-O2 \
+	-D_FORTIFY_SOURCE=2 \
+	-fstack-protector-strong -fstack-clash-protection \
+	-Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -Wl,-z,separate-code \
+	-Wpedantic -Wformat=2 -Wformat-overflow=2 -Wformat-truncation=2 -Wformat-security -Wnull-dereference -Wstack-protector -Wtrampolines -Walloca -Wvla -Warray-bounds=2 -Wimplicit-fallthrough=3 -Wtraditional-conversion -Wshift-overflow=2 -Wcast-qual -Wstringop-overflow=4 -Wconversion -Warith-conversion -Wlogical-op -Wduplicated-cond -Wduplicated-branches -Wformat-signedness -Wshadow -Wstrict-overflow=4 -Wundef -Wstrict-prototypes -Wswitch-default -Wswitch-enum -Wstack-usage=1000000 -Wcast-align=strict
