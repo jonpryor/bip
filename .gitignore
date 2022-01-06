@@ -55,3 +55,9 @@ src/conf.h
 src/config.h
 src/config.h.in
 src/lex.c
+
+# Binaries
+src/*.o
+src/*.a
+src/bip
+src/bipmkpw
