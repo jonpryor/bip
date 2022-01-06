@@ -2,7 +2,8 @@
  * $Id$
  *
  * This file is part of the bip project
- * Copyright (C) 2004 2005 Arnaud Cornet and Loïc Gomez
+ * Copyright (C) 2004,2005 Arnaud Cornet
+ * Copyright (C) 2004,2005,2022 Loïc Gomez
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,34 +27,42 @@ int conf_log_level;
 FILE *conf_global_log_file;
 int conf_log_system;
 
+void bipmkpw_fatal(char *msg, char *err)
+{
+	fprintf(stderr, "%s: %s\n", msg, err);
+	exit(1);
+}
+
 void readpass(char *buffer, int buflen)
 {
 	int ttyfd = open("/dev/tty", O_RDWR);
-	if (ttyfd == -1) {
-		fprintf(stderr, "Unable to open tty: %s\n", strerror(errno));
-		exit(1);
-	}
+	if (ttyfd == -1)
+		bipmkpw_fatal("Unable to open tty", strerror(errno));
 
 	struct termios tt, ttback;
 	memset(&ttback, 0, sizeof(ttback));
-	if (tcgetattr(ttyfd, &ttback) < 0) {
-		fprintf(stderr, "tcgetattr failed: %s\n", strerror(errno));
-		exit(1);
-	}
+	if (tcgetattr(ttyfd, &ttback) < 0)
+		bipmkpw_fatal("tcgetattr failed", strerror(errno));
 
 	memcpy(&tt, &ttback, sizeof(ttback));
+// unsigned conversion from ‘int’ to ‘tcflag_t’ {aka ‘unsigned int’} changes value from ‘-11’ to ‘4294967285’
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wsign-conversion"
 	tt.c_lflag &= ~(ICANON|ECHO);
-	if (tcsetattr(ttyfd, TCSANOW, &tt) < 0) {
-		fprintf(stderr, "tcsetattr failed: %s\n", strerror(errno));
-		exit(1);
-	}
+#pragma GCC diagnostic pop
+	if (tcsetattr(ttyfd, TCSANOW, &tt) < 0)
+		bipmkpw_fatal("tcsetattr failed", strerror(errno));
 
-	write(ttyfd, "Password: ", 10);
+	if (!write(ttyfd, "Password: ", (size_t)10))
+		bipmkpw_fatal("tty write failed", strerror(errno));
 
 	int idx = 0;
 	int valid = 1;
 	while (idx < buflen) {
-		read(ttyfd, buffer+idx, 1);
+		ssize_t rbytes = read(ttyfd, buffer+idx, (size_t)1);
+		if (rbytes <= 0) {
+			break;
+		}
 		if (buffer[idx] == '\n') {
 			buffer[idx] = 0;
 			break;
@@ -63,7 +72,8 @@ void readpass(char *buffer, int buflen)
 		idx++;
 	}
 
-	write(ttyfd, "\n", 1);
+	if (!write(ttyfd, "\n", (size_t)1))
+		bipmkpw_fatal("tty write failed", strerror(errno));
 
 	tcsetattr(ttyfd, TCSANOW, &ttback);
 	close(ttyfd);
@@ -84,9 +94,16 @@ int main(void)
 	readpass(str, 256);
 	str[255] = 0;
 
+// passing argument 1 of ‘srand’ with different width due to prototype [-Werror=traditional-conversion]
+// conversion from ‘time_t’ {aka ‘long int’} to ‘unsigned int’ may change value [-Werror=conversion]
+// We don't care.
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wtraditional-conversion"
+#pragma GCC diagnostic ignored "-Wconversion"
 	// the time used to type the pass is entropy
 	srand(time(NULL));
-	seed = rand();
+#pragma GCC diagnostic pop
+	seed = (unsigned)rand(); // rand should be > 0
 
 	md5 = chash_double(str, seed);
         for (i = 0; i < 20; i++)
