@@ -721,25 +721,29 @@ static char *get_str_elem(char *str, int num)
 	int index = 0;
 
 	while ((c = strchr(cur, PASS_SEP))) {
+		long len = c - cur;
 		if (index < num) {
 			index++;
 			cur = c + 1;
 			continue;
 		}
-		if (c - cur < 1)
+		if (len < 1)
 			return NULL;
-		ret = bip_malloc(c - cur + 1);
-		memcpy(ret, cur, c - cur);
-		ret[c - cur] = 0;
+		// len always > 0
+		ret = bip_malloc((size_t)len + 1);
+		memcpy(ret, cur, (size_t)len);
+		ret[len] = 0;
 		return ret;
 	}
 	if (index == num) {
+		long len;
 		c = str + strlen(str);
-		if (c - cur < 1)
+		len = c - cur;
+		if (len < 1)
 			return NULL;
-		ret = bip_malloc(c - cur + 1);
-		memcpy(ret, cur, c - cur);
-		ret[c - cur] = 0;
+		ret = bip_malloc((size_t)len + 1);
+		memcpy(ret, cur, (size_t)len);
+		ret[len] = 0;
 		return ret;
 	}
 	return NULL;
