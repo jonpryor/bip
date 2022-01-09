@@ -191,6 +191,7 @@ void log_updatelast(logfile_t *lf)
 static void log_reset(logstore_t *store)
 {
 	logfile_t *olf;
+	long ftell_r;
 
 	store->skip_advance = 0;
 
@@ -206,14 +207,19 @@ static void log_reset(logstore_t *store)
 		list_remove_first(&store->file_group);
 	}
 
-	assert(olf);
-	assert(olf->file);
+	if (!olf || !olf->file)
+		return;
 
 	list_it_init_last(&store->file_group, &store->file_it);
 
-	fseek(olf->file, 0, SEEK_END);
-	olf->len = ftell(olf->file);
-	store->file_offset = olf->len;
+	fseek(olf->file, (long)0, SEEK_END);
+	ftell_r = ftell(olf->file);
+	if (ftell_r < 0) {
+		mylog(LOG_ERROR, "log_reset: ftell error %s", strerror(errno));
+		return;
+	}
+	store->file_offset = ftell_r;
+	olf->len = (size_t)ftell_r;
 }
 
 void log_reinit(logstore_t *store)
@@ -267,6 +273,7 @@ static int log_add_file(log_t *logdata, const char *destination,
 	char *uniq_fname;
 	char *canonical_fname = NULL;
 	logfile_t *lf = NULL;
+	long ftell_r;
 
 	if (logdata->log_to_file) {
 		if (log_has_file(logdata, filename)) {
@@ -296,7 +303,16 @@ static int log_add_file(log_t *logdata, const char *destination,
 
 		lf = bip_malloc(sizeof(logfile_t));
 		lf->file = f;
-		lf->len = ftell(f);
+		ftell_r = ftell(f);
+		lf->len = (size_t)ftell_r;
+		if (ftell_r < 0) {
+			mylog(LOG_ERROR, "log_add_file: ftell error %s",
+					strerror(errno));
+			free(uniq_fname);
+			free(canonical_fname);
+			fclose(f);
+			return 0;
+		}
 		lf->filename = uniq_fname;
 		lf->canonical_filename = canonical_fname;
 		log_updatelast(lf);
@@ -308,8 +324,9 @@ static int log_add_file(log_t *logdata, const char *destination,
 		list_init(&store->file_group, NULL);
 		store->name = bip_strdup(destination);
 		store->skip_advance = 0;
+		// should be safe to cast as lf->len comes from ftell()
 		if (lf)
-			store->file_offset = lf->len;
+			store->file_offset = (long)lf->len;
 		hash_insert(&logdata->logfgs, destination, store);
 	}
 
@@ -828,7 +845,9 @@ int log_has_backlog(log_t *logdata, const char *destination)
 	if (lf != list_get_last(&store->file_group))
 		return 1;
 
-	return store->file_offset != lf->len;
+	// should be safe to cast to unsigned as we check ftell
+	// when setting file_offset and only ++ since then
+	return (size_t)store->file_offset != lf->len;
 }
 
 /*

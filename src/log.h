@@ -2,7 +2,8 @@
  * $Id: log.h,v 1.26 2005/04/12 19:34:35 nohar Exp $
  *
  * This file is part of the bip project
- * Copyright (C) 2004 Arnaud Cornet and Loïc Gomez
+ * Copyright (C) 2004 Arnaud Cornet
+ * Copyright (C) 2004,2022 Loïc Gomez
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -47,7 +48,7 @@ typedef struct logstore
 	int memc;
 	int track_backlog;
 	list_iterator_t file_it;
-	size_t file_offset;
+	long file_offset;
 } logstore_t;
 
 typedef struct log
