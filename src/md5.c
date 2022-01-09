@@ -360,7 +360,11 @@ unsigned char *chash_double(char *str, unsigned int seed)
 	length = strlen(str);
 	length += 4;
 	ptr = bip_malloc(length);
+// conversion from ‘unsigned int’ to ‘unsigned char’ may change value [-Werror=conversion]
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wconversion"
 	ptr[0] = seed >> 24 & 0xff;
+#pragma GCC diagnostic pop
 	ptr[1] = seed >> 16 & 0xff;
 	ptr[2] = seed >> 8 & 0xff;
 	ptr[3] = seed & 0xff;

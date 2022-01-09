@@ -82,7 +82,12 @@ static void hash_binary(char *hex, unsigned char **password, unsigned int *seed)
 	md5 = bip_malloc((size_t) 20);
 	for (i = 0; i < 20; i++) {
 		sscanf(hex + 2 * i, "%02x", &buf);
+// conversion from ‘unsigned int’ to ‘unsigned char’ may change value
+// we're parsing a text (hex) so buf won't ever be something else than a char
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wconversion"
 		md5[i] = buf;
+#pragma GCC diagnostic pop
 	}
 
 	*seed = 0;

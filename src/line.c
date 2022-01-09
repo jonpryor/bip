@@ -16,6 +16,9 @@
 #include "line.h"
 #include "util.h"
 
+// TODO resolve assuming signed overflow does not occur when changing X +- C1 cmp C2 to X cmp C2 -+ C1
+#pragma GCC diagnostic ignored "-Wstrict-overflow"
+
 void irc_line_init(struct line *l)
 {
 	memset(l, 0, sizeof(struct line));

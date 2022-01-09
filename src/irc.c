@@ -24,6 +24,9 @@
 #include "md5.h"
 #include "utils/base64.h"
 
+// TODO resolve assuming signed overflow does not occur when changing X +- C1 cmp C2 to X cmp C2 -+ C1
+#pragma GCC diagnostic ignored "-Wstrict-overflow"
+
 #define S_CONN_DELAY (10)
 
 extern int sighup;

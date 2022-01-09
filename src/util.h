@@ -43,11 +43,14 @@ struct list_item {
 	void *ptr;
 };
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstrict-prototypes"
 typedef struct list {
 	struct list_item *first;
 	struct list_item *last;
 	int (*cmp)();
 } list_t;
+#pragma GCC diagnostic pop
 
 typedef struct list_iterator {
 	list_t *list;
