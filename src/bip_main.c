@@ -296,7 +296,10 @@ int main(int argc, char **argv)
 	else
 		pid = getpid();
 	snprintf(buf, (size_t) 29, "%lu\n", (unsigned long int)pid);
-	write(fd, buf, strlen(buf));
+	ssize_t written;
+	written = write(fd, buf, strlen(buf));
+	if (written <= 0)
+		mylog(LOG_ERROR, "Could not write to PID file");
 	close(fd);
 
 	bip.listener = listen_new(conf_ip, conf_port, conf_css);
