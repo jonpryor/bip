@@ -94,7 +94,8 @@ char *nick_from_ircmask(const char *mask)
 	char *ret;
 	size_t len;
 
-	assert(mask);
+	if (!mask)
+		return NULL;
 
 	while (*nick && *nick != '!')
 		nick++;
@@ -1380,6 +1381,8 @@ static int origin_is_me(struct line *l, struct link_server *server)
 	if (!l->origin)
 		return 0;
 	nick = nick_from_ircmask(l->origin);
+	if (!nick)
+		return 0;
 	if (strcasecmp(nick, server->nick) == 0) {
 		free(nick);
 		return 1;
@@ -1416,6 +1419,9 @@ static int irc_join(struct link_server *server, struct line *line)
 		return ERR_PROTOCOL;
 
 	s_nick = nick_from_ircmask(line->origin);
+	// should not happen
+	if (!s_nick)
+		return ERR_PROTOCOL;
 	hash_insert(&channel->ovmasks, s_nick, 0);
 	free(s_nick);
 	return OK_COPY;
@@ -1615,6 +1621,9 @@ static int irc_part(struct link_server *server, struct line *line)
 	if (!line->origin)
 		return ERR_PROTOCOL;
 	s_nick = nick_from_ircmask(line->origin);
+	// should not happen
+	if (!s_nick)
+		return ERR_PROTOCOL;
 	if (!hash_includes(&channel->ovmasks, s_nick)) {
 		free(s_nick);
 		return ERR_PROTOCOL;
@@ -1898,6 +1907,9 @@ static void irc_privmsg_check_ctcp(struct link_server *server,
 
 	char *nick;
 	nick = nick_from_ircmask(line->origin);
+	// should not happen
+	if (!nick)
+		return;
 	if (irc_line_elem_equals(line, 2, "\001VERSION\001")) {
 		WRITE_LINE2(CONN(server), NULL, "NOTICE", nick,
 				"\001VERSION bip-" PACKAGE_VERSION "\001");
@@ -1945,6 +1957,9 @@ static int irc_nick(struct link_server *server, struct line *line)
 		return ERR_PROTOCOL;
 
 	org_nick = nick_from_ircmask(line->origin);
+	// should not happen
+	if (!org_nick)
+		return ERR_PROTOCOL;
 	dst_nick = irc_line_elem(line, 1);
 
 	for (hash_it_init(&server->channels, &hi); hash_it_item(&hi);
@@ -1984,6 +1999,9 @@ static int irc_generic_quit(struct link_server *server, struct line *line)
 	if (!line->origin)
 		return ERR_PROTOCOL;
 	s_nick = nick_from_ircmask(line->origin);
+	// should not happen
+	if (!s_nick)
+		return ERR_PROTOCOL;
 	for (hash_it_init(&server->channels, &hi); hash_it_item(&hi);
 			hash_it_next(&hi)) {
 		channel = hash_it_item(&hi);
