@@ -1179,12 +1179,12 @@ static int irc_cli_join(struct link_client *irc, struct line *line)
 static int irc_cli_part(struct link_client *irc, struct line *line)
 {
 	struct chan_info *ci;
-	char *cname;
+	const char *cname;
 
 	if (irc_line_count(line) != 2 && irc_line_count(line) != 3)
 		return ERR_PROTOCOL;
 
-	cname = (char *)irc_line_elem(line, 1);
+	cname = irc_line_elem(line, 1);
 
 	if ((ci = hash_remove_if_exists(&LINK(irc)->chan_infos,
 					cname)) != NULL) {
