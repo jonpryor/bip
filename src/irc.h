@@ -115,7 +115,7 @@ struct link {
 
 	/** link live data **/
 	struct link_server *l_server;
-	int l_clientc;
+	unsigned int l_clientc;
 	struct link_client **l_clientv;
 
 	struct log *log;

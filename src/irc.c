@@ -168,7 +168,7 @@ static int irc_001(struct link_server *server, struct line *line)
 		LINK(server)->s_state = IRCS_CONNECTING;
 
 	/* change nick on client */
-	int i;
+	unsigned int i;
 	for (i = 0; i < LINK(server)->l_clientc; i++) {
 		struct link_client *c = LINK(server)->l_clientv[i];
 		WRITE_LINE1(CONN(c), LINK(server)->cli_nick, "NICK",
@@ -224,7 +224,7 @@ static void irc_server_join(struct link_server *s)
 
 static void irc_server_connected(struct link_server *server)
 {
-	int i;
+	unsigned int i;
 
         LINK(server)->s_state = IRCS_CONNECTED;
         LINK(server)->s_conn_attempt = 0;
@@ -339,7 +339,7 @@ static int irc_315(struct link_server *server, struct line *l)
 
 void rotate_who_client(struct link *link)
 {
-	int i;
+	unsigned int i;
 	mylog(LOG_DEBUG, "rotate_who_client %p", link->who_client);
 	/* find a client with non-null who_count */
 	link->who_client = NULL;
@@ -583,7 +583,7 @@ int irc_dispatch_server(bip_t *bip, struct link_server *server,
 	}
 
 	if (ret == OK_COPY) {
-		int i;
+		unsigned int i;
 		for (i = 0; i < LINK(server)->l_clientc; i++) {
 			if (TYPE(LINK(server)->l_clientv[i]) ==
 					IRC_TYPE_CLIENT) {
@@ -660,7 +660,7 @@ static void write_init_string(connection_t *c, struct line *line, char *nick)
 
 static void bind_to_link(struct link *l, struct link_client *ic)
 {
-	int i = l->l_clientc;
+	unsigned int i = l->l_clientc;
 
 	LINK(ic) = l;
 	l->l_clientc++;
@@ -672,7 +672,7 @@ static void bind_to_link(struct link *l, struct link_client *ic)
 void unbind_from_link(struct link_client *ic)
 {
 	struct link *l = LINK(ic);
-	int i;
+	unsigned int i;
 
 	for (i = 0; i < l->l_clientc; i++)
 		if (l->l_clientv[i] == ic)
@@ -689,6 +689,8 @@ void unbind_from_link(struct link_client *ic)
 	for (i = i + 1; i < l->l_clientc; i++)
 		l->l_clientv[i - 1] = l->l_clientv[i];
 
+	if (l->l_clientc == 0)
+		fatal("unbind_from_link: negative client count");
 	l->l_clientc--;
 	l->l_clientv = bip_realloc(l->l_clientv, l->l_clientc *
 			sizeof(struct link_client *));
@@ -1069,7 +1071,7 @@ static int irc_cli_mode(struct link_client *ic, struct line *line)
 
 static void irc_notify_disconnection(struct link_server *is)
 {
-	int i;
+	unsigned int i;
 	LINK(is)->cli_nick = bip_strdup(is->nick);
 
 	for (i = 0; i < LINK(is)->l_clientc; i++) {
@@ -1095,7 +1097,6 @@ void irc_add_channel_info(struct link_server *ircs, const char *chan,
 
 	ci = hash_get(&LINK(ircs)->chan_infos, chan);
 	if (!ci) {
-		struct chan_info *ci;
 		ci = chan_info_new();
 		ci->name = bip_strdup(chan);
 		ci->key = key ? bip_strdup(key) : NULL;
@@ -1251,7 +1252,7 @@ static int irc_dispatch_client(bip_t *bip, struct link_client *ic,
 
 		free(str);
 		if (r == OK_COPY_CLI) {
-			int i;
+			unsigned int i;
 			struct link_server *s = LINK(ic)->l_server;
 
 			for (i = 0; i < LINK(s)->l_clientc; i++)
