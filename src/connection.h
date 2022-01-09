@@ -75,7 +75,7 @@ typedef struct connection {
 	time_t connect_time;
 	time_t timeout;
 	char *incoming;
-	unsigned incoming_end;
+	size_t incoming_end;
 	list_t *outgoing;
 	char *partial;
 	list_t *incoming_lines;

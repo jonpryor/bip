@@ -212,6 +212,16 @@ static int _write_socket_SSL(connection_t *cn, char* message)
 
 	size = sizeof(char)*strlen(message);
 
+	// let's not ERR (SSL_write doesn't allow 0 len writes)
+	if (size == 0)
+		return WRITE_OK;
+
+	// this will fail anyways
+	if (size > INT_MAX) {
+		mylog(LOG_ERROR, "Message too long in SSL write_socket");
+		return WRITE_ERROR;
+	}
+
 	if (!cn->client && cn->cert == NULL) {
 		cn->cert = mySSL_get_cert(cn->ssl_h);
 		if (cn->cert == NULL) {
@@ -219,7 +229,7 @@ static int _write_socket_SSL(connection_t *cn, char* message)
 			return WRITE_ERROR;
 		}
 	}
-	count = SSL_write(cn->ssl_h, (const void *)message, size);
+	count = SSL_write(cn->ssl_h, (const void *)message, (int)size);
 	ERR_print_errors(errbio);
 	if (count <= 0) {
 		int err = SSL_get_error(cn->ssl_h, count);
@@ -234,10 +244,10 @@ static int _write_socket_SSL(connection_t *cn, char* message)
 		}
 		return WRITE_ERROR;
 	}
-	if (count != size) {
+	if (count != (int)size) {
 		/* abnormal : openssl keeps writing until message is not fully
 		 * sent */
-		mylog(LOG_DEBUG, "only %d written while message length is %d",
+		mylog(LOG_ERROR, "SSL_write wrote only %d while message length is %d",
 				count,size);
 	}
 
@@ -474,9 +484,23 @@ list_t *read_lines(connection_t *cn, int *error)
 /* returns 1 if connection must be notified */
 static int read_socket_SSL(connection_t *cn)
 {
-	int max, count;
+	int count;
+	size_t max;
 
-	max = CONN_BUFFER_SIZE - cn->incoming_end;
+	if (cn == NULL)
+		return 0;
+
+	if (cn->incoming_end >= CONN_BUFFER_SIZE) {
+		mylog(LOG_ERROR, "read_socket_SSL: internal error");
+		return -1;
+	}
+
+	max = sizeof(char)*(CONN_BUFFER_SIZE - cn->incoming_end);
+	if (max > INT_MAX) {
+		mylog(LOG_ERROR, "read_socket_SSL: cannot read that much data");
+		return -1;
+	}
+
 	if (!cn->client && cn->cert == NULL) {
 		cn->cert = mySSL_get_cert(cn->ssl_h);
 		if (cn->cert == NULL) {
@@ -484,8 +508,8 @@ static int read_socket_SSL(connection_t *cn)
 			return -1;
 		}
 	}
-	count = SSL_read(cn->ssl_h, (void *)cn->incoming + cn->incoming_end,
-			sizeof(char) * max);
+	count = SSL_read(cn->ssl_h, (void *)(cn->incoming + cn->incoming_end),
+			(int)max);
 	ERR_print_errors(errbio);
 	if (count < 0) {
 		int err = SSL_get_error(cn->ssl_h, count);
@@ -511,23 +535,29 @@ static int read_socket_SSL(connection_t *cn)
 			connection_close(cn);
 		}
 		return 1;
+	} else {
+		cn->incoming_end += (size_t)count;
+		return 0;
 	}
-
-	cn->incoming_end += count;
-	return 0;
 }
 #endif
 
 /* returns 1 if connection must be notified */
 static int read_socket(connection_t *cn)
 {
-	int max, count;
+	ssize_t count;
+	size_t max;
 
 	if (cn == NULL)
 		return 0;
-	max = CONN_BUFFER_SIZE - cn->incoming_end;
-	count = read(cn->handle, cn->incoming+cn->incoming_end,
-			sizeof(char)*max);
+
+	if (cn->incoming_end >= CONN_BUFFER_SIZE) {
+		mylog(LOG_ERROR, "read_socket: internal error");
+		return -1;
+	}
+
+	max = sizeof(char)*(CONN_BUFFER_SIZE - cn->incoming_end);
+	count = read(cn->handle, cn->incoming+cn->incoming_end, max);
 	if (count < 0) {
 		if (errno == EAGAIN || errno == EINTR || errno == EINPROGRESS)
 			return 0;
@@ -544,10 +574,10 @@ static int read_socket(connection_t *cn)
 			connection_close(cn);
 		}
 		return 1;
+	} else {
+		cn->incoming_end += (unsigned)count;
+		return 0;
 	}
-
-	cn->incoming_end += count;
-	return 0;
 }
 
 static void data_find_lines(connection_t *cn)

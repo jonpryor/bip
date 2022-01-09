@@ -1116,13 +1116,21 @@ static list_t *log_backread(log_t *log, const char *storename, const char *dest)
 static char *_log_wrap(const char *dest, const char *line)
 {
 	char *buf;
-	size_t count;
+	int count;
 
 	buf = bip_malloc((size_t)LOGLINE_MAXLEN + 1);
 	count = snprintf(buf, (size_t)LOGLINE_MAXLEN + 1,
 			":" P_IRCMASK " PRIVMSG %s :%s\r\n", dest, line);
+	if (count < 0) {
+		mylog(LOG_ERROR, "_log_wrap: error on snprintf: %s",
+				strerror(errno));
+		buf[LOGLINE_MAXLEN - 2] = '\r';
+		buf[LOGLINE_MAXLEN - 1] = '\n';
+		buf[LOGLINE_MAXLEN] = 0;
+		return buf;
+	}
 	if (count >= LOGLINE_MAXLEN + 1) {
-		mylog(LOG_DEBUG, "line too long");
+		mylog(LOG_WARN, "_log_wrap: line too long");
 		buf[LOGLINE_MAXLEN - 2] = '\r';
 		buf[LOGLINE_MAXLEN - 1] = '\n';
 		buf[LOGLINE_MAXLEN] = 0;
@@ -1172,13 +1180,16 @@ static size_t _log_write(log_t *logdata, logstore_t *store,
 void log_write(log_t *logdata, const char *destination, const char *str)
 {
 	logstore_t *store = log_find_file(logdata, destination);
+	size_t written;
 
 	if (!store) {
 		mylog(LOG_ERROR, "Unable to find/create logfile for '%s'",
 				destination);
 		return;
 	}
-	_log_write(logdata, store, destination, str);
+	written = _log_write(logdata, store, destination, str);
+	if (written <= 0)
+		mylog(LOG_WARN, "log_write to '%s' failed", destination);
 }
 
 static list_t *log_all_logs = NULL;

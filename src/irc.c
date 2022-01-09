@@ -1294,7 +1294,9 @@ static void irc_copy_cli(struct link_client *src, struct link_client *dest,
 	}
 
 	/* LINK(src) == LINK(dest) */
-	size_t len = strlen(irc_line_elem(line, 2)) + 5;
+	size_t len = strlen(irc_line_elem(line, 2)) + 6;
+	// snprintf fix                               ^
+	// ‘__builtin___snprintf_chk’ output may be truncated before the last format character
 	char *tmp;
 
 	if (len == 0)
@@ -2897,10 +2899,13 @@ static void server_set_prefix(struct link_server *s, const char *modes)
 static int bip_get_index(const char* str, char car)
 {
 	char *cur;
-	if ((cur = strchr(str, car)))
-		return cur - str + 1;
-	else
+	long diff;
+	if (!(cur = strchr(str, car)))
 		return 0;
+	diff = cur - str + 1;
+	if (diff > INT_MAX)
+		fatal("bip_get_index: string too long");
+	return (int)diff;
 }
 
 static int bip_fls(long v)
