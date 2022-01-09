@@ -158,6 +158,17 @@ end:
 	return res;
 }
 
+void bip_clock_gettime(clockid_t clockid, struct timespec *tp)
+{
+	int err = clock_gettime(clockid, tp);
+
+	if (err != 0)
+		fatal("clock_gettime: %s", strerror(errno));
+
+	if (tp->tv_sec < 0 || tp->tv_nsec < 0)
+		fatal("clock_gettime returned negative time");
+}
+
 /*
  * <nick> ::= <letter> { <letter> | <number> | <special> }
  * <special> ::= '-' | '[' | ']' | '\' | '`' | '^' | '{' | '}'

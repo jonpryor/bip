@@ -874,7 +874,7 @@ static int cn_want_write(connection_t *cn)
 list_t *wait_event(list_t *cn_list, time_t *msec, int *nc)
 {
 	fd_set fds_read, fds_write, fds_except;
-	int maxfd = -1, err, errtime;
+	int maxfd = -1, err;
 	list_t *cn_newdata;
 	list_iterator_t it;
 	struct timeval tv;
@@ -945,11 +945,7 @@ list_t *wait_event(list_t *cn_list, time_t *msec, int *nc)
 	mylog(LOG_DEBUGTOOMUCH, "msec: %d, sec: %d, usec: %d", *msec, tv.tv_sec,
 			tv.tv_usec);
 
-	errtime = clock_gettime(CLOCK_MONOTONIC, &btv);
-	if (errtime != 0) {
-		fatal("clock_gettime: %s", strerror(errno));
-	}
-
+	bip_clock_gettime(CLOCK_MONOTONIC, &btv);
 	err = select(maxfd + 1, &fds_read, &fds_write, &fds_except, &tv);
 
 	if (err == 0) {
@@ -962,11 +958,7 @@ list_t *wait_event(list_t *cn_list, time_t *msec, int *nc)
 				tv.tv_sec, tv.tv_usec);
 	}
 
-	errtime = clock_gettime(CLOCK_MONOTONIC, &etv);
-	if (errtime != 0) {
-		fatal("clock_gettime: %s", strerror(errno));
-	}
-
+	bip_clock_gettime(CLOCK_MONOTONIC, &etv);
 	if (etv.tv_sec < btv.tv_sec)
 		mylog(LOG_ERROR, "Time rewinded ! not touching interval");
 	else {

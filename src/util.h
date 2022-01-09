@@ -178,6 +178,7 @@ void *bip_realloc(void *ptr, size_t size);
 char *bip_strdup(const char *str);
 char *bip_strcat_fit(size_t *remaining, char *str, const char *str2);
 char *bip_strcatf_fit(size_t *remaining, char *str, const char *str2, ...);
+void bip_clock_gettime(clockid_t clockid, struct timespec *tp);
 #define array_each(a, idx, ptr) for ((idx) = 0; \
 		(idx) < (a)->elemc && (((ptr) = array_get((a), (idx))) || 1); \
 		(idx)++)
