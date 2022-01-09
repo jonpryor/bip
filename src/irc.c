@@ -2451,12 +2451,13 @@ void oidentd_dump(bip_t *bip)
 			return;
 		}
 
-		content = (char *)bip_malloc(stats.st_size + 1);
+		// casting to size_t as stat should never return negative size
+		content = (char *)bip_malloc((size_t)(stats.st_size + 1));
 
-		if (fread(content, (size_t)1, stats.st_size, f) !=
+		// validate that content is of stats.st_size size
+		if (fread(content, (size_t)1, (size_t)stats.st_size, f) !=
 				(size_t)stats.st_size) {
-			mylog(LOG_WARN, "Can't read %s fully",
-					bip->oidentdpath);
+			mylog(LOG_WARN, "Can't read %s fully", bip->oidentdpath);
 			free(content);
 			goto clean_oidentd;
 		}
@@ -2475,21 +2476,29 @@ void oidentd_dump(bip_t *bip)
 				goto clean_oidentd;
 			}
 
+			// data preceeding the tag, bipstart >= content (strstr)
+			fwrite(content, (size_t)1, (size_t)(bipstart - content), f);
+
 			bipend = strstr(bipstart, BIP_OIDENTD_END);
-
-			/* data preceeding the tag */
-			fwrite(content, 1, bipstart - content, f);
-
-			/* data following the tag, if any */
-			if (bipend != NULL)
-				fwrite(bipend + BIP_OIDENTD_END_LENGTH, 1,
-						stats.st_size -
-						(bipend - content) -
-						BIP_OIDENTD_END_LENGTH, f);
-			else
+			if (bipend == NULL) {
 				mylog(LOG_WARN, "No %s mark found in %s",
 						BIP_OIDENTD_END,
 						bip->oidentdpath);
+			} else {
+				/* data following the tag
+				 * ...........BIP_OIDENTD_START...BIP_OIDENTD_END..............
+				 * ^content...^bipstart...........^bipend........^remaining data
+				 */
+				char *remaining =  bipend + BIP_OIDENTD_END_LENGTH;
+				off_t remaining_len = stats.st_size -
+					(bipend - content) - (off_t)BIP_OIDENTD_END_LENGTH;
+				if (remaining_len < 0) {
+					mylog(LOG_ERROR, "oidentd_dump: error parsing %s",
+							bip->oidentdpath);
+					goto clean_oidentd;
+				}	
+				fwrite(remaining, (size_t)1, (size_t)remaining_len, f);
+			}
 		} else {
 			/* No previous conf */
 			if (stats.st_size != 0 &&
