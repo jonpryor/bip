@@ -1,7 +1,8 @@
 /*
  *  RFC 1321 compliant MD5 implementation
  *
- *  Copyright (C) 2001-2003  Christophe Devine
+ *  Copyright (C) 2001-2003 Christophe Devine
+ *  Copyright (C) 2022 Loïc Gomez
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -238,7 +239,7 @@ void md5_finish( md5_context *ctx, uint8 digest[16] )
     padn = ( last < 56 ) ? ( 56 - last ) : ( 120 - last );
 
     md5_update( ctx, md5_padding, padn );
-    md5_update( ctx, msglen, 8 );
+    md5_update( ctx, msglen, (unsigned long)8 );
 
     PUT_UINT32( ctx->state[0], digest,  0 );
     PUT_UINT32( ctx->state[1], digest,  4 );
@@ -365,15 +366,15 @@ unsigned char *chash_double(char *str, unsigned int seed)
 	ptr[3] = seed & 0xff;
 	memcpy(ptr + 4, str, length - 4);
 
-	md5 = bip_malloc(16 + 4);
-	memcpy(md5, ptr, 4);
+	md5 = bip_malloc((size_t)16 + 4);
+	memcpy(md5, ptr, (size_t)4);
 
 	md5_starts(&ctx);
 	md5_update(&ctx, ptr, length);
 	md5_finish(&ctx, md5 + 4);
 
 	md5_starts(&ctx);
-	md5_update(&ctx, md5, 20);
+	md5_update(&ctx, md5, (unsigned long)20);
 	md5_finish(&ctx, md5 + 4);
 	free(ptr);
 	return md5;

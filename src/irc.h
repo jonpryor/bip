@@ -225,7 +225,7 @@ struct chan_info {
 	int backlog;
 };
 
-#define chan_info_new() bip_calloc(sizeof(struct chan_info), 1)
+#define chan_info_new() bip_calloc(sizeof(struct chan_info), (size_t)1)
 
 struct link_server {
 	struct link_connection _link_c;
@@ -274,7 +274,6 @@ struct link_server *irc_server_new(struct link *link, connection_t *conn);
 void irc_server_free(struct link_server *is);
 struct client *client_new(void);
 void irc_main(bip_t *);
-int ischannel(char p);
 void irc_client_close(struct link_client *);
 void irc_client_free(struct link_client *);
 struct link *irc_link_new(void);

@@ -2,7 +2,8 @@
  * $Id: log.c,v 1.56 2005/04/21 06:58:50 nohar Exp $
  *
  * This file is part of the bip project
- * Copyright (C) 2004 Arnaud Cornet and Loïc Gomez
+ * Copyright (C) 2004 Arnaud Cornet
+ * Copyright (C) 2004,2022 Loïc Gomez
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -83,7 +84,7 @@ int check_dir_r(char *dirname)
 		int slash_ok = 1;
 		while (*tmp == '/') {
 			if (slash_ok) {
-				strncpy(dir + count, "/", 2);
+				strncpy(dir + count, "/", (size_t)2);
 				count++;
 				slash_ok = 0;
 			}
@@ -140,15 +141,15 @@ char *log_build_filename(log_t *logdata, const char *destination)
 	char *dest = bip_strdup(destination);
 
 	strtolower(dest);
-	logfile = (char *)bip_malloc(MAX_PATH_LEN + 1);
+	logfile = (char *)bip_malloc((size_t)MAX_PATH_LEN + 1);
 
 	time(&s);
 	now = localtime(&s);
-	strftime(year, 5, "%Y", now);
-	strftime(day, 3, "%d", now);
-	strftime(month, 3, "%m", now);
-	strftime(hour, 3, "%H", now);
-	snprintf(logfile, MAX_PATH_LEN, "%s/%s", conf_log_root,
+	strftime(year, (size_t)5, "%Y", now);
+	strftime(day, (size_t)3, "%d", now);
+	strftime(month, (size_t)3, "%m", now);
+	strftime(hour, (size_t)3, "%H", now);
+	snprintf(logfile, (size_t)MAX_PATH_LEN, "%s/%s", conf_log_root,
 			conf_log_format);
 	replace_var(logfile, "%u", logdata->user->name, MAX_PATH_LEN);
 	replace_var(logfile, "%n", logdata->network, MAX_PATH_LEN);
@@ -280,7 +281,7 @@ static int log_add_file(log_t *logdata, const char *destination,
 			return 0;
 		}
 
-		if (fseek(f, 0, SEEK_END) == -1) {
+		if (fseek(f, (long)0, SEEK_END) == -1) {
 			mylog(LOG_ERROR, "fseek(%s) %s", uniq_fname,
 					strerror(errno));
 			free(uniq_fname);
@@ -299,7 +300,7 @@ static int log_add_file(log_t *logdata, const char *destination,
 
 	store = hash_get(&logdata->logfgs, destination);
 	if (!store) {
-		store = bip_calloc(sizeof(logstore_t), 1);
+		store = bip_calloc(sizeof(logstore_t), (size_t)1);
 		list_init(&store->file_group, NULL);
 		store->name = bip_strdup(destination);
 		store->skip_advance = 0;
@@ -433,7 +434,7 @@ logstore_t *log_find_file(log_t *logdata, const char *destination)
 
 void log_join(log_t *logdata, const char *ircmask, const char *channel)
 {
-	snprintf(logdata->buffer, LOGLINE_MAXLEN,
+	snprintf(logdata->buffer, (size_t)LOGLINE_MAXLEN,
 			"%s -!- %s has joined %s", timestamp(), ircmask,
 			channel);
 	log_write(logdata, channel, logdata->buffer);
@@ -443,11 +444,11 @@ void log_part(log_t *logdata, const char *ircmask, const char *channel,
 		const char *message)
 {
 	if (message)
-		snprintf(logdata->buffer, LOGLINE_MAXLEN,
+		snprintf(logdata->buffer, (size_t)LOGLINE_MAXLEN,
 			"%s -!- %s has left %s [%s]", timestamp(), ircmask,
 			channel, message);
 	else
-		snprintf(logdata->buffer, LOGLINE_MAXLEN,
+		snprintf(logdata->buffer, (size_t)LOGLINE_MAXLEN,
 			"%s -!- %s has left %s", timestamp(), ircmask,
 			channel);
 	log_write(logdata, channel, logdata->buffer);
@@ -456,7 +457,7 @@ void log_part(log_t *logdata, const char *ircmask, const char *channel,
 void log_kick(log_t *logdata, const char *ircmask, const char *channel,
 		const char *who, const char *message)
 {
-	snprintf(logdata->buffer, LOGLINE_MAXLEN,
+	snprintf(logdata->buffer, (size_t)LOGLINE_MAXLEN,
 			"%s -!- %s has been kicked by %s [%s]", timestamp(),
 			who, ircmask, message);
 	log_write(logdata, channel, logdata->buffer);
@@ -465,7 +466,7 @@ void log_kick(log_t *logdata, const char *ircmask, const char *channel,
 void log_quit(log_t *logdata, const char *ircmask, const char *channel,
 		const char *message)
 {
-	snprintf(logdata->buffer, LOGLINE_MAXLEN,
+	snprintf(logdata->buffer, (size_t)LOGLINE_MAXLEN,
 			"%s -!- %s has quit [%s]", timestamp(), ircmask,
 			message);
 	log_write(logdata, channel, logdata->buffer);
@@ -487,7 +488,7 @@ void log_nick(log_t *logdata, const char *ircmask, const char *channel,
 	}
 	free(oldnick);
 
-	snprintf(logdata->buffer, LOGLINE_MAXLEN,
+	snprintf(logdata->buffer, (size_t)LOGLINE_MAXLEN,
 			"%s -!- %s is now known as %s",
 			timestamp(), ircmask, newnick);
 	log_write(logdata, channel, logdata->buffer);
@@ -514,16 +515,16 @@ static void do_log_privmsg(log_t *logdata, const char *storage, int src,
 		if (*message == '+' || *message == '-')
 			real_message++;
 
-		if (strncmp(real_message, "\001ACTION ", 8) != 0)
+		if (strncmp(real_message, "\001ACTION ", (size_t)8) != 0)
 			return;
 		msg = bip_strdup(real_message);
 		*(msg + strlen(msg) - 1) = '\0';
-		snprintf(logdata->buffer, LOGLINE_MAXLEN,
+		snprintf(logdata->buffer, (size_t)LOGLINE_MAXLEN,
 					"%s %c * %s %s", timestamp(), dir,
 					from, msg + 8);
 		free(msg);
 	} else {
-		snprintf(logdata->buffer, LOGLINE_MAXLEN,
+		snprintf(logdata->buffer, (size_t)LOGLINE_MAXLEN,
 					"%s %c %s: %s", timestamp(), dir,
 					from, message);
 	}
@@ -571,7 +572,7 @@ void log_cli_notice(log_t *logdata, const char *ircmask,
 void log_topic(log_t *logdata, const char *ircmask, const char *channel,
 		const char *message)
 {
-	snprintf(logdata->buffer, LOGLINE_MAXLEN,
+	snprintf(logdata->buffer, (size_t)LOGLINE_MAXLEN,
 			"%s -!- %s changed topic of %s to: %s", timestamp(),
 			ircmask, channel, message);
 	log_write(logdata, channel, logdata->buffer);
@@ -579,7 +580,7 @@ void log_topic(log_t *logdata, const char *ircmask, const char *channel,
 
 void log_init_topic(log_t *logdata, const char *channel, const char *message)
 {
-	snprintf(logdata->buffer, LOGLINE_MAXLEN,
+	snprintf(logdata->buffer, (size_t)LOGLINE_MAXLEN,
 			"%s -!- Topic for %s: %s", timestamp(), channel,
 			message);
 	log_write(logdata, channel, logdata->buffer);
@@ -594,13 +595,13 @@ void log_init_topic_time(log_t *logdata, const char *channel, const char *who,
 
 	seconds = atoi(when);
 	time = localtime(&seconds);
-	timestr = (char *)bip_malloc(50 + 1);
+	timestr = (char *)bip_malloc((size_t)50 + 1);
 	timestr[0] = '\0';
 	if (time)
-		strftime(timestr, 50, "%A %d %B %Y, %H:%M:%S", time);
+		strftime(timestr, (size_t)50, "%A %d %B %Y, %H:%M:%S", time);
 	timestr[50] = '\0';
 
-	snprintf(logdata->buffer, LOGLINE_MAXLEN,
+	snprintf(logdata->buffer, (size_t)LOGLINE_MAXLEN,
 			"%s -!- Topic set by %s [%s]", timestamp(), who,
 			timestr);
 	free(timestr);
@@ -611,15 +612,15 @@ void log_mode(log_t *logdata, const char *ircmask, const char *channel,
 		const char *modes, array_t *mode_args)
 {
 	int i;
-	char *tmpbuf = bip_malloc(LOGLINE_MAXLEN + 1);
-	char *tmpbuf2 = bip_malloc(LOGLINE_MAXLEN + 1);
+	char *tmpbuf = bip_malloc((size_t)LOGLINE_MAXLEN + 1);
+	char *tmpbuf2 = bip_malloc((size_t)LOGLINE_MAXLEN + 1);
 	char *tmp;
 
-	snprintf(tmpbuf, LOGLINE_MAXLEN, "%s -!- mode/%s [%s", timestamp(),
-			channel, modes);
+	snprintf(tmpbuf, (size_t)LOGLINE_MAXLEN,
+			"%s -!- mode/%s [%s", timestamp(), channel, modes);
 	if (mode_args) {
 		for (i = 0; i < array_count(mode_args); i++) {
-			snprintf(tmpbuf2, LOGLINE_MAXLEN, "%s %s", tmpbuf,
+			snprintf(tmpbuf2, (size_t)LOGLINE_MAXLEN, "%s %s", tmpbuf,
 					(char *)array_get(mode_args, i));
 			tmp = tmpbuf;
 			tmpbuf = tmpbuf2;
@@ -627,7 +628,8 @@ void log_mode(log_t *logdata, const char *ircmask, const char *channel,
 		}
 	}
 
-	snprintf(logdata->buffer, LOGLINE_MAXLEN, "%s] by %s", tmpbuf, ircmask);
+	snprintf(logdata->buffer, (size_t)LOGLINE_MAXLEN, "%s] by %s",
+			tmpbuf, ircmask);
 	log_write(logdata, channel, logdata->buffer);
 
 	free(tmpbuf);
@@ -637,7 +639,7 @@ void log_mode(log_t *logdata, const char *ircmask, const char *channel,
 void log_disconnected(log_t *logdata)
 {
 	hash_iterator_t hi;
-	snprintf(logdata->buffer, LOGLINE_MAXLEN, "%s -!- Disconnected"
+	snprintf(logdata->buffer, (size_t)LOGLINE_MAXLEN, "%s -!- Disconnected"
 			" from server...", timestamp());
 	for (hash_it_init(&logdata->logfgs, &hi); hash_it_item(&hi);
 			hash_it_next(&hi))
@@ -649,7 +651,7 @@ void log_ping_timeout(log_t *logdata)
 	list_t *l = log_backlogs(logdata);
 	char *s;
 
-	snprintf(logdata->buffer, LOGLINE_MAXLEN,
+	snprintf(logdata->buffer, (size_t)LOGLINE_MAXLEN,
 			"%s -!- Ping timeout with server...", timestamp());
 	while ((s = list_remove_first(l))) {
 		log_write(logdata, s, logdata->buffer);
@@ -663,7 +665,7 @@ void log_connected(log_t *logdata)
 {
 	hash_iterator_t hi;
 
-	snprintf(logdata->buffer, LOGLINE_MAXLEN, "%s -!- Connected to"
+	snprintf(logdata->buffer, (size_t)LOGLINE_MAXLEN, "%s -!- Connected to"
 			" server...", timestamp());
 	for (hash_it_init(&logdata->logfgs, &hi); hash_it_item(&hi);
 			hash_it_next(&hi)) {
@@ -860,7 +862,7 @@ char *log_beautify(log_t *logdata, const char *buf, const char *storename,
 	lots = p - sots;
 	p++;
 
-	if (strncmp(p, "-!-", 3) == 0) {
+	if (strncmp(p, "-!-", (size_t)3) == 0) {
 		if (logdata->user->bl_msg_only)
 			return NULL;
 		else
@@ -1005,7 +1007,7 @@ static int log_backread_file(log_t *log, logstore_t *store, logfile_t *lf,
 		}
 	} else {
 		//mylog(LOG_ERROR, "bread Seeking %s to %d", lf->filename, 0);
-		if (fseek(lf->file, 0, SEEK_SET)) {
+		if (fseek(lf->file, (long)0, SEEK_SET)) {
 			mylog(LOG_ERROR, "Can't seek in %s", lf->filename);
 			list_add_last(res, _log_wrap(store->name,
 						"Error seeking in logfile"));
@@ -1013,7 +1015,7 @@ static int log_backread_file(log_t *log, logstore_t *store, logfile_t *lf,
 		}
 	}
 
-	buf = bip_malloc(LOGLINE_MAXLEN + 1);
+	buf = bip_malloc((size_t)LOGLINE_MAXLEN + 1);
 	for(;;) {
 		if (!fgets(buf, LOGLINE_MAXLEN, lf->file)) {
 			if (ferror(lf->file)) {
@@ -1108,8 +1110,8 @@ static char *_log_wrap(const char *dest, const char *line)
 	char *buf;
 	size_t count;
 
-	buf = bip_malloc(LOGLINE_MAXLEN + 1);
-	count = snprintf(buf, LOGLINE_MAXLEN + 1,
+	buf = bip_malloc((size_t)LOGLINE_MAXLEN + 1);
+	count = snprintf(buf, (size_t)LOGLINE_MAXLEN + 1,
 			":" P_IRCMASK " PRIVMSG %s :%s\r\n", dest, line);
 	if (count >= LOGLINE_MAXLEN + 1) {
 		mylog(LOG_DEBUG, "line too long");
@@ -1127,7 +1129,7 @@ static int _log_write(log_t *logdata, logstore_t *store,
 	size_t len;
 	static char tmpstr[LOGLINE_MAXLEN + 1];
 
-	strncpy(tmpstr, str, LOGLINE_MAXLEN);
+	strncpy(tmpstr, str, (size_t)LOGLINE_MAXLEN);
 	tmpstr[LOGLINE_MAXLEN] = 0;
 
 	if (store->memlog) {
@@ -1149,7 +1151,7 @@ static int _log_write(log_t *logdata, logstore_t *store,
 
 	len = strlen(tmpstr);
 	nbwrite = fwrite(tmpstr, sizeof(char), len, lf->file);
-	nbwrite += fwrite("\n", sizeof(char), 1, lf->file);
+	nbwrite += fwrite("\n", sizeof(char), (size_t)1, lf->file);
 	log_updatelast(lf);
 	if (nbwrite != len + 1)
 		mylog(LOG_ERROR, "Error writing to %s logfile", lf->filename);
@@ -1202,11 +1204,11 @@ log_t *log_new(struct bipuser *user, const char *network)
 {
 	log_t *logdata;
 
-	logdata = (log_t *)bip_calloc(sizeof(log_t), 1);
+	logdata = (log_t *)bip_calloc(sizeof(log_t), (size_t)1);
 	logdata->user = user;
 	logdata->network = bip_strdup(network);
 	hash_init(&logdata->logfgs, HASH_NOCASE);
-	logdata->buffer = (char *)bip_malloc(LOGLINE_MAXLEN + 1);
+	logdata->buffer = (char *)bip_malloc((size_t)LOGLINE_MAXLEN + 1);
 	logdata->buffer[LOGLINE_MAXLEN - 1] = 0; // debug
 	logdata->buffer[LOGLINE_MAXLEN] = 0;
 	logdata->connected = 0;

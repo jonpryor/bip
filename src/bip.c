@@ -79,7 +79,7 @@ static void hash_binary(char *hex, unsigned char **password, unsigned int *seed)
 	if (strlen(hex) != 40)
 		fatal("Incorrect password format %s\n", hex);
 
-	md5 = bip_malloc(20);
+	md5 = bip_malloc((size_t) 20);
 	for (i = 0; i < 20; i++) {
 		sscanf(hex + 2 * i, "%02x", &buf);
 		md5[i] = buf;
@@ -175,7 +175,7 @@ try_again:
 	f = fopen(conf_pid_file, "r");
 	if (f)
 		goto pid_is_there;
-	if (gethostname(hname, 511) == -1)
+	if (gethostname(hname, (size_t)511) == -1)
 		fatal("%s %s", "gethostname", strerror(errno));
 	hname[511] = 0;
 	snprintf(longpath, longpath_max - 1, "%s.%s.%ld", conf_pid_file, hname,
@@ -299,7 +299,7 @@ static int add_network(bip_t *bip, list_t *data)
 		n->serverv = NULL;
 		n->serverc = 0;
 	} else {
-		n = bip_calloc(sizeof(struct network), 1);
+		n = bip_calloc(sizeof(struct network), (size_t)1);
 		hash_insert(&bip->networks, name, n);
 	}
 
@@ -527,6 +527,10 @@ static int add_connection(bip_t *bip, struct bipuser *user, list_t *data)
 				case LEX_BACKLOG:
 					ci->backlog = t2->ndata;
 					break;
+				default:
+					conf_die(bip, "Unknown keyword in channel block (%d)",
+							t2->type);
+					return 0;
 				}
 				if (t2->tuple_type == TUPLE_STR && t2->pdata)
 					free(t2->pdata);
@@ -694,7 +698,7 @@ static int add_user(bip_t *bip, list_t *data, struct historical_directives *hds)
 	}
 	u = hash_get(&bip->users, name);
 	if (!u) {
-		u = bip_calloc(sizeof(struct bipuser), 1);
+		u = bip_calloc(sizeof(struct bipuser), (size_t) 1);
 		hash_insert(&bip->users, name, u);
 		hash_init(&u->connections, HASH_NOCASE);
 		u->admin = 0;
@@ -1757,7 +1761,7 @@ void _bip_notify(struct link_client *ic, char *fmt, va_list ap)
 	else
 		nick = LINK(ic)->prev_nick;
 
-	vsnprintf(str, 4095, fmt, ap);
+	vsnprintf(str, (size_t)4095, fmt, ap);
 	str[4095] = 0;
 	WRITE_LINE2(CONN(ic), P_IRCMASK, (LINK(ic)->user->bip_use_notice ?
 				"NOTICE" : "PRIVMSG"), nick, str);

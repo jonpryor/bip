@@ -36,7 +36,7 @@ void memory_fatal(void)
 {
 	fflush(conf_global_log_file);
 #define OOMMSG "Out of memory.\n"
-	fwrite(OOMMSG, 1, strlen(OOMMSG), conf_global_log_file);
+	fwrite(OOMMSG, (size_t)1, strlen(OOMMSG), conf_global_log_file);
 #undef OOMMSG
 	fflush(conf_global_log_file);
 	exit(28);
@@ -199,7 +199,7 @@ char *timestamp(void)
 	time(&tv);
 	tm = localtime(&tv);
 
-	strftime(ts, 20, "%d-%m-%Y %H:%M:%S", tm);
+	strftime(ts, (size_t)20, "%d-%m-%Y %H:%M:%S", tm);
 	return ts;
 }
 
@@ -212,7 +212,7 @@ char *hrtime(time_t s)
 		return "never";
 	tm = localtime(&s);
 
-	strftime(ts, 20, "%d-%m-%Y %H:%M:%S", tm);
+	strftime(ts, (size_t)20, "%d-%m-%Y %H:%M:%S", tm);
 	return ts;
 }
 

@@ -99,7 +99,7 @@ static void log_file_setup(void)
 	if (conf_log_system && conf_daemonize) {
 		if (conf_global_log_file && conf_global_log_file != stderr)
 			fclose(conf_global_log_file);
-		snprintf(buf, 4095, "%s/bip.log", conf_log_root);
+		snprintf(buf, (size_t) 4095, "%s/bip.log", conf_log_root);
 		FILE *f = fopen(buf, "a");
 		if (!f)
 			fatal("Can't open %s: %s", buf, strerror(errno));
@@ -295,7 +295,7 @@ int main(int argc, char **argv)
 		pid = daemonize();
 	else
 		pid = getpid();
-	snprintf(buf, 29, "%ld\n", (long unsigned int)pid);
+	snprintf(buf, (size_t) 29, "%lu\n", (unsigned long int)pid);
 	write(fd, buf, strlen(buf));
 	close(fd);
 

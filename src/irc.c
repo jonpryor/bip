@@ -82,7 +82,7 @@ static char *sasl_mechanism_to_text(int sasl_mechanism);
 struct channel *channel_new(const char *name)
 {
 	struct channel *chan;
-	chan = bip_calloc(sizeof(struct channel), 1);
+	chan = bip_calloc(sizeof(struct channel), (size_t)1);
 	chan->name = bip_strdup(name);
 	hash_init(&chan->ovmasks, HASH_NOCASE);
 	return chan;
@@ -114,7 +114,7 @@ list_t *channel_name_list(struct link_server *server, struct channel *c)
 	list_t *ret;
 	hash_iterator_t hi;
 	size_t len = 0;
-	char *str = bip_malloc(NAMESIZE + 1);
+	char *str = bip_malloc((size_t)(NAMESIZE + 1));
 
 	ret = list_new(NULL);
 	*str = 0;
@@ -127,7 +127,7 @@ list_t *channel_name_list(struct link_server *server, struct channel *c)
 
 		if (len + strlen(nick) + 2 + (ovmask ? 1 : 0) >= NAMESIZE) {
 			list_add_last(ret, str);
-			str = bip_malloc(NAMESIZE + 1);
+			str = bip_malloc((size_t)(NAMESIZE + 1));
 			*str = 0;
 			len = 0;
 		}
@@ -250,7 +250,7 @@ static void irc_server_connected(struct link_server *server)
 	list_iterator_t itocs;
 	for (list_it_init(&LINK(server)->on_connect_send, &itocs);
 				list_it_item(&itocs); list_it_next(&itocs)) {
-		ssize_t len = strlen(list_it_item(&itocs)) + 2;
+		size_t len = strlen(list_it_item(&itocs)) + 2;
 		char *str = bip_malloc(len + 1);
 		sprintf(str, "%s\r\n", (char *)list_it_item(&itocs));
 		write_line(CONN(server), str);
@@ -517,9 +517,9 @@ int irc_dispatch_server(bip_t *bip, struct link_server *server,
 				if (LINK(server)->ignore_server_capab &&
 						irc_line_elem_equals(line, i, "CAPAB"))
 					irc_line_drop(line, i);
-				else if (!strncmp(irc_line_elem(line, i), "CHANMODES=", 10))
+				else if (!strncmp(irc_line_elem(line, i), "CHANMODES=", (size_t)10))
 					server_set_chanmodes(server, irc_line_elem(line, i) + 10);
-				else if (!strncmp(irc_line_elem(line, i), "PREFIX=(", 8))
+				else if (!strncmp(irc_line_elem(line, i), "PREFIX=(", (size_t)8))
 					server_set_prefix(server, irc_line_elem(line, i) + 7);
 			}
 		}
@@ -1790,8 +1790,8 @@ static int irc_mode_channel(struct link_server *s, struct channel *channel,
 
 static char *irc_timestamp(void)
 {
-	char *ts = bip_malloc(21);
-	snprintf(ts, 20, "%ld", (long int)time(NULL));
+	char *ts = bip_malloc((size_t)23);
+	snprintf(ts, (size_t)22, "%ld", (long int)time(NULL));
 	return ts;
 }
 
@@ -2149,7 +2149,7 @@ static struct link_client *irc_accept_new(connection_t *conn)
 	if (!newconn)
 		return NULL;
 
-	ircc = bip_calloc(sizeof(struct link_client), 1);
+	ircc = bip_calloc(sizeof(struct link_client), (size_t)1);
 	CONN(ircc) = newconn;
 	TYPE(ircc) = IRC_TYPE_LOGGING_CLIENT;
 	CONN(ircc)->user_data = ircc;
@@ -2254,7 +2254,7 @@ struct link_client *irc_client_new(void)
 {
 	struct link_client *c;
 
-	c = bip_calloc(sizeof(struct link_client), 1);
+	c = bip_calloc(sizeof(struct link_client), (size_t)1);
 	list_init(&c->who_queue, list_ptr_cmp);
 
 	return c;
@@ -2264,7 +2264,7 @@ struct link_server *irc_server_new(struct link *link, connection_t *conn)
 {
 	struct link_server *s;
 
-	s = bip_calloc(sizeof(struct link_server), 1);
+	s = bip_calloc(sizeof(struct link_server), (size_t)1);
 
 	TYPE(s) = IRC_TYPE_SERVER;
 	hash_init(&s->channels, HASH_NOCASE);
@@ -2445,7 +2445,7 @@ void oidentd_dump(bip_t *bip)
 
 		content = (char *)bip_malloc(stats.st_size + 1);
 
-		if (fread(content, 1, stats.st_size, f) !=
+		if (fread(content, (size_t)1, stats.st_size, f) !=
 				(size_t)stats.st_size) {
 			mylog(LOG_WARN, "Can't read %s fully",
 					bip->oidentdpath);
@@ -2458,10 +2458,9 @@ void oidentd_dump(bip_t *bip)
 
 		bipstart = strstr(content, BIP_OIDENTD_START);
 		if (bipstart != NULL) {
-			/* We have some config left, rewrite the file
-			 * completely */
-			fseek(f, SEEK_SET, 0);
-			if (ftruncate(fileno(f), 0) == -1) {
+			// We have some config left, rewrite the file completely
+			fseek(f, (long)SEEK_SET, (int)0);
+			if (ftruncate(fileno(f), (off_t)0) == -1) {
 				mylog(LOG_DEBUG, "Can't reset %s size",
 						bip->oidentdpath);
 				free(content);
@@ -2756,7 +2755,7 @@ void irc_client_free(struct link_client *cli)
 struct link *irc_link_new(void)
 {
 	struct link *link;
-	link = bip_calloc(sizeof(struct link), 1);
+	link = bip_calloc(sizeof(struct link), (size_t)1);
 
 	link->l_server = NULL;
 	hash_init(&link->chan_infos, HASH_NOCASE);
@@ -2845,7 +2844,7 @@ static void server_set_chanmodes(struct link_server *l, const char *modes)
 			modes = cur + 1;
 		} else {
 			// emptry string
-			dup = bip_calloc(1, sizeof(char));
+			dup = bip_calloc((size_t)1, sizeof(char));
 		}
 		mylog(LOG_DEBUGVERB, "[%s] Modes: '%s'", LINK(l)->name, dup);
 		array_push(&l->chanmodes, dup);

@@ -2,7 +2,8 @@
  * $Id$
  *
  * This file is part of the bip project
- * Copyright (C) 2004 2005 Arnaud Cornet and Loïc Gomez
+ * Copyright (C) 2004,2005 Arnaud Cornet
+ * Copyright (C) 2004,2005,2022 Loïc Gomez
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -84,7 +85,7 @@ struct line {
 
 void irc_line_init(struct line *l);
 void _irc_line_deinit(struct line *l);
-struct line *irc_line_new();
+struct line *irc_line_new(void);
 void irc_line_write(struct line *l, connection_t *c);
 void irc_line_append(struct line *l, const char *s);
 struct line *irc_line_new_from_string(char *str);

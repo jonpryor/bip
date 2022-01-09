@@ -2,7 +2,8 @@
  * $Id: connection.c,v 1.98 2005/04/12 19:34:35 nohar Exp $
  *
  * This file is part of the bip project
- * Copyright (C) 2004 2005 Arnaud Cornet and Loïc Gomez
+ * Copyright (C) 2004,2005 Arnaud Cornet
+ * Copyright (C) 2004,2005,2022 Loïc Gomez
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -319,7 +320,12 @@ static int _write_socket(connection_t *cn, char *message)
 	 * Shitty: we might have written a partial line, so we hack the line...
 	 * Callers of _write_socket muse provide a writable message
 	 */
+// this might be the same
+#if EWOULDBLOCK == EAGAIN
+	if (errno == EAGAIN || errno == EINPROGRESS) {
+#else
 	if (errno == EAGAIN || errno == EWOULDBLOCK || errno == EINPROGRESS) {
+#endif
 		memmove(message, message + tcount, size - tcount + 1);
 		return WRITE_KEEP;
 	}
@@ -1101,8 +1107,8 @@ static connection_t *connection_init(int anti_flood, int ssl, int timeout,
 	char *incoming;
 	list_t *outgoing;
 
-	conn = (connection_t *)bip_calloc(sizeof(connection_t), 1);
-	incoming = (char *)bip_malloc(CONN_BUFFER_SIZE);
+	conn = (connection_t *)bip_calloc(sizeof(connection_t), (size_t)1);
+	incoming = (char *)bip_malloc((size_t)CONN_BUFFER_SIZE);
 	outgoing = list_new(NULL);
 
 	conn->anti_flood = anti_flood;
@@ -1260,7 +1266,7 @@ connection_t *listen_new(char *hostname, int port, int ssl)
 	connection_t *conn;
 	char portbuf[20];
 	/* TODO: allow litteral service name in the function interface */
-	if (snprintf(portbuf, 20, "%d", port) >= 20)
+	if (snprintf(portbuf, (size_t)20, "%d", port) >= 20)
 		portbuf[19] = '\0';
 
 	/*
@@ -1296,7 +1302,7 @@ static SSL_CTX *SSL_init_context(char *ciphers)
 		SSL_load_error_strings();
 		errbio = BIO_new_fp(conf_global_log_file, BIO_NOCLOSE);
 
-		ssl_cx_idx = SSL_get_ex_new_index(0, "bip connection_t",
+		ssl_cx_idx = SSL_get_ex_new_index((size_t)0, "bip connection_t",
 			NULL, NULL,NULL);
 
 		flags = O_RDONLY;
@@ -1309,7 +1315,7 @@ static SSL_CTX *SSL_init_context(char *ciphers)
 		}
 
 		do {
-			ret = read(fd, buf, 1024);
+			ret = read(fd, buf, (size_t)1024);
 			if (ret <= 0) {
 				mylog(LOG_ERROR,"/dev/random: %s",
 						strerror(errno));
@@ -1573,6 +1579,8 @@ static connection_t *_connection_new_SSL(char *dsthostname, char *dstport,
 		mylog(LOG_ERROR, "Can't open SSL certificate check store! Check path "
 				"and permissions.");
 		return conn;
+	default:
+		fatal("Unknown SSL cert check mode.");
 	}
 
 	switch (conn->ssl_check_mode) {
@@ -1639,10 +1647,10 @@ connection_t *connection_new(char *dsthostname, int dstport, char *srchostname,
 	(void)ssl_client_certfile;
 #endif
 	/* TODO: allow litteral service name in the function interface */
-	if (snprintf(dstportbuf, 20, "%d", dstport) >= 20)
+	if (snprintf(dstportbuf, (size_t)20, "%d", dstport) >= 20)
 		dstportbuf[19] = '\0';
 	if (srcport) {
-		if (snprintf(srcportbuf, 20, "%d", srcport) >= 20)
+		if (snprintf(srcportbuf, (size_t)20, "%d", srcport) >= 20)
 			srcportbuf[19] = '\0';
 		tmp = srcportbuf;
 	} else
@@ -1807,7 +1815,7 @@ static char *socket_ip(int fd, int remote)
 		return NULL;
 	}
 
-	ip = bip_malloc(65);
+	ip = bip_malloc((size_t)65);
 
 	switch (addr.sa_family) {
 	case AF_INET:
