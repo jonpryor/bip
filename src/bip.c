@@ -179,7 +179,7 @@ try_again:
 		fatal("%s %s", "gethostname", strerror(errno));
 	hname[511] = 0;
 	snprintf(longpath, longpath_max - 1, "%s.%s.%ld", conf_pid_file, hname,
-			(long unsigned int)getpid());
+			(long)getpid());
 	longpath[longpath_max] = 0;
 	if ((fd = open(longpath, O_CREAT|O_WRONLY, S_IWUSR|S_IRUSR)) == -1)
 		fatal("Cannot write to PID file (%s) %s", longpath,
@@ -199,13 +199,13 @@ try_again:
 pid_is_there:
 	{
 		pid_t pid;
-		long unsigned int p;
+		size_t p;
 		if (fd != -1)
 			close(fd);
 		if (f) {
-			int c = fscanf(f, "%ld", &p);
+			int c = fscanf(f, "%zu", (size_t *)&p);
 			fclose(f);
-			pid = p;
+			pid = (pid_t)p;
 			if (c != 1 || p == 0) {
 				mylog(LOG_INFO, "pid file found but invalid "
 						"data inside. Continuing...\n");
