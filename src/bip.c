@@ -539,16 +539,16 @@ static int add_connection(bip_t *bip, struct bipuser *user, list_t *data)
 			list_free(t->pdata);
 			break;
 		case LEX_AUTOJOIN_ON_KICK:
-			l->autojoin_on_kick = t->ndata;
+			l->autojoin_on_kick = (t->ndata > 0 ? 1 : 0);
 			break;
 		case LEX_FOLLOW_NICK:
-			l->follow_nick = t->ndata;
+			l->follow_nick = (t->ndata > 0 ? 1 : 0);
 			break;
 		case LEX_IGN_FIRST_NICK:
-			l->ignore_first_nick = t->ndata;
+			l->ignore_first_nick = (t->ndata > 0 ? 1 : 0);
 			break;
 		case LEX_IGNORE_CAPAB:
-			l->ignore_server_capab = t->ndata;
+			l->ignore_server_capab = (t->ndata > 0 ? 1 : 0);
 			break;
 		case LEX_AWAY_NICK:
 			MOVE_STRING(l->away_nick, t->pdata);
@@ -561,7 +561,7 @@ static int add_connection(bip_t *bip, struct bipuser *user, list_t *data)
 			t->pdata = NULL;
 			break;
 		case LEX_LOG:
-			l->log->log_to_file = t->ndata;
+			l->log->log_to_file = (t->ndata > 0 ? 1 : 0);
 			break;
 #ifdef HAVE_LIBSSL
 		case LEX_SSL_CHECK_MODE:
@@ -712,12 +712,12 @@ static int add_user(bip_t *bip, list_t *data, struct historical_directives *hds)
 		u->bip_use_notice = DEFAULT_BIP_USE_NOTICE;
 	}
 
-	u->backlog = hds->backlog;
-	u->always_backlog = hds->always_backlog;
-	u->bl_msg_only = hds->bl_msg_only;
-	u->backlog_lines = hds->backlog_lines;
-	u->backlog_timestamp = hds->backlog_timestamp;
-	u->blreset_on_talk = hds->blreset_on_talk;
+	u->backlog = (hds->backlog > 0 ? 1 : 0);
+	u->always_backlog = (hds->always_backlog > 0 ? 1 : 0);
+	u->bl_msg_only = (hds->bl_msg_only > 0 ? 1 : 0);
+	u->backlog_lines = (hds->backlog_lines > 0 ? 1 : 0);
+	u->backlog_timestamp = (hds->backlog_timestamp > 0 ? 1 : 0);
+	u->blreset_on_talk = (hds->blreset_on_talk > 0 ? 1 : 0);
 
 	while ((t = list_remove_first(data))) {
 		switch (t->type) {
@@ -725,7 +725,7 @@ static int add_user(bip_t *bip, list_t *data, struct historical_directives *hds)
 			MOVE_STRING(u->name, t->pdata);
 			break;
 		case LEX_ADMIN:
-			u->admin = t->ndata;
+			u->admin = (t->ndata > 0 ? 1 : 0);
 			break;
 		case LEX_PASSWORD:
 			hash_binary(t->pdata, &u->password, &u->seed);
@@ -742,13 +742,13 @@ static int add_user(bip_t *bip, list_t *data, struct historical_directives *hds)
 			MOVE_STRING(u->default_realname, t->pdata);
 			break;
 		case LEX_ALWAYS_BACKLOG:
-			u->always_backlog = t->ndata;
+			u->always_backlog = (t->ndata > 0 ? 1 : 0);
 			break;
 		case LEX_BACKLOG:
-			u->backlog = t->ndata;
+			u->backlog = (t->ndata > 0 ? 1 : 0);
 			break;
 		case LEX_BL_MSG_ONLY:
-			u->bl_msg_only = t->ndata;
+			u->bl_msg_only = (t->ndata > 0 ? 1 : 0);
 			break;
 		case LEX_BACKLOG_LINES:
 			u->backlog_lines = t->ndata;
@@ -760,13 +760,13 @@ static int add_user(bip_t *bip, list_t *data, struct historical_directives *hds)
 			u->backlog_timestamp = lex_backlog_timestamp(t->pdata);
 			break;
 		case LEX_BLRESET_ON_TALK:
-			u->blreset_on_talk = t->ndata;
+			u->blreset_on_talk = (t->ndata > 0 ? 1 : 0);
 			break;
 		case LEX_BLRESET_CONNECTION:
-			u->blreset_connection = t->ndata;
+			u->blreset_connection = (t->ndata > 0 ? 1 : 0);
 			break;
 		case LEX_BIP_USE_NOTICE:
-			u->bip_use_notice = t->ndata;
+			u->bip_use_notice = (t->ndata > 0 ? 1 : 0);
 			break;
 		case LEX_CONNECTION:
 			list_add_last(&connection_list, t->pdata);
@@ -1008,7 +1008,7 @@ int fireup(bip_t *bip, FILE *conf)
 			MOVE_STRING(conf_ip, t->pdata);
 			break;
 		case LEX_PORT:
-			conf_port = t->ndata;
+			conf_port = (unsigned short)t->ndata;
 			break;
 		case LEX_RECONN_TIMER:
 			conf_reconn_timer = t->ndata;
