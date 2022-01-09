@@ -2,7 +2,8 @@
  * $Id: bip.c,v 1.39 2005/04/21 06:58:50 nohar Exp $
  *
  * This file is part of the bip project
- * Copyright (C) 2004 2005 Arnaud Cornet and Loïc Gomez
+ * Copyright (C) 2004,2005 Arnaud Cornet
+ * Copyright (C) 2004,2005,2022 Loïc Gomez
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -62,7 +63,7 @@ extern FILE *conf_global_log_file;
 
 void reload_config(int i);
 void bad_quit(int i);
-void check_rlimits();
+void check_rlimits(void);
 void rlimit_cpu_reached(int i);
 void rlimit_bigfile_reached(int i);
 void conf_die(bip_t *bip, char *fmt, ...);
@@ -83,7 +84,7 @@ static void usage(char *name)
 	exit(1);
 }
 
-static void version()
+static void version(void)
 {
 	printf(
 "Bip IRC Proxy - " PACKAGE_VERSION "\n"

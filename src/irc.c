@@ -2753,7 +2753,7 @@ void irc_client_free(struct link_client *cli)
 	free(cli);
 }
 
-struct link *irc_link_new()
+struct link *irc_link_new(void)
 {
 	struct link *link;
 	link = bip_calloc(sizeof(struct link), 1);

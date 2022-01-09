@@ -4,6 +4,7 @@
  *
  * This file is part of the bip proproject
  * Copyright (C) 2004 Arnaud Cornet
+ * Copyright (C) 2022 Loïc Gomez
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,7 +25,7 @@ extern int linec;
 
 extern int yyerror(char *);
 
-int yywrap()
+int yywrap(void)
 {
 	return 1;
 }

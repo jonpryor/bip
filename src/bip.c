@@ -131,7 +131,7 @@ static int add_server(bip_t *bip, struct server *s, list_t *data)
 #define ERRBUFSZ 128
 
 extern list_t *root_list;
-extern int yyparse();
+extern int yyparse(void);
 
 void conf_die(bip_t *bip, char *fmt, ...)
 {
@@ -1101,7 +1101,7 @@ out_conf_error:
 	return 0;
 }
 
-void check_rlimits()
+void check_rlimits(void)
 {
 	int r, cklim;
 	struct rlimit lt;
