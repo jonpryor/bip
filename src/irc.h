@@ -77,12 +77,12 @@ struct bipuser {
 	char *default_realname;
 
 	/* backlog options */
-	int backlog:1;
+	char backlog;
 	int backlog_lines;
-	int always_backlog:1;
-	int bl_msg_only:1;
-	int blreset_on_talk:1;
-	int blreset_connection:1;
+	char always_backlog;
+	char bl_msg_only;
+	char blreset_on_talk;
+	char blreset_connection;
 
 	enum BLTimestamp backlog_timestamp;
 
@@ -93,7 +93,7 @@ struct bipuser {
 #endif
 
 	hash_t connections;
-	int in_use:1; /* for mark and sweep on reload */
+	char in_use; /* for mark and sweep on reload */
 };
 
 struct network
@@ -137,10 +137,10 @@ struct link {
 
 	/** link options */
 
-	int follow_nick:1;
-	int ignore_first_nick:1;
-	int autojoin_on_kick:1;
-	int ignore_server_capab:1;
+	char follow_nick;
+	char ignore_first_nick;
+	char autojoin_on_kick;
+	char ignore_server_capab;
 	list_t on_connect_send;
 	char *no_client_away_msg;
 	char *away_nick;

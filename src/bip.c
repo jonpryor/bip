@@ -111,7 +111,7 @@ static int add_server(bip_t *bip, struct server *s, list_t *data)
 			MOVE_STRING(s->host, t->pdata);
 			break;
 		case LEX_PORT:
-			s->port = t->ndata;
+			s->port = (unsigned short)t->ndata;
 			break;
 		default:
 			fatal("Config error in server block (%d)", t->type);
@@ -317,8 +317,13 @@ static int add_network(bip_t *bip, list_t *data)
 			break;
 #endif
 		case LEX_SERVER:
-			n->serverv = bip_realloc(n->serverv, (n->serverc + 1)
-						* sizeof(struct server));
+			if (n->serverc < 0) {
+				conf_die(bip, "internal error in network statement");
+				return 0;
+			}
+
+			n->serverv = bip_realloc(n->serverv,
+					(unsigned int)(n->serverc + 1) * sizeof(struct server));
 			n->serverc++;
 			memset(&n->serverv[n->serverc - 1], 0,
 					sizeof(struct server));

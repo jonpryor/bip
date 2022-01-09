@@ -1360,7 +1360,7 @@ int irc_dispatch(bip_t *bip, struct link_any *l, struct line *line)
 		break;
 #endif
 	default:
-		fatal("gnéééééé");
+		fatal("irc_dispatch: unknown IRC_TYPE_SERVER");
 	}
 	return ERR_PROTOCOL; /* never reached */
 }

@@ -1496,6 +1496,9 @@ static int SSLize(connection_t *cn, int *nc)
 			return 1;
 		}
 		break;
+	default:
+		mylog(LOG_ERROR, "Unknown ssl_check_mode (%d)!", cn->ssl_check_mode);
+		return 1;
 	}
 
 	if (err2 == SSL_ERROR_SYSCALL) {
@@ -1533,6 +1536,8 @@ static connection_t *_connection_new_SSL(char *dsthostname, char *dstport,
 
 	switch (conn->ssl_check_mode) {
 	struct stat st_buf;
+	case SSL_CHECK_NONE:
+		break;
 	case SSL_CHECK_BASIC:
 		if (!SSL_CTX_load_verify_locations(conn->ssl_ctx_h, check_store,
 				NULL)) {
