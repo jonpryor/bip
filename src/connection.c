@@ -18,7 +18,10 @@
 #include "connection.h"
 #include "path_util.h"
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstrict-prototypes"
 extern int errno;
+#pragma GCC diagnostic pop
 #ifdef HAVE_LIBSSL
 static int ssl_initialized = 0;
 static SSL_CTX *sslctx = NULL;
@@ -1184,7 +1187,11 @@ static int ctx_set_dh(SSL_CTX *ctx)
 		return 0;
 	}
 
+// SSL crap: passing argument 3 of ‘SSL_CTX_ctrl’ with different width due to prototype
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wtraditional-conversion"
 	ret = SSL_CTX_set_tmp_dh(ctx, dh);
+#pragma GCC diagnostic pop
 	DH_free(dh);
 
 	if (ret != 1) {
@@ -1324,7 +1331,11 @@ static SSL_CTX *SSL_init_context(char *ciphers)
 	SSL_CTX *ctx;
 
 	if (!ssl_initialized) {
+// SSL crap: passing argument 1 of ‘OPENSSL_init_ssl’ with different width due to prototype
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wtraditional-conversion"
 		SSL_library_init();
+#pragma GCC diagnostic pop
 		SSL_load_error_strings();
 		errbio = BIO_new_fp(conf_global_log_file, BIO_NOCLOSE);
 
@@ -1372,9 +1383,14 @@ prng_end:
 		ERR_print_errors(errbio);
 		return NULL;
 	}
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wtraditional-conversion"
+// SSL crap: passing argument 3 of ‘SSL_CTX_ctrl’ with different width due to prototype
 	SSL_CTX_set_session_cache_mode(ctx, SSL_SESS_CACHE_BOTH);
 	SSL_CTX_set_timeout(ctx, (long)60);
+// SSL crap: passing argument 2 of ‘SSL_CTX_set_options’ with different width due to prototype
 	SSL_CTX_set_options(ctx, SSL_OP_ALL);
+#pragma GCC diagnostic pop
 	if (ciphers && !SSL_CTX_set_cipher_list(ctx, ciphers)) {
 		SSL_CTX_free(ctx);
 		return NULL;
@@ -1799,7 +1815,11 @@ uint16_t connection_localport(connection_t *cn)
 		return 0;
 	}
 
+// ntohs() expects uint16_t, while sockaddr_in.sin_port is an in_port_t...
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wtraditional-conversion"
 	return ntohs(addr.sin_port);
+#pragma GCC diagnostic pop
 }
 
 uint16_t connection_remoteport(connection_t *cn)
@@ -1819,7 +1839,11 @@ uint16_t connection_remoteport(connection_t *cn)
 		return 0;
 	}
 
+// ntohs() expects uint16_t, while sockaddr_in.sin_port is an in_port_t...
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wtraditional-conversion"
 	return ntohs(addr.sin_port);
+#pragma GCC diagnostic pop
 }
 
 static char *socket_ip(int fd, int remote)

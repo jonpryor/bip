@@ -20,7 +20,10 @@
 #include <stdio.h>
 #include <string.h>
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstrict-prototypes"
 extern int errno;
+#pragma GCC diagnostic pop
 extern int log_level;
 extern char *conf_log_root;
 extern char *conf_log_format;

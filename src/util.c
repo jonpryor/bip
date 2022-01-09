@@ -29,7 +29,10 @@
 
 extern int conf_log_level;
 extern int conf_log_system;
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstrict-prototypes"
 extern int errno;
+#pragma GCC diagnostic pop
 extern FILE *conf_global_log_file;
 
 void memory_fatal(void)
