@@ -54,7 +54,7 @@ static void server_set_chanmodes(struct link_server *l, const char *chanmodes);
 static void server_set_prefix(struct link_server *l, const char *prefix);
 static void server_init_modes(struct link_server *s);
 static int bip_get_index(const char* str, char car);
-static int bip_fls(int v);
+static int bip_fls(long v);
 
 void oidentd_dump(bip_t *bip);
 
@@ -100,7 +100,7 @@ char *nick_from_ircmask(const char *mask)
 		nick++;
 	if (!*nick)
 		return bip_strdup(mask);
-	len = nick - mask;
+	len = (size_t)(nick - mask); // cannot be < 0
 	ret = bip_malloc(len + 1);
 	memcpy(ret, mask, len);
 	ret[len] = 0;
@@ -492,8 +492,8 @@ int irc_dispatch_server(bip_t *bip, struct link_server *server,
 						newnick[7] = '`';
 					}
 				} else {
-					newnick[8] = rand() *
-						('z' - 'a') / RAND_MAX + 'a';
+					newnick[8] = (char)('a' + ('z' - 'a') *
+							rand() / RAND_MAX);
 				}
 				newnick[9] = 0;
 			}
@@ -1124,7 +1124,7 @@ static int irc_cli_join(struct link_client *irc, struct line *line)
 		ks = NULL;
 
 	while ((e = strchr(s, ','))) {
-		size_t len = e - s;
+		size_t len = (size_t)(e - s); // cannot be < 0 or NULL per while
 		char *p = bip_malloc(len + 1);
 		size_t klen;
 		char *kp = NULL;
@@ -1136,7 +1136,7 @@ static int irc_cli_join(struct link_client *irc, struct line *line)
 				ke = strchr(ks, ',');
 				if (!ke)
 					ke = ks + strlen(ks);
-				klen = ke - ks;
+				klen = (size_t)(ke - ks);
 				kp = bip_malloc(klen + 1);
 				memcpy(kp, ks, klen);
 				kp[klen] = 0;
@@ -1496,7 +1496,7 @@ static int irc_353(struct link_server *server, struct line *line)
 		while (*eon && *eon != ' ')
 			eon++;
 
-		len = eon - names;
+		len = (size_t)(eon - names); // cannot be < 0
 		nick = bip_malloc(len + 1);
 		memcpy(nick, names, len);
 		nick[len] = 0;
@@ -1623,7 +1623,7 @@ static int irc_part(struct link_server *server, struct line *line)
 
 static void mode_add_letter_uniq(struct link_server *s, char c)
 {
-	int i;
+	size_t i;
 	for (i = 0; i < s->user_mode_len; i++) {
 		if (s->user_mode[i] == c)
 			return;
@@ -1634,7 +1634,7 @@ static void mode_add_letter_uniq(struct link_server *s, char c)
 
 static void mode_remove_letter(struct link_server *s, char c)
 {
-	int i;
+	size_t i;
 	for (i = 0; i < s->user_mode_len; i++) {
 		if (s->user_mode[i] == c) {
 			for (; i < s->user_mode_len - 1; i++)
@@ -1672,7 +1672,7 @@ static int irc_mode(struct link_server *server, struct line *line)
 	struct channel *channel;
 	const char *mode;
 	int add = 1;
-	unsigned cur_arg = 0;
+	int cur_arg = 0;
 	array_t *mode_args = NULL;
 	int ret;
 
@@ -2348,7 +2348,7 @@ connection_t *irc_server_connect(struct link *link)
 #else
 				0, NULL, 0, NULL, NULL,
 #endif
-				CONNECT_TIMEOUT);
+				(time_t)CONNECT_TIMEOUT);
 	assert(conn);
 	if (conn->handle == -1) {
 		mylog(LOG_INFO, "[%s] Cannot connect.", link->name);
@@ -2698,7 +2698,7 @@ prot_err:
  */
 void irc_main(bip_t *bip)
 {
-	int timeleft = 1000;
+	time_t timeleft = 1000;
 
 	if (bip->reloading_client) {
 		char *l;
@@ -2835,7 +2835,8 @@ static void server_set_chanmodes(struct link_server *l, const char *modes)
 		if (cur || modes) {
 			size_t len;
 			if (cur)
-				len = cur - modes;
+				// cur can't be lower than modes if !NULL
+				len = (size_t)(cur - modes);
 			else
 				len = strlen(modes); // last piece
 			dup = bip_malloc(len + 1);
@@ -2855,7 +2856,7 @@ static void server_set_chanmodes(struct link_server *l, const char *modes)
 static void server_set_prefix(struct link_server *s, const char *modes)
 {
 	char * end_mode;
-	unsigned int len;
+	size_t len;
 
 	mylog(LOG_DEBUG, "[%s] Set user modes", LINK(s)->name);
 
@@ -2867,7 +2868,8 @@ static void server_set_prefix(struct link_server *s, const char *modes)
 		return;
 	}
 
-	len = end_mode - modes - 1; // len of mode without '('
+	// end_mode can't be lower than (modes + 1)
+	len = (size_t)(end_mode - modes - 1); // len of mode without '('
 	if (len * 2 + 2 != strlen(modes)) {
 		mylog(LOG_WARN, "[%s] Unable to parse PREFIX parameter", LINK(s)->name);
 		return;
@@ -2895,9 +2897,9 @@ static int bip_get_index(const char* str, char car)
 		return 0;
 }
 
-static int bip_fls(int v)
+static int bip_fls(long v)
 {
-	unsigned int r = 0;
+	int r = 0;
 	while (v >>= 1)
 		r++;
 

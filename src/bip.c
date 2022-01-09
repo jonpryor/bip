@@ -136,7 +136,7 @@ extern int yyparse(void);
 void conf_die(bip_t *bip, char *fmt, ...)
 {
 	va_list ap;
-	int size = ERRBUFSZ;
+	size_t size = ERRBUFSZ;
 	int n;
 	char *error = bip_malloc(size);
 
@@ -144,12 +144,12 @@ void conf_die(bip_t *bip, char *fmt, ...)
 		va_start(ap, fmt);
 		n = vsnprintf(error, size, fmt, ap);
 		va_end(ap);
-		if (n > -1 && n < size) {
+		if (n > -1 && (unsigned int) n < size) {
 			list_add_last(&bip->errors, error);
 			break;
 		}
 		if (n > -1)
-			size = n + 1;
+			size = (unsigned int) n + 1;
 		else
 			size *= 2;
 		error = bip_realloc(error, size);
@@ -167,7 +167,7 @@ int do_pid_stuff(void)
 	FILE *f;
 	int fd;
 	// size is conf_pid_file + hname max + %ld max + two '.'.
-	int longpath_max = strlen(conf_pid_file) + 512 + 3 + 20;
+	size_t longpath_max = strlen(conf_pid_file) + 512 + 3 + 20;
 	char *longpath = bip_malloc(longpath_max + 1);
 
 try_again:
@@ -1835,7 +1835,7 @@ void set_on_connect_send(struct link_client *ic, char *val)
 
 #define ON_CONNECT_MAX_STRSIZE 1024
 void adm_on_connect_send(struct link_client *ic, struct line *line,
-		unsigned int privmsg)
+		int privmsg)
 {
 	size_t remaining = ON_CONNECT_MAX_STRSIZE;
 	char buf[ON_CONNECT_MAX_STRSIZE];
@@ -1856,12 +1856,12 @@ void adm_on_connect_send(struct link_client *ic, struct line *line,
 	for (i = privmsg + 2; i < irc_line_count(line); i++) {
 		mylog(LOG_DEBUG, "[%s] processing item %d, remaining %ld, %s",
 				LINK(ic)->user->name, i, remaining, buf);
-		if ((unsigned int)i > privmsg + 2)
+		if (i > privmsg + 2)
 			bufpos = bip_strcatf_fit(&remaining, bufpos, " %s",
 					irc_line_elem(line, i));
 		else
 			bufpos = bip_strcat_fit(&remaining, bufpos,
-					(char *)irc_line_elem(line, i));
+					irc_line_elem(line, i));
 		mylog(LOG_DEBUG, "[%s] processed item %d, remaining %ld, %s",
 				LINK(ic)->user->name, i, remaining, buf);
 		if (!bufpos) {
@@ -2009,7 +2009,7 @@ int adm_bip(bip_t *bip, struct link_client *ic, struct line *line, int privmsg)
 	if (privmsg) {
 		char *linestr, *elemstr;
 		char *ptr, *eptr;
-		int slen;
+		size_t slen;
 
 		if (irc_line_count(line) != 3)
 			return OK_FORGET;
@@ -2021,7 +2021,10 @@ int adm_bip(bip_t *bip, struct link_client *ic, struct line *line, int privmsg)
 		elemstr = bip_malloc(strlen(linestr) + 1);
 
 		while((eptr = strstr(ptr, " "))) {
-			slen = eptr - ptr;
+			// eptr is either >= ptr or NULL from strstr()
+			// but it can't be NULL per while loop
+			// we can then assume slen is unsigned
+			slen = (size_t)(eptr - ptr);
 			if (slen == 0) {
 				ptr++;
 				continue;
@@ -2031,8 +2034,8 @@ int adm_bip(bip_t *bip, struct link_client *ic, struct line *line, int privmsg)
 			irc_line_append(line, elemstr);
 			ptr = eptr + 1;
 		}
-		eptr = ptr + strlen(ptr);
-		slen = eptr - ptr;
+		slen = strlen(ptr);
+		eptr = ptr + slen;
 		if (slen != 0) {
 			memcpy(elemstr, ptr, slen);
 			elemstr[slen] = 0;

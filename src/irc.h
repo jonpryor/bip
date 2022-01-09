@@ -236,7 +236,7 @@ struct link_server {
 	hash_t channels;
 
 	char *user_mode;
-	int user_mode_len;
+	size_t user_mode_len;
 
 	/* init stuff */
 	int lag;

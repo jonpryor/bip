@@ -207,7 +207,8 @@ static X509 *mySSL_get_cert(SSL *ssl)
 
 static int _write_socket_SSL(connection_t *cn, char* message)
 {
-	int count, size;
+	int count;
+	size_t size;
 
 	size = sizeof(char)*strlen(message);
 
@@ -305,7 +306,7 @@ static int _write_socket(connection_t *cn, char *message)
 		count = write(cn->handle, ((const char *)message) + tcount,
 					size - tcount);
 		if (count > 0) {
-			tcount += count;
+			tcount += (size_t)count;
 			if (tcount == size)
 				return WRITE_OK;
 		}
@@ -806,7 +807,9 @@ static int cn_want_write(connection_t *cn)
 		 * cn->lasttoken is the number of milliseconds when we
 		 * last added a token to the bucket */
 		if (!clock_gettime(CLOCK_MONOTONIC, &tv)) {
-			now = tv.tv_sec * 1000 + tv.tv_nsec / 1000000;
+			if (tv.tv_sec < 0 || tv.tv_nsec < 0)
+				fatal("clock_gettime returned negative time");
+			now = (unsigned long)(tv.tv_sec * 1000 + tv.tv_nsec / 1000000);
 			/* round now to TOKEN_INTERVAL multiple */
 			now -= now % TOKEN_INTERVAL;
 			if (now < cn->lasttoken) {
@@ -814,8 +817,8 @@ static int cn_want_write(connection_t *cn)
 				cn->token = 1;
 				cn->lasttoken = now;
 			} else if (now > cn->lasttoken + TOKEN_INTERVAL) {
-				cn->token += (now - cn->lasttoken) /
-					TOKEN_INTERVAL;
+				cn->token += (unsigned)((now - cn->lasttoken) /
+					TOKEN_INTERVAL);
 				if (cn->token > TOKEN_MAX)
 					cn->token = TOKEN_MAX;
 				if (!cn->token)
@@ -838,7 +841,7 @@ static int cn_want_write(connection_t *cn)
 }
 
 
-list_t *wait_event(list_t *cn_list, int *msec, int *nc)
+list_t *wait_event(list_t *cn_list, time_t *msec, int *nc)
 {
 	fd_set fds_read, fds_write, fds_except;
 	int maxfd = -1, err, errtime;
@@ -1067,7 +1070,7 @@ static void create_listening_socket(char *hostname, char *port,
 
 		if (setsockopt(cn->handle, SOL_SOCKET, SO_REUSEADDR,
 					(char *)&multi_client,
-					sizeof(multi_client)) < 0) {
+					(socklen_t)sizeof(multi_client)) < 0) {
 			mylog(LOG_WARN, "setsockopt() : %s", strerror(errno));
 			close(cn->handle);
 			cn->handle = -1;
@@ -1100,7 +1103,7 @@ static void create_listening_socket(char *hostname, char *port,
 	cn->connected = CONN_ERROR;
 }
 
-static connection_t *connection_init(int anti_flood, int ssl, int timeout,
+static connection_t *connection_init(int anti_flood, int ssl, time_t timeout,
 		int listen)
 {
 	connection_t *conn;
@@ -1142,7 +1145,7 @@ static int ctx_set_dh(SSL_CTX *ctx)
 	/* Return ephemeral DH parameters. */
 	DH *dh = NULL;
 	FILE *f;
-	int ret;
+	long ret;
 
 	if ((f = fopen(conf_client_dh_file, "r")) == NULL) {
 		mylog(LOG_ERROR, "Unable to open DH parameters (%s): %s",
@@ -1273,14 +1276,14 @@ connection_t *listen_new(char *hostname, int port, int ssl)
 	 * SSL flag is only here to tell program to convert socket to SSL after
 	 * accept(). Listening socket will NOT be SSL
 	 */
-	conn = connection_init(0, ssl, 0, 1);
+	conn = connection_init(0, ssl, (time_t)0, 1);
 	create_listening_socket(hostname, portbuf, conn);
 
 	return conn;
 }
 
 static connection_t *_connection_new(char *dsthostname, char *dstport,
-		char *srchostname, char *srcport, int timeout)
+		char *srchostname, char *srcport, time_t timeout)
 {
 	connection_t *conn;
 
@@ -1293,7 +1296,8 @@ static connection_t *_connection_new(char *dsthostname, char *dstport,
 #ifdef HAVE_LIBSSL
 static SSL_CTX *SSL_init_context(char *ciphers)
 {
-	int fd, flags, ret, rng;
+	int fd, flags, rng;
+	ssize_t ret;
 	char buf[1025];
 	SSL_CTX *ctx;
 
@@ -1323,7 +1327,7 @@ static SSL_CTX *SSL_init_context(char *ciphers)
 			}
 			mylog(LOG_DEBUG, "PRNG seeded with %d /dev/random "
 					"bytes", ret);
-			RAND_seed(buf, ret);
+			RAND_seed(buf, (int)ret);
 		} while (!(rng = RAND_status()));
 
 prng_end:
@@ -1427,7 +1431,7 @@ static int bip_ssl_verify_callback(int preverify_ok, X509_STORE_CTX *ctx)
 	if (!result) {
 		/* We have a verify error! Log it */
 		mylog(LOG_ERROR, "SSL cert check failed at depth=%d: %s (%d)",
-				depth, X509_verify_cert_error_string(err), err);
+				depth, X509_verify_cert_error_string((long)err), err);
 	}
 
 	return result;
@@ -1436,6 +1440,7 @@ static int bip_ssl_verify_callback(int preverify_ok, X509_STORE_CTX *ctx)
 static int SSLize(connection_t *cn, int *nc)
 {
 	int err, err2;
+	long errl;
 
 	if (cn == NULL)
 		return 1;
@@ -1462,7 +1467,7 @@ static int SSLize(connection_t *cn, int *nc)
 	if (err2 == SSL_ERROR_NONE) {
 		const SSL_CIPHER *cipher;
 		char buf[128];
-		int len;
+		size_t len;
 
 		cipher = SSL_get_current_cipher(cn->ssl_h);
 		SSL_CIPHER_description(cipher, buf, 128);
@@ -1481,17 +1486,17 @@ static int SSLize(connection_t *cn, int *nc)
 	case SSL_CHECK_NONE:
 		break;
 	case SSL_CHECK_BASIC:
-		if((err = SSL_get_verify_result(cn->ssl_h)) != X509_V_OK) {
-			mylog(LOG_ERROR, "Certificate check failed: %s (%d)!",
-				X509_verify_cert_error_string(err), err);
+		if((errl = SSL_get_verify_result(cn->ssl_h)) != X509_V_OK) {
+			mylog(LOG_ERROR, "Certificate check failed: %s (%ld)!",
+				X509_verify_cert_error_string(errl), errl);
 			cn->connected = CONN_UNTRUSTED;
 			return 1;
 		}
 		break;
 	case SSL_CHECK_CA:
-		if((err = SSL_get_verify_result(cn->ssl_h)) != X509_V_OK) {
-			mylog(LOG_ERROR, "Certificate check failed: %s (%d)!",
-				X509_verify_cert_error_string(err), err);
+		if((errl = SSL_get_verify_result(cn->ssl_h)) != X509_V_OK) {
+			mylog(LOG_ERROR, "Certificate check failed: %s (%ld)!",
+				X509_verify_cert_error_string(errl), errl);
 			cn->connected = CONN_UNTRUSTED;
 			return 1;
 		}
@@ -1521,7 +1526,7 @@ static int SSLize(connection_t *cn, int *nc)
 
 static connection_t *_connection_new_SSL(char *dsthostname, char *dstport,
 		char *srchostname, char *srcport, char *ciphers, int check_mode,
-		char *check_store, char *ssl_client_certfile, int timeout)
+		char *check_store, char *ssl_client_certfile, time_t timeout)
 {
 	connection_t *conn;
 
@@ -1641,7 +1646,7 @@ static connection_t *_connection_new_SSL(char *dsthostname, char *dstport,
 
 connection_t *connection_new(char *dsthostname, int dstport, char *srchostname,
 		int srcport, int ssl, char *ssl_ciphers, int ssl_check_mode,
-		char *ssl_check_store, char *ssl_client_certfile, int timeout)
+		char *ssl_check_store, char *ssl_client_certfile, time_t timeout)
 {
 	char dstportbuf[20], srcportbuf[20], *tmp;
 #ifndef HAVE_LIBSSL
@@ -1727,7 +1732,7 @@ int main(int argc,char* argv[])
 		fprintf(stderr,"Usage: %s host port\n",argv[0]);
 		exit(1);
 	}
-	conn = connection_init(0, 0, 0, 1);
+	conn = connection_init(0, 0, (time_t)0, 1);
 	conn->connect_time = time(NULL);
 	create_listening_socket(argv[1],argv[2],&conn);
 	if (s == -1) {
@@ -1755,41 +1760,41 @@ int main(int argc,char* argv[])
 }
 #endif
 
-int connection_localport(connection_t *cn)
+uint16_t connection_localport(connection_t *cn)
 {
 	struct sockaddr_in addr;
 	int err;
 	socklen_t addrlen;
 
 	if (cn->handle <= 0)
-		return -1;
+		return 0;
 
 	addrlen = sizeof(addr);
 	err = getsockname(cn->handle, (struct sockaddr *)&addr, &addrlen);
 	if (err != 0) {
 		mylog(LOG_ERROR, "in getsockname(%d): %s", cn->handle,
 				strerror(errno));
-		return -1;
+		return 0;
 	}
 
 	return ntohs(addr.sin_port);
 }
 
-int connection_remoteport(connection_t *cn)
+uint16_t connection_remoteport(connection_t *cn)
 {
 	struct sockaddr_in addr;
 	int err;
 	socklen_t addrlen;
 
 	if (cn->handle <= 0)
-		return -1;
+		return 0;
 
 	addrlen = sizeof(addr);
 	err = getpeername(cn->handle, (struct sockaddr *)&addr, &addrlen);
 	if (err != 0) {
 		mylog(LOG_ERROR, "in getpeername(%d): %s", cn->handle,
 				strerror(errno));
-		return -1;
+		return 0;
 	}
 
 	return ntohs(addr.sin_port);

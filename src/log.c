@@ -28,7 +28,7 @@ extern int conf_log;
 
 extern FILE *conf_global_log_file;
 
-static int _log_write(log_t *logdata, logstore_t *lf, const char *d,
+static size_t _log_write(log_t *logdata, logstore_t *lf, const char *d,
 		const char *str);
 static char *_log_wrap(const char *dest, const char *line);
 void logfile_free(logfile_t *lf);
@@ -73,9 +73,10 @@ int check_dir(char *filename, int is_fatal)
 
 int check_dir_r(char *dirname)
 {
-	int pos, count = 0;
+	size_t count = 0;
 	char *dir, *tmp;
-	int len = strlen(dirname);
+	size_t len = strlen(dirname);
+	size_t pos;
 
 	mylog(LOG_DEBUGVERB, "Recursive check of %s engaged", dirname);
 	tmp = dirname;
@@ -110,7 +111,7 @@ void strtolower(char *str)
 	char *c;
 
 	for (c = str; *c != '\0'; c++)
-		*c = tolower(*c);
+		*c = (char)tolower(*c); // tolower()->int but should be safe to cast
 }
 
 /*
@@ -121,8 +122,8 @@ void strtolower(char *str)
 void replace_var(char *str, char *var, char *value, unsigned int max)
 {
 	char *pos;
-	unsigned int lenvar = strlen(var);
-	unsigned int lenval = strlen(value);
+	size_t lenvar = strlen(var);
+	size_t lenval = strlen(value);
 
 	while((pos = strstr(str, var))) {
 		/* Make room */
@@ -852,14 +853,18 @@ char *log_beautify(log_t *logdata, const char *buf, const char *storename,
 	assert(buf);
 
 	p = strchr(buf, ' ');
+	// buf...p
 	if (!p || !p[0] || !p[1])
 		return _log_wrap(dest, buf);
 	p++;
+	// buf...p
 	sots = logdata->user->backlog_timestamp == BLTSDateTime ? buf : p;
+	// buf...sots=p OR sots=buf...p
 	p = strchr(p, ' ');
+	// buf...sots...p OR sots=buf...p
 	if (!p || !p[0] || !p[1])
 		return _log_wrap(dest, buf);
-	lots = p - sots;
+	lots = (size_t)(p - sots);
 	p++;
 
 	if (strncmp(p, "-!-", (size_t)3) == 0) {
@@ -892,7 +897,7 @@ char *log_beautify(log_t *logdata, const char *buf, const char *storename,
 		p++;
 	if (!p[0])
 		return _log_wrap(dest, buf);
-	lon = p - son;
+	lon = (size_t)(p - son);
 
 	p = strchr(p, ' ');
 	if (!p || !p[0] || !p[1])
@@ -909,10 +914,11 @@ char *log_beautify(log_t *logdata, const char *buf, const char *storename,
 	if (lom == 0)
 		return _log_wrap(dest, buf);
 
+	// action and out are 0 or 1, safe to cast
 	p = ret = (char *)bip_malloc(
 		1 + lon + strlen(LAMESTRING) + strlen(dest) + 2 + lots + 2 +
-		lom + 3 + action * (2 + strlen("ACTION ")) +
-		out * strlen(PMSG_ARROW));
+		lom + 3 + (size_t)action * (2 + strlen("ACTION ")) +
+		(size_t)out * strlen(PMSG_ARROW));
 
 	*p++ = ':';
 
@@ -1025,7 +1031,9 @@ static int log_backread_file(log_t *log, logstore_t *store, logfile_t *lf,
 			/* error or oef */
 			break;
 		}
-		int slen = strlen(buf);
+		size_t slen = strlen(buf);
+		if (slen == 0)
+			break; // should not happen, per previous fgets block
 		if (buf[slen - 1] == '\n')
 			buf[slen - 1] = 0;
 		if (slen >= 2 && buf[slen] == '\r')
@@ -1122,7 +1130,7 @@ static char *_log_wrap(const char *dest, const char *line)
 	return buf;
 }
 
-static int _log_write(log_t *logdata, logstore_t *store,
+static size_t _log_write(log_t *logdata, logstore_t *store,
 		const char *destination, const char *str)
 {
 	size_t nbwrite;
@@ -1247,13 +1255,13 @@ array_t *str_split(const char *str, const char *splt)
 {
 	const char *p = str;
 	const char *start = str;
-	int len;
+	size_t len;
 	char *extracted;
 	array_t *array = array_new();;
 
 	do {
 		if (!*p || strchr(splt, *p)) {
-			len = p - start;
+			len = (size_t)(p - start);
 			extracted = bip_malloc(len + 1);
 			memcpy(extracted, start, len);
 			extracted[len] = 0;

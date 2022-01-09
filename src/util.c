@@ -286,7 +286,7 @@ void mylog(int level, char *fmt, ...)
 void dump_trace(void)
 {
 	void *array[32];
-	size_t size;
+	int size;
 
 	size = backtrace(array, 32);
 	fflush(conf_global_log_file);
@@ -630,8 +630,9 @@ static unsigned char hash_func(const char *pkey)
 	char c;
 	unsigned long hash = 5381; /* 5381 & 0xff makes more sense */
 
+	// toupper should not return negative values (only char compatible int)
 	while ((c = *pkey++))
-		hash = ((hash << 5) + hash) ^ toupper(c);
+		hash = ((hash << 5) + hash) ^ (long unsigned)toupper(c);
 	return (unsigned char)hash;
 }
 
@@ -810,7 +811,7 @@ char *bip_strmaydup(char *s)
 void strucase(char *s)
 {
 	while (*s) {
-		*s = toupper(*s);
+		*s = (char)toupper(*s); // toupper, safe to cast to char
 		s++;
 	}
 }
@@ -840,8 +841,10 @@ void array_ensure(array_t *a, int index)
 
 	if (array_includes(a, index))
 		return;
-	a->elemv = bip_realloc(a->elemv, sizeof(void *) * (index + 1));
-	memset(a->elemv + a->elemc, 0, sizeof(void *) * (index + 1 - a->elemc));
+	a->elemv = bip_realloc(a->elemv, sizeof(void *) * (size_t)(index + 1));
+	// a->elemc should be lower than index + 1
+	memset(a->elemv + a->elemc, 0,
+			sizeof(void *) * (size_t)(index + 1 - a->elemc));
 	a->elemc = index + 1;
 }
 

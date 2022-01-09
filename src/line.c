@@ -2,7 +2,8 @@
  * $Id$
  *
  * This file is part of the bip project
- * Copyright (C) 2004 2005 Arnaud Cornet and Loïc Gomez
+ * Copyright (C) 2004,2005 Arnaud Cornet
+ * Copyright (C) 2004,2005,2022 Loïc Gomez
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -164,7 +165,8 @@ struct line *irc_line_new_from_string(char *str)
 			irc_line_free(line);
 			return NULL;
 		}
-		len = space - str - 1; /* leading ':' */
+		// space is at least str + 1, len >= 0
+		len = (size_t)(space - str - 1); /* leading ':' */
 		line->origin = bip_malloc(len + 1);
 		memcpy(line->origin, str + 1, len);
 		line->origin[len] = 0;
@@ -187,7 +189,9 @@ struct line *irc_line_new_from_string(char *str)
 			while (*space && *space != ' ')
 				space++;
 		}
-		len = space - str;
+		// str is the start of string
+		// space is the end of string or end of word
+		len = (size_t)(space - str);
 		tmp = bip_malloc(len + 1);
 		memcpy(tmp, str, len);
 		tmp[len] = 0;

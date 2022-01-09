@@ -2,7 +2,8 @@
  * $Id: connection.h,v 1.40 2005/04/12 19:34:35 nohar Exp $
  *
  * This file is part of the bip project
- * Copyright (C) 2004 2005 Arnaud Cornet and Loïc Gomez
+ * Copyright (C) 2004,2005 Arnaud Cornet
+ * Copyright (C) 2004,2005,2022 Loïc Gomez
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -92,7 +93,7 @@ typedef struct connection {
 
 connection_t *connection_new(char *dsthostname, int dstport, char *srchostname,
 		int srcport, int ssl, char *ssl_ciphers, int ssl_check_mode,
-		char *ssl_check_store, char *ssl_client_certfile, int timeout);
+		char *ssl_check_store, char *ssl_client_certfile, time_t timeout);
 connection_t *listen_new(char *hostname, int port, int ssl);
 connection_t *accept_new(connection_t *cn);
 void connection_free(connection_t *cn);
@@ -102,13 +103,13 @@ void write_line(connection_t *cn, char *line);
 void write_lines(connection_t *cn, list_t *lines);
 void write_line_fast(connection_t *cn, char *line);
 list_t *read_lines(connection_t *cn, int *error);
-list_t *wait_event(list_t *cn_list, int *msec, int *nc);
+list_t *wait_event(list_t *cn_list, time_t *msec, int *nc);
 
 int cn_is_connected(connection_t *cn);
 int cn_is_listening(connection_t *cn);
 
-int connection_localport(connection_t *cn);
-int connection_remoteport(connection_t *cn);
+uint16_t connection_localport(connection_t *cn);
+uint16_t connection_remoteport(connection_t *cn);
 char *connection_localip(connection_t *cn);
 char *connection_remoteip(connection_t *cn);
 #endif
