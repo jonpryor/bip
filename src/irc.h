@@ -239,8 +239,8 @@ struct link_server {
 	size_t user_mode_len;
 
 	/* init stuff */
-	int lag;
-	int laginit_ts;
+	unsigned lag;
+	time_t laginit_ts;
 	int lagtest_timeout;
 
 	/* chanmodes */

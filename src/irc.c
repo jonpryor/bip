@@ -188,8 +188,13 @@ void irc_start_lagtest(struct link_server *l)
  */
 void irc_compute_lag(struct link_server *is)
 {
+	time_t lag;
 	assert(is->laginit_ts != -1);
-	is->lag = time(NULL) - is->laginit_ts;
+	lag = time(NULL) - is->laginit_ts;
+	if (lag > LAGOUT_TIME*2)
+		is->lag = LAGOUT_TIME*2;
+	else
+		is->lag = (unsigned)lag;
 }
 
 int irc_lags_out(struct link_server *is)
