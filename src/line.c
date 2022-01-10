@@ -66,7 +66,7 @@ char *irc_line_pop(struct line *l)
 
 void _irc_line_append(struct line *l, const char *s)
 {
-	array_push(&l->words, (char *)s);
+	array_push(&l->words, bip_strdup(s));
 }
 
 void irc_line_append(struct line *l, const char *s)
@@ -110,11 +110,14 @@ char *irc_line_to_string_to(struct line *line, char *nick)
 {
 	char *tmp;
 	char *l;
+	const char *prev;
 
-	tmp = (char *)irc_line_elem(line, 1);
+	prev = irc_line_elem(line, 1);
+	tmp = bip_strdup(prev);
 	array_set(&line->words, 1, nick);
 	l = irc_line_to_string(line);
 	array_set(&line->words, 1, tmp);
+	bip_cfree(prev);
 
 	return l;
 }
@@ -136,7 +139,7 @@ const char *irc_line_elem(struct line *line, int elem)
 
 void irc_line_drop(struct line *line, int elem)
 {
-	free(array_drop(&line->words, elem));
+	bip_cfree(array_drop(&line->words, elem));
 }
 
 int irc_line_elem_equals(struct line *line, int elem, const char *cmp)
@@ -214,7 +217,7 @@ void irc_line_free(struct line *l)
 	int i;
 
 	for (i = 0; i < array_count(&l->words); i++)
-		free(array_get(&l->words, i));
+		bip_cfree(array_get(&l->words, i));
 	array_deinit(&l->words);
 	if (l->origin)
 		free(l->origin);

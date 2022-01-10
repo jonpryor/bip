@@ -642,7 +642,7 @@ void log_mode(log_t *logdata, const char *ircmask, const char *channel,
 	if (mode_args) {
 		for (i = 0; i < array_count(mode_args); i++) {
 			snprintf(tmpbuf2, (size_t)LOGLINE_MAXLEN, "%s %s", tmpbuf,
-					(char *)array_get(mode_args, i));
+					(const char*)array_get(mode_args, i));
 			tmp = tmpbuf;
 			tmpbuf = tmpbuf2;
 			tmpbuf2 = tmp;
@@ -1408,7 +1408,7 @@ list_t *backlog_lines(log_t *log, const char *bl, const char *cli_nick,
 				irc_line_init(&l);
 				l.origin = P_IRCMASK;
 				if (dest == cli_nick)
-					l.origin = (char *)bl;
+					l.origin = bip_strdup(bl);
 				_irc_line_append(&l, "PRIVMSG");
 				_irc_line_append(&l, dest);
 				_irc_line_append(&l, "End of backlog");

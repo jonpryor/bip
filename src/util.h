@@ -71,7 +71,7 @@ typedef struct hash_iterator {
 
 typedef struct array {
 	int elemc;
-	void **elemv;
+	const void **elemv;
 } array_t;
 
 #define MOVE_STRING(dest, src) do {\
@@ -178,12 +178,13 @@ char *checkmode2text(int v);
 void *bip_malloc(size_t size);
 void *bip_calloc(size_t nmemb, size_t size);
 void *bip_realloc(void *ptr, size_t size);
+void bip_cfree(const void *ptr);
 char *bip_strdup(const char *str);
 char *bip_strcat_fit(size_t *remaining, char *str, const char *str2);
 char *bip_strcatf_fit(size_t *remaining, char *str, const char *str2, ...);
 void bip_clock_gettime(clockid_t clockid, struct timespec *tp);
 #define array_each(a, idx, ptr) for ((idx) = 0; \
-		(idx) < (a)->elemc && (((ptr) = array_get((a), (idx))) || 1); \
+		(idx) < (a)->elemc && (((ptr) = bip_strdup(array_get((a), (idx)))) || 1); \
 		(idx)++)
 
 void array_init(array_t *a);
@@ -192,7 +193,7 @@ void array_ensure(array_t *a, int index);
 array_t *array_extract(array_t *a, int index, int upto);
 void array_deinit(array_t *a);
 void array_free(array_t *a);
-void *array_drop(array_t *a, int index);
+const void *array_drop(array_t *a, int index);
 static inline int array_count(array_t *a)
 {
 	assert(a);
@@ -212,7 +213,7 @@ static inline void array_set(array_t *a, int index, void *ptr)
 	a->elemv[index] = ptr;
 }
 
-static inline void *array_get(array_t *a, int index)
+static inline const void *array_get(array_t *a, int index)
 {
 	assert(a && array_includes(a, index));
 	return a->elemv[index];
@@ -234,13 +235,13 @@ static inline void *array_pop(array_t *a)
 	if (a->elemc == 0)
 		return NULL;
 	if (a->elemc == 1) {
-		void *ptr = a->elemv[0];
+		void *ptr = bip_strdup(a->elemv[0]);
 		free(a->elemv);
 		a->elemv = NULL;
 		a->elemc = 0;
 		return ptr;
 	}
-	return a->elemv[--a->elemc];
+	return (void *)bip_strdup(a->elemv[--a->elemc]);
 }
 
 #endif

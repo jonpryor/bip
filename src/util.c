@@ -77,6 +77,17 @@ void *bip_realloc(void *ptr, size_t size)
 	return r;
 }
 
+void bip_cfree(const void *ptr)
+{
+	if (!ptr)
+		return;
+// there's no other way to free a const pointer
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wcast-qual"
+	free((void *)ptr);
+#pragma GCC diagnostic pop
+}
+
 char *bip_strdup(const char *str)
 {
 	char *r = strdup(str);
@@ -862,10 +873,10 @@ void array_ensure(array_t *a, int index)
 	a->elemc = index + 1;
 }
 
-void *array_drop(array_t *a, int index)
+const void *array_drop(array_t *a, int index)
 {
 	int i;
-	void *ret;
+	const void *ret;
 
 	assert(a && array_includes(a, index));
 
