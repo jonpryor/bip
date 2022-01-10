@@ -1105,8 +1105,13 @@ void irc_add_channel_info(struct link_server *ircs, const char *chan,
 		const char *key)
 {
 	struct chan_info *ci;
+// TODO resolve this issue from array_get
+// passing argument X of .... with different width due to prototype
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wtraditional-conversion"
 	if (!ischannel(*chan))
 		return;
+#pragma GCC diagnostic pop
 
 	ci = hash_get(&LINK(ircs)->chan_infos, chan);
 	if (!ci) {
@@ -1291,6 +1296,10 @@ static void irc_copy_cli(struct link_client *src, struct link_client *dest,
 		return;
 	}
 
+// TODO resolve this issue from array_get
+// passing argument X of .... with different width due to prototype
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wtraditional-conversion"
 	if (ischannel(*irc_line_elem(line, 1)) || LINK(src) != LINK(dest)) {
 		assert(!line->origin);
 		line->origin = LINK(src)->l_server->nick;
@@ -1300,6 +1309,7 @@ static void irc_copy_cli(struct link_client *src, struct link_client *dest,
 		free(str);
 		return;
 	}
+#pragma GCC diagnostic pop
 
 	/* LINK(src) == LINK(dest) */
 	size_t len = strlen(irc_line_elem(line, 2)) + 6;
@@ -1509,10 +1519,15 @@ static int irc_353(struct link_server *server, struct line *line)
 		long int ovmask = 0;
 		/* some ircds (e.g. unreal) may display several flags for the
                    same nick */
+// TODO resolve this issue from array_get
+// passing argument X of .... with different width due to prototype
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wtraditional-conversion"
 		while ((index = bip_get_index(server->prefixes, *names))) {
 			ovmask |= 1 << index;
 			names++;
 		}
+#pragma GCC diagnostic pop
 		eon = names;
 		while (*eon && *eon != ' ')
 			eon++;
@@ -1682,11 +1697,16 @@ static void irc_user_mode(struct link_server *server, struct line *line)
 		else if (*mode == '+')
 			add = 1;
 		else {
+// TODO resolve this issue from array_get
+// passing argument X of .... with different width due to prototype
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wtraditional-conversion"
 			if (add) {
 				mode_add_letter_uniq(server, *mode);
 			} else {
 				mode_remove_letter(server, *mode);
 			}
+#pragma GCC diagnostic pop
 		}
 	}
 }
@@ -1716,8 +1736,13 @@ static int irc_mode(struct link_server *server, struct line *line)
 		return OK_COPY;
 	}
 
+// TODO resolve this issue from array_get
+// passing argument X of .... with different width due to prototype
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wtraditional-conversion"
 	if (!ischannel(irc_line_elem(line, 1)[0]))
 		return ERR_PROTOCOL;
+#pragma GCC diagnostic pop
 
 	/* channel mode change */
 	channel = hash_get(&server->channels, irc_line_elem(line, 1));
@@ -1786,6 +1811,10 @@ static int irc_mode_channel(struct link_server *s, struct channel *channel,
 	long int ovmask;
 	int index;
 
+// TODO resolve this issue from array_get
+// passing argument X of .... with different width due to prototype
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wtraditional-conversion"
 	if (*mode == 'k') {
 		if (add) {
 			channel->key = bip_strdup(
@@ -1809,6 +1838,7 @@ static int irc_mode_channel(struct link_server *s, struct channel *channel,
 			ovmask &= ~(1 << index);
 		hash_insert(&channel->ovmasks, nick, (void *)ovmask);
 	}
+#pragma GCC diagnostic pop
 	return OK_COPY;
 }
 

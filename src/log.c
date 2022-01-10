@@ -555,6 +555,10 @@ static void do_log_privmsg(log_t *logdata, const char *storage, int src,
 void log_privmsg(log_t *logdata, const char *ircmask, const char *destination,
 		const char *message)
 {
+// TODO resolve this issue from array_get
+// passing argument X of .... with different width due to prototype
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wtraditional-conversion"
 	if (!ischannel(*destination)) {
 		char *nick = nick_from_ircmask(ircmask);
 		do_log_privmsg(logdata, nick, 0, ircmask, message);
@@ -562,6 +566,7 @@ void log_privmsg(log_t *logdata, const char *ircmask, const char *destination,
 	} else {
 		do_log_privmsg(logdata, destination, 0, ircmask, message);
 	}
+#pragma GCC diagnostic pop
 }
 
 void log_cli_privmsg(log_t *logdata, const char *ircmask,
@@ -575,6 +580,10 @@ void log_notice(log_t *logdata, const char *ircmask, const char *destination,
 {
 	if (!ircmask)
 		ircmask = P_IRCMASK;
+// TODO resolve this issue from array_get
+// passing argument X of .... with different width due to prototype
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wtraditional-conversion"
 	if (!ischannel(*destination)) {
 		char *nick = nick_from_ircmask(ircmask);
 		do_log_privmsg(logdata, nick, 0, ircmask, message);
@@ -582,6 +591,7 @@ void log_notice(log_t *logdata, const char *ircmask, const char *destination,
 	} else {
 		do_log_privmsg(logdata, destination, 0, ircmask, message);
 	}
+#pragma GCC diagnostic pop
 }
 
 void log_cli_notice(log_t *logdata, const char *ircmask,
@@ -732,10 +742,15 @@ void log_reset_all(log_t *logdata)
 	for (hash_it_init(&logdata->logfgs, &hi); hash_it_item(&hi);
 			hash_it_next(&hi)) {
 		store = hash_it_item(&hi);
+// TODO resolve this issue from array_get
+// passing argument X of .... with different width due to prototype
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wtraditional-conversion"
 		if (ischannel(*hash_it_key(&hi)))
 			log_reset(store);
 		else
 			list_add_last(&drop, bip_strdup(hash_it_key(&hi)));
+#pragma GCC diagnostic pop
 	}
 
 	char *name;
@@ -752,8 +767,13 @@ void log_reset_store(log_t *log, const char *storename)
 	store = hash_get(&log->logfgs, storename);
 	if (store) {
 		log_reset(store);
+// TODO resolve this issue from array_get
+// passing argument X of .... with different width due to prototype
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wtraditional-conversion"
 		if (!ischannel(*storename))
 			log_drop(log, storename);
+#pragma GCC diagnostic pop
 	}
 }
 
@@ -926,10 +946,15 @@ char *log_beautify(log_t *logdata, const char *buf, const char *storename,
 		return _log_wrap(dest, buf);
 	p++;
 
+// TODO resolve this issue from array_get
+// passing argument X of .... with different width due to prototype
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wtraditional-conversion"
 	if (out && !ischannel(*dest)) {
 		son = storename;
 		lon = strlen(storename);
 	}
+#pragma GCC diagnostic pop
 
 	som = p;
 	lom = strlen(p);
@@ -963,10 +988,15 @@ char *log_beautify(log_t *logdata, const char *buf, const char *storename,
 		strcpy(p, "ACTION ");
 		p += strlen("ACTION ");
 	}
+// TODO resolve this issue from array_get
+// passing argument X of .... with different width due to prototype
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wtraditional-conversion"
 	if (out && !ischannel(*dest)) {
 		strcpy(p, PMSG_ARROW);
 		p += strlen(PMSG_ARROW);
 	}
+#pragma GCC diagnostic pop
 	if (logdata->user->backlog_timestamp != BLTSNone) {
 		memcpy(p, sots, lots);
 		p += lots;
@@ -1386,10 +1416,15 @@ list_t *backlog_lines(log_t *log, const char *bl, const char *cli_nick,
 	const char *dest;
 
 	ret = NULL;
+// TODO resolve this issue from array_get
+// passing argument X of .... with different width due to prototype
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wtraditional-conversion"
 	if (ischannel(*bl))
 		dest = bl;
 	else
 		dest = cli_nick;
+#pragma GCC diagnostic pop
 
 	if (log_has_backlog(log, bl) || hours) {
 		if (hours == 0)
