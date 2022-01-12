@@ -13,3 +13,6 @@ EXTRA_DIST = \
 	scripts/bip-release \
 	scripts/bipgenconfig \
 	systemd
+
+lint:
+	find src/ tests/ \( -name *.c -o -name *.h \) -type f -print0 | xargs -0 clang-format -i
