@@ -1,6 +1,14 @@
-noinst_LIBRARIES = libbip.a
+noinst_LIBRARIES = libbip.a libbiplex.a
 
-libbip_a_SOURCES = conf.y lex.l \
+libbiplex_a_SOURCES = \
+	conf.y lex.l
+
+# Not adding AM_CFLAGS here, because many debian flex releases generate code
+# that compares signed and unsigned integers. It looks like this issue is
+# fixed by flex 2.6.5 which is unreleased.
+libbiplex_a_CFLAGS = $(OPENSSL_CFLAGS)
+
+libbip_a_SOURCES = \
 	bip.c bip.h \
 	connection.c connection.h \
 	defaults.h \
@@ -19,11 +27,12 @@ bin_PROGRAMS = bip bipmkpw
 
 bip_SOURCES = bip_main.c
 bip_CFLAGS = ${OPENSSL_CFLAGS} $(AM_CFLAGS)
-bip_LDADD = libbip.a ${OPENSSL_LIBS}
-
+bip_LDADD = libbip.a libbiplex.a ${OPENSSL_LIBS}
 
 bipmkpw_SOURCES = bipmkpw.c md5.c util.c
 bipmkpw_CFLAGS = ${OPENSSL_CFLAGS} $(AM_CFLAGS)
+bipmkpw_LDADD = libbip.a libbiplex.a $(OPENSSL_LIBS)
+
 AM_YFLAGS= -d
 BUILT_SOURCES = conf.c conf.h lex.c
 
