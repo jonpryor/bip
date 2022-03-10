@@ -1,3 +1,8 @@
+2022-03-10 (0.9.3) "sanitize our bip and add some layers"
+- Add SASL authentication support (EXTERNAL, PLAIN)
+- Handle some recommended GCC flags
+- fix /bip user info command
+
 2021-10-12 (0.9.2) "for the love of unsubsquirrel"
 - Update and fix minor issues in sample bip and vim configuration files
 
