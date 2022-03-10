@@ -1,3 +1,243 @@
+commit 18665b150198d283419d2e1d72901af96eda18e4 (G)
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@libregerbil.fr>
+Date:   Thu Mar 10 14:38:26 2022 +0100
+
+    Update NEWS file (SASL, GCC flags, /bip user info)
+
+commit f2fd1824caad008ad529a2860d8568208a0955e7 (G)
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@libregerbil.fr>
+Date:   Thu Mar 10 13:52:03 2022 +0100
+
+    Format the whole code using clang-format
+
+commit 8d9658ca43242d4c8bc203846017a907ebb39fcc (G)
+Author: Loïc Gomez <bip@kyoshiro.org>
+Date:   Thu Mar 10 13:09:41 2022 +0100
+
+    Build lexer in a separate unit without AM_CFLAGS
+
+commit e04f97c78ff528b3c83c080fcb3ecade664b5c73 (G)
+Author: Loïc Gomez <bip@kyoshiro.org>
+Date:   Mon Jan 10 19:30:56 2022 +0100
+
+    ignore some issues related to array_get
+    
+    ignore "passing argument X of .... with different width due to prototype"
+
+commit 26d347dec6d7f096cc41a9dac67984a3e1987105 (G)
+Author: Loïc Gomez <bip@kyoshiro.org>
+Date:   Mon Jan 10 18:10:50 2022 +0100
+
+    sanitize: fix const char * being used as non-const
+
+commit ee6ee0bd34855baf755c57047bb1404ebd930c17 (G)
+Author: Loïc Gomez <bip@kyoshiro.org>
+Date:   Sun Jan 9 22:15:46 2022 +0100
+
+    irc_cli_part set cname to proper const char *
+
+commit edf78eadb1f1e69172451189aae50827dc179ea1 (G)
+Author: Loïc Gomez <bip@kyoshiro.org>
+Date:   Sun Jan 9 21:30:25 2022 +0100
+
+    sanitize: pragmas for our code
+
+commit efb79b1e806142865f63255274f88f43af0c3362 (G)
+Author: Loïc Gomez <bip@kyoshiro.org>
+Date:   Sun Jan 9 21:24:25 2022 +0100
+
+    sanitize: a bit evolved size_t cast for get_str_elem
+
+commit 79d9be4e71b171cf047bed0f59377dd9ce930d1e (G)
+Author: Loïc Gomez <bip@kyoshiro.org>
+Date:   Sun Jan 9 20:43:26 2022 +0100
+
+    sanitize: ftell/fseek & len/file_offset type fixes
+
+commit dbf8ccd4de68f3dc54efaf63e782c19570ef77bb (G)
+Author: Loïc Gomez <bip@kyoshiro.org>
+Date:   Sun Jan 9 20:39:38 2022 +0100
+
+    sanitize: more NULL pointer failsafes
+
+commit f54775fe9204942ab174c8d8e9a88a183c42fed3 (G)
+Author: Loïc Gomez <bip@kyoshiro.org>
+Date:   Sun Jan 9 20:37:55 2022 +0100
+
+    sanitize: ignore warnings related to external libs
+
+commit f379eb35d29c86d0667be072e02e5dfe4af2ec23 (G)
+Author: Loïc Gomez <bip@kyoshiro.org>
+Date:   Sun Jan 9 20:35:50 2022 +0100
+
+    sanitize: oidentd handler fixes
+
+commit ce4cf8b6a0c8610cc4df096184c006e7cfdd044b (G)
+Author: Loïc Gomez <bip@kyoshiro.org>
+Date:   Sun Jan 9 21:02:48 2022 +0100
+
+    sanitize: add bip_clock_gettime util function
+
+commit 368149575d2cf8aefc6b50983dddb6e1a25b6426 (G)
+Author: Loïc Gomez <bip@kyoshiro.org>
+Date:   Sun Jan 9 20:24:40 2022 +0100
+
+    sanitize: null writes, write errors, oversized int,
+    
+    and set incoming_end to size_t
+
+commit b990a071b364696432de23a7b6f84807156129fd (G)
+Author: Loïc Gomez <bip@kyoshiro.org>
+Date:   Sun Jan 9 20:11:01 2022 +0100
+
+    sanitize: fix pid/pidfile handling
+
+commit af590f83b7f8e843b2274c33099b653c2be438da (G)
+Author: Loïc Gomez <bip@kyoshiro.org>
+Date:   Sun Jan 9 21:12:24 2022 +0100
+
+    lag shouldn't be allowed to go negative
+
+commit 62fd77dc177710574c66e38882c841c1368dec89 (G)
+Author: Loïc Gomez <bip@kyoshiro.org>
+Date:   Sun Jan 9 21:00:33 2022 +0100
+
+    l_clientc should not be allowed to go negative
+
+commit dd5343b7107ef91a81cae1c74164e08c4421c83f (G)
+Author: Loïc Gomez <bip@kyoshiro.org>
+Date:   Sun Jan 9 20:59:59 2022 +0100
+
+    use proper types, safe casts (mostly size_t)
+
+commit 94fe272018cfc38b05e98b5b64d9cc959b39e7f1 (G)
+Author: Loïc Gomez <bip@kyoshiro.org>
+Date:   Sun Jan 9 19:34:49 2022 +0100
+
+    handle more config errors, use char not int:1
+
+commit fbfae37d6581b6a077021ba5f62bd2af67b16bbf (G)
+Author: Loïc Gomez <bip@kyoshiro.org>
+Date:   Sun Jan 9 19:23:41 2022 +0100
+
+    sanitize: configuration parsing
+
+commit 9d6394679f075992b9902a7a3b4c2fe61819cb43 (G)
+Author: Loïc Gomez <bip@kyoshiro.org>
+Date:   Sun Jan 9 18:25:44 2022 +0100
+
+    sanitize: check return value
+
+commit 2a5e7b6f7bea243117d671ec4812f63b46a23a39 (G)
+Author: Loïc Gomez <bip@kyoshiro.org>
+Date:   Sun Jan 9 21:20:49 2022 +0100
+
+    sanitize: add trivial casts to types
+    
+    and add missing default cases
+
+commit e694dae31cedcfd7dd2eadffb6c9a18b1f4b866c (G)
+Author: Loïc Gomez <bip@kyoshiro.org>
+Date:   Sun Jan 9 18:25:26 2022 +0100
+
+    functions without parameters: add missing void
+
+commit 26d34bafabe7ba8aa778ff8e7af960d1a6dab081 (G)
+Author: Loïc Gomez <bip@kyoshiro.org>
+Date:   Thu Jan 6 19:48:59 2022 +0100
+
+    sanitize: add bipmkpw_fatal & fix bipmkpw warnings
+
+commit fe108e390f6400ccc94ebfe09e0215ad57dbdccf (G)
+Author: Loïc Gomez <bip@kyoshiro.org>
+Date:   Thu Jan 6 21:34:55 2022 +0100
+
+    Add secure / strict CFLAGS
+    
+    Ref: https://airbus-seclab.github.io/c-compiler-security/#gcc-tldr
+
+commit e7d82acfff5877bcede66b6c1661a4a3e9ed3a2e (G)
+Author: Loïc Gomez <bip@kyoshiro.org>
+Date:   Sun Jan 2 15:26:51 2022 +0100
+
+    Update build configuration
+
+commit 51a46a1454092dc74f64e299770195a2911fbdd3 (G)
+Author: Loïc Gomez <bip@kyoshiro.org>
+Date:   Thu Jan 6 19:57:08 2022 +0100
+
+    Add compiled stuff to gitignore
+
+commit 7680af6a0998a8fb1b5fb4f93ee8ae3784d01fd6 (G)
+Author: Loïc Gomez <bip@kyoshiro.org>
+Date:   Wed Jan 12 21:48:43 2022 +0100
+
+    Add make lint calling clang-format & force 80 cols
+
+commit 34b3c4b0c3464211ef129ea9f806595833d0b645 (G)
+Author: Loïc Gomez <bip@kyoshiro.org>
+Date:   Thu Jan 6 13:43:18 2022 +0100
+
+    Move /BIP to bip_strcat{,f}_fit memccpy wrapper
+    
+    instead of snprintf.
+
+commit 399a104d1ea483623ca15f39a45a699c5ececcb1 (G)
+Author: Loïc Gomez <bip@kyoshiro.org>
+Date:   Thu Jan 6 19:51:11 2022 +0100
+
+    fix /bip user info command
+
+commit dc43d75d1f7e7c01d943f085120f704d2dac831d (G)
+Author: Loïc Gomez <bip@kyoshiro.org>
+Date:   Sun Jan 2 14:16:10 2022 +0100
+
+    Add SASL authentication support (EXTERNAL, PLAIN)
+
+commit 1df884545fc4bb901dcea6d4cc1e9eda117f9220 (G)
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@libregerbil.fr>
+Date:   Sun Oct 17 12:52:00 2021 +0200
+
+    Add a man page for the bipgenconfig script
+    
+    This man page comes from the Debian package.
+
+commit 814ef729380adb60e7d60fa7fc02f9fac316023c (G)
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@libregerbil.fr>
+Date:   Sun Oct 17 12:47:12 2021 +0200
+
+    Add man pages in Documentation key of systemd unit
+
+commit 462c1036fc3daefe7ee81262134bd6542e4cc8be (G)
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@libregerbil.fr>
+Date:   Sun Oct 17 12:09:45 2021 +0200
+
+    Fix spelling errors found by Lintian
+
+commit 9aa9e719d97ec4dc886946ace3b688674be4144d (G)
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@libregerbil.fr>
+Date:   Wed Oct 13 13:13:22 2021 +0200
+
+    new release: ensure NEWS file is up to date
+
+commit ce67374c0e5844b563559f73c5eb085d7fdba1f7 (G)
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@libregerbil.fr>
+Date:   Wed Oct 13 11:40:30 2021 +0200
+
+    Synchronize NEWS file & NEWS from project
+
+commit 42ccca78493e7a5e342883052aeb18dadc82bae9 (G)
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@libregerbil.fr>
+Date:   Tue Oct 12 21:33:19 2021 +0200
+
+    Add -git to version string.
+
+commit 49688a5aa19fdf12e7f42b84e5434025399f05e5 (G)
+Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@libregerbil.fr>
+Date:   Tue Oct 12 21:33:13 2021 +0200
+
+    Update version and ChangeLog for bip-0.9.2 release.
+
 commit ef70865450a0b0aab4561f8815630d697dd109dd (G)
 Author: Pierre-Louis Bonicoli <pierre-louis.bonicoli@libregerbil.fr>
 Date:   Tue Oct 12 18:53:26 2021 +0200
