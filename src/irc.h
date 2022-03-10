@@ -96,8 +96,7 @@ struct bipuser {
 	char in_use; /* for mark and sweep on reload */
 };
 
-struct network
-{
+struct network {
 	char *name;
 #ifdef HAVE_LIBSSL
 	int ssl;
@@ -111,7 +110,7 @@ struct network
 #define SASL_AUTH_PLAIN 2
 
 struct link {
-	char *name;	/* id */
+	char *name; /* id */
 
 	/** link live data **/
 	struct link_server *l_server;
@@ -144,8 +143,8 @@ struct link {
 	list_t on_connect_send;
 	char *no_client_away_msg;
 	char *away_nick;
-	hash_t chan_infos;		/* channels we want */
-	list_t chan_infos_order;	/* for order only */
+	hash_t chan_infos;	 /* channels we want */
+	list_t chan_infos_order; /* for order only */
 
 	struct bipuser *user;
 
@@ -168,7 +167,7 @@ struct link {
 
 #ifdef HAVE_LIBSSL
 	int ssl_check_mode;
-	STACK_OF(X509) *untrusted_certs;
+	STACK_OF(X509) * untrusted_certs;
 #endif
 	int in_use; /* for mark and sweep on reload */
 };
@@ -189,9 +188,9 @@ struct link_any {
 
 #define IRCC_NONE (0)
 #define IRCC_NICK (1)
-#define IRCC_USER (1<<1)
-#define IRCC_PASS (1<<2)
-#define IRCC_READY (IRCC_NICK|IRCC_PASS|IRCC_USER)
+#define IRCC_USER (1 << 1)
+#define IRCC_PASS (1 << 2)
+#define IRCC_READY (IRCC_NICK | IRCC_PASS | IRCC_USER)
 
 struct link_client {
 	struct link_connection _link_c;
@@ -284,4 +283,3 @@ void irc_cli_backlog(struct link_client *ic, int hours);
 #define BIP_FAKEMASK "!bip@bip.bip.bip"
 
 #endif
-

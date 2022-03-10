@@ -17,65 +17,65 @@
 
 #include "connection.h"
 
-#define WRITE_LINE0(con, org, com) \
-	do  { \
-		struct line l; \
-		irc_line_init(&l); \
-		l.origin = org; \
-		_irc_line_append(&l, com); \
-		irc_line_write(&l, con); \
-		_irc_line_deinit(&l); \
-	} while(0)
+#define WRITE_LINE0(con, org, com)                                             \
+	do {                                                                   \
+		struct line l;                                                 \
+		irc_line_init(&l);                                             \
+		l.origin = org;                                                \
+		_irc_line_append(&l, com);                                     \
+		irc_line_write(&l, con);                                       \
+		_irc_line_deinit(&l);                                          \
+	} while (0)
 
-#define WRITE_LINE1(con, org, com, a) \
-	do  { \
-		struct line l; \
-		irc_line_init(&l); \
-		l.origin = org; \
-		_irc_line_append(&l, com); \
-		_irc_line_append(&l, a); \
-		irc_line_write(&l, con); \
-		_irc_line_deinit(&l); \
-	} while(0)
+#define WRITE_LINE1(con, org, com, a)                                          \
+	do {                                                                   \
+		struct line l;                                                 \
+		irc_line_init(&l);                                             \
+		l.origin = org;                                                \
+		_irc_line_append(&l, com);                                     \
+		_irc_line_append(&l, a);                                       \
+		irc_line_write(&l, con);                                       \
+		_irc_line_deinit(&l);                                          \
+	} while (0)
 
-#define WRITE_LINE2(con, org, com, a1, a2) \
-	do  { \
-		struct line l; \
-		irc_line_init(&l); \
-		l.origin = org; \
-		_irc_line_append(&l, com); \
-		_irc_line_append(&l, a1); \
-		_irc_line_append(&l, a2); \
-		irc_line_write(&l, con); \
-		_irc_line_deinit(&l); \
-	} while(0)
+#define WRITE_LINE2(con, org, com, a1, a2)                                     \
+	do {                                                                   \
+		struct line l;                                                 \
+		irc_line_init(&l);                                             \
+		l.origin = org;                                                \
+		_irc_line_append(&l, com);                                     \
+		_irc_line_append(&l, a1);                                      \
+		_irc_line_append(&l, a2);                                      \
+		irc_line_write(&l, con);                                       \
+		_irc_line_deinit(&l);                                          \
+	} while (0)
 
-#define WRITE_LINE3(con, org, com, a1, a2, a3) \
-	do  { \
-		struct line l; \
-		irc_line_init(&l); \
-		l.origin = org; \
-		_irc_line_append(&l, com); \
-		_irc_line_append(&l, a1); \
-		_irc_line_append(&l, a2); \
-		_irc_line_append(&l, a3); \
-		irc_line_write(&l, con); \
-		_irc_line_deinit(&l); \
-	} while(0)
+#define WRITE_LINE3(con, org, com, a1, a2, a3)                                 \
+	do {                                                                   \
+		struct line l;                                                 \
+		irc_line_init(&l);                                             \
+		l.origin = org;                                                \
+		_irc_line_append(&l, com);                                     \
+		_irc_line_append(&l, a1);                                      \
+		_irc_line_append(&l, a2);                                      \
+		_irc_line_append(&l, a3);                                      \
+		irc_line_write(&l, con);                                       \
+		_irc_line_deinit(&l);                                          \
+	} while (0)
 
-#define WRITE_LINE4(con, org, com, a1, a2, a3, a4) \
-	do  { \
-		struct line l; \
-		irc_line_init(&l); \
-		l.origin = org; \
-		_irc_line_append(&l, com); \
-		_irc_line_append(&l, a1); \
-		_irc_line_append(&l, a2); \
-		_irc_line_append(&l, a3); \
-		_irc_line_append(&l, a4); \
-		irc_line_write(&l, con); \
-		_irc_line_deinit(&l); \
-	} while(0)
+#define WRITE_LINE4(con, org, com, a1, a2, a3, a4)                             \
+	do {                                                                   \
+		struct line l;                                                 \
+		irc_line_init(&l);                                             \
+		l.origin = org;                                                \
+		_irc_line_append(&l, com);                                     \
+		_irc_line_append(&l, a1);                                      \
+		_irc_line_append(&l, a2);                                      \
+		_irc_line_append(&l, a3);                                      \
+		_irc_line_append(&l, a4);                                      \
+		irc_line_write(&l, con);                                       \
+		_irc_line_deinit(&l);                                          \
+	} while (0)
 
 struct line {
 	char *origin;

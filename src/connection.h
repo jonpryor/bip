@@ -92,8 +92,9 @@ typedef struct connection {
 } connection_t;
 
 connection_t *connection_new(char *dsthostname, int dstport, char *srchostname,
-		int srcport, int ssl, char *ssl_ciphers, int ssl_check_mode,
-		char *ssl_check_store, char *ssl_client_certfile, time_t timeout);
+			     int srcport, int ssl, char *ssl_ciphers,
+			     int ssl_check_mode, char *ssl_check_store,
+			     char *ssl_client_certfile, time_t timeout);
 connection_t *listen_new(char *hostname, int port, int ssl);
 connection_t *accept_new(connection_t *cn);
 void connection_free(connection_t *cn);

@@ -32,7 +32,7 @@ extern int conf_log;
 extern FILE *conf_global_log_file;
 
 static size_t _log_write(log_t *logdata, logstore_t *lf, const char *d,
-		const char *str);
+			 const char *str);
 static char *_log_wrap(const char *dest, const char *line);
 void logfile_free(logfile_t *lf);
 void log_drop(log_t *log, const char *storename);
@@ -53,16 +53,15 @@ int check_dir(char *filename, int is_fatal)
 		if (err) {
 			if (is_fatal)
 				fatal("mkdir(%s) %s", filename,
-						strerror(errno));
+				      strerror(errno));
 			mylog(LOG_ERROR, "mkdir(%s) %s", filename,
-					strerror(errno));
+			      strerror(errno));
 			return 1;
 		}
 	} else if (err) {
 		if (is_fatal)
 			fatal("stat(%s) %s", filename, strerror(errno));
-		mylog(LOG_ERROR, "stat(%s) %s", filename,
-				strerror(errno));
+		mylog(LOG_ERROR, "stat(%s) %s", filename, strerror(errno));
 		return 1;
 	} else if (!(statbuf.st_mode & S_IFDIR)) {
 		if (is_fatal)
@@ -99,7 +98,7 @@ int check_dir_r(char *dirname)
 		tmp += pos;
 		count += pos;
 		*(dir + count) = '\0';
-		mylog(LOG_DEBUGVERB,"check_dir_r: %s", dir);
+		mylog(LOG_DEBUGVERB, "check_dir_r: %s", dir);
 		if (check_dir(dir, 0)) {
 			free(dir);
 			return 1;
@@ -114,7 +113,8 @@ void strtolower(char *str)
 	char *c;
 
 	for (c = str; *c != '\0'; c++)
-		*c = (char)tolower(*c); // tolower()->int but should be safe to cast
+		*c = (char)tolower(
+			*c); // tolower()->int but should be safe to cast
 }
 
 /*
@@ -128,7 +128,7 @@ void replace_var(char *str, char *var, char *value, unsigned int max)
 	size_t lenvar = strlen(var);
 	size_t lenval = strlen(value);
 
-	while((pos = strstr(str, var))) {
+	while ((pos = strstr(str, var))) {
 		/* Make room */
 		if (strlen(str) + lenval - lenvar >= max)
 			return;
@@ -154,7 +154,7 @@ char *log_build_filename(log_t *logdata, const char *destination)
 	strftime(month, (size_t)3, "%m", now);
 	strftime(hour, (size_t)3, "%H", now);
 	snprintf(logfile, (size_t)MAX_PATH_LEN, "%s/%s", conf_log_root,
-			conf_log_format);
+		 conf_log_format);
 	replace_var(logfile, "%u", logdata->user->name, MAX_PATH_LEN);
 	replace_var(logfile, "%n", logdata->network, MAX_PATH_LEN);
 	replace_var(logfile, "%c", dest, MAX_PATH_LEN);
@@ -201,8 +201,8 @@ static void log_reset(logstore_t *store)
 		return;
 	}
 
-	while ((olf = list_get_first(&store->file_group)) &&
-			olf != list_get_last(&store->file_group)) {
+	while ((olf = list_get_first(&store->file_group))
+	       && olf != list_get_last(&store->file_group)) {
 		logfile_free(olf);
 		list_remove_first(&store->file_group);
 	}
@@ -225,7 +225,7 @@ static void log_reset(logstore_t *store)
 void log_reinit(logstore_t *store)
 {
 	mylog(LOG_ERROR, "%s is inconsistent, droping backlog info",
-			store->name);
+	      store->name);
 	log_reset(store);
 }
 
@@ -253,10 +253,10 @@ static int log_has_file(log_t *logdata, const char *fname)
 	logstore_t *store;
 
 	for (hash_it_init(&logdata->logfgs, &hi); hash_it_item(&hi);
-			hash_it_next(&hi)) {
+	     hash_it_next(&hi)) {
 		store = hash_it_item(&hi);
 		for (list_it_init(&store->file_group, &li); list_it_item(&li);
-				list_it_next(&li)) {
+		     list_it_next(&li)) {
 			logfile_t *lf = list_it_item(&li);
 			if (strcmp(fname, lf->filename) == 0)
 				return 1;
@@ -266,7 +266,7 @@ static int log_has_file(log_t *logdata, const char *fname)
 }
 
 static int log_add_file(log_t *logdata, const char *destination,
-		const char *filename)
+			const char *filename)
 {
 	FILE *f;
 	logstore_t *store;
@@ -286,7 +286,7 @@ static int log_add_file(log_t *logdata, const char *destination,
 		f = fopen(uniq_fname, "a+");
 		if (!f) {
 			mylog(LOG_ERROR, "fopen(%s) %s", uniq_fname,
-					strerror(errno));
+			      strerror(errno));
 			free(uniq_fname);
 			free(canonical_fname);
 			return 0;
@@ -294,7 +294,7 @@ static int log_add_file(log_t *logdata, const char *destination,
 
 		if (fseek(f, (long)0, SEEK_END) == -1) {
 			mylog(LOG_ERROR, "fseek(%s) %s", uniq_fname,
-					strerror(errno));
+			      strerror(errno));
 			free(uniq_fname);
 			free(canonical_fname);
 			fclose(f);
@@ -307,7 +307,7 @@ static int log_add_file(log_t *logdata, const char *destination,
 		lf->len = (size_t)ftell_r;
 		if (ftell_r < 0) {
 			mylog(LOG_ERROR, "log_add_file: ftell error %s",
-					strerror(errno));
+			      strerror(errno));
 			free(uniq_fname);
 			free(canonical_fname);
 			fclose(f);
@@ -377,17 +377,17 @@ logstore_t *log_find_file(log_t *logdata, const char *destination)
 			if (!filename)
 				return NULL;
 			mylog(LOG_DEBUG, "Creating new logfile for %s: %s",
-					destination, filename);
+			      destination, filename);
 		}
 		if (!log_add_file(logdata, destination, filename)) {
-		    if (filename)
-			    free(filename);
+			if (filename)
+				free(filename);
 			return NULL;
 		}
 		store = hash_get(&logdata->logfgs, destination);
 		assert(store);
 		/* ok we are allocating a new store now, let's set it up for
-		* backlogging if applicable */
+		 * backlogging if applicable */
 		assert(logdata->user);
 		assert(logdata->network);
 		l = hash_get(&logdata->user->connections, logdata->network);
@@ -413,8 +413,8 @@ logstore_t *log_find_file(log_t *logdata, const char *destination)
 
 	time(&t);
 	ltime = localtime(&t);
-	if (ltime->tm_year != lf->last_log.tm_year ||
-			ltime->tm_yday != lf->last_log.tm_yday) {
+	if (ltime->tm_year != lf->last_log.tm_year
+	    || ltime->tm_yday != lf->last_log.tm_yday) {
 		logfile_t *oldlf;
 
 		/* day changed, we might want to rotate logfile */
@@ -430,7 +430,7 @@ logstore_t *log_find_file(log_t *logdata, const char *destination)
 
 		/* we do want to rotate logfiles */
 		mylog(LOG_DEBUG, "Rotating logfile for %s %s %s", destination,
-				lf->filename, filename);
+		      lf->filename, filename);
 
 		oldlf = list_get_last(&store->file_group);
 		if (!log_add_file(logdata, destination, filename)) {
@@ -443,8 +443,8 @@ logstore_t *log_find_file(log_t *logdata, const char *destination)
 			/* remove oldlf from file_group */
 			assert(list_remove_first(&store->file_group) == oldlf);
 			logfile_free(oldlf);
-			assert(list_get_first(&store->file_group) ==
-					list_get_last(&store->file_group));
+			assert(list_get_first(&store->file_group)
+			       == list_get_last(&store->file_group));
 		} else {
 			fclose(oldlf->file);
 			oldlf->file = NULL;
@@ -456,53 +456,51 @@ logstore_t *log_find_file(log_t *logdata, const char *destination)
 void log_join(log_t *logdata, const char *ircmask, const char *channel)
 {
 	snprintf(logdata->buffer, (size_t)LOGLINE_MAXLEN,
-			"%s -!- %s has joined %s", timestamp(), ircmask,
-			channel);
+		 "%s -!- %s has joined %s", timestamp(), ircmask, channel);
 	log_write(logdata, channel, logdata->buffer);
 }
 
 void log_part(log_t *logdata, const char *ircmask, const char *channel,
-		const char *message)
+	      const char *message)
 {
 	if (message)
 		snprintf(logdata->buffer, (size_t)LOGLINE_MAXLEN,
-			"%s -!- %s has left %s [%s]", timestamp(), ircmask,
-			channel, message);
+			 "%s -!- %s has left %s [%s]", timestamp(), ircmask,
+			 channel, message);
 	else
 		snprintf(logdata->buffer, (size_t)LOGLINE_MAXLEN,
-			"%s -!- %s has left %s", timestamp(), ircmask,
-			channel);
+			 "%s -!- %s has left %s", timestamp(), ircmask,
+			 channel);
 	log_write(logdata, channel, logdata->buffer);
 }
 
 void log_kick(log_t *logdata, const char *ircmask, const char *channel,
-		const char *who, const char *message)
+	      const char *who, const char *message)
 {
 	snprintf(logdata->buffer, (size_t)LOGLINE_MAXLEN,
-			"%s -!- %s has been kicked by %s [%s]", timestamp(),
-			who, ircmask, message);
+		 "%s -!- %s has been kicked by %s [%s]", timestamp(), who,
+		 ircmask, message);
 	log_write(logdata, channel, logdata->buffer);
 }
 
 void log_quit(log_t *logdata, const char *ircmask, const char *channel,
-		const char *message)
+	      const char *message)
 {
 	snprintf(logdata->buffer, (size_t)LOGLINE_MAXLEN,
-			"%s -!- %s has quit [%s]", timestamp(), ircmask,
-			message);
+		 "%s -!- %s has quit [%s]", timestamp(), ircmask, message);
 	log_write(logdata, channel, logdata->buffer);
 }
 
 void log_nick(log_t *logdata, const char *ircmask, const char *channel,
-		const char *newnick)
+	      const char *newnick)
 {
 	char *oldnick = nick_from_ircmask(ircmask);
-	logstore_t* oldstore;
-	logstore_t* newstore;
+	logstore_t *oldstore;
+	logstore_t *newstore;
 
 	if ((oldstore = hash_get(&logdata->logfgs, oldnick))) {
 		if ((newstore = hash_get(&logdata->logfgs, newnick))
-			&& oldstore != newstore) {
+		    && oldstore != newstore) {
 			log_drop(logdata, newnick);
 		}
 		hash_rename_key(&logdata->logfgs, oldnick, newnick);
@@ -510,13 +508,12 @@ void log_nick(log_t *logdata, const char *ircmask, const char *channel,
 	free(oldnick);
 
 	snprintf(logdata->buffer, (size_t)LOGLINE_MAXLEN,
-			"%s -!- %s is now known as %s",
-			timestamp(), ircmask, newnick);
+		 "%s -!- %s is now known as %s", timestamp(), ircmask, newnick);
 	log_write(logdata, channel, logdata->buffer);
 }
 
 static void do_log_privmsg(log_t *logdata, const char *storage, int src,
-		const char *from, const char *message)
+			   const char *from, const char *message)
 {
 	char dir = '<';
 
@@ -525,10 +522,11 @@ static void do_log_privmsg(log_t *logdata, const char *storage, int src,
 	if (src)
 		dir = '>';
 
-	if (strlen(message) > 8 && ((*message == '\001' ||
-		((*message == '+' || *message == '-') &&
-			 (*(message + 1) == '\001'))) &&
-		(*(message + strlen(message) - 1) == '\001'))) {
+	if (strlen(message) > 8
+	    && ((*message == '\001'
+		 || ((*message == '+' || *message == '-')
+		     && (*(message + 1) == '\001')))
+		&& (*(message + strlen(message) - 1) == '\001'))) {
 		char *msg;
 		/* hack for freenode and the like */
 		const char *real_message = message;
@@ -541,19 +539,17 @@ static void do_log_privmsg(log_t *logdata, const char *storage, int src,
 		msg = bip_strdup(real_message);
 		*(msg + strlen(msg) - 1) = '\0';
 		snprintf(logdata->buffer, (size_t)LOGLINE_MAXLEN,
-					"%s %c * %s %s", timestamp(), dir,
-					from, msg + 8);
+			 "%s %c * %s %s", timestamp(), dir, from, msg + 8);
 		free(msg);
 	} else {
 		snprintf(logdata->buffer, (size_t)LOGLINE_MAXLEN,
-					"%s %c %s: %s", timestamp(), dir,
-					from, message);
+			 "%s %c %s: %s", timestamp(), dir, from, message);
 	}
 	log_write(logdata, storage, logdata->buffer);
 }
 
 void log_privmsg(log_t *logdata, const char *ircmask, const char *destination,
-		const char *message)
+		 const char *message)
 {
 // TODO resolve this issue from array_get
 // passing argument X of .... with different width due to prototype
@@ -570,7 +566,7 @@ void log_privmsg(log_t *logdata, const char *ircmask, const char *destination,
 }
 
 void log_cli_privmsg(log_t *logdata, const char *ircmask,
-		const char *destination, const char *message)
+		     const char *destination, const char *message)
 {
 	do_log_privmsg(logdata, destination, 1, ircmask, message);
 }
@@ -595,30 +591,29 @@ void log_notice(log_t *logdata, const char *ircmask, const char *destination,
 }
 
 void log_cli_notice(log_t *logdata, const char *ircmask,
-		const char *destination, const char *message)
+		    const char *destination, const char *message)
 {
 	do_log_privmsg(logdata, destination, 1, ircmask, message);
 }
 
 void log_topic(log_t *logdata, const char *ircmask, const char *channel,
-		const char *message)
+	       const char *message)
 {
 	snprintf(logdata->buffer, (size_t)LOGLINE_MAXLEN,
-			"%s -!- %s changed topic of %s to: %s", timestamp(),
-			ircmask, channel, message);
+		 "%s -!- %s changed topic of %s to: %s", timestamp(), ircmask,
+		 channel, message);
 	log_write(logdata, channel, logdata->buffer);
 }
 
 void log_init_topic(log_t *logdata, const char *channel, const char *message)
 {
 	snprintf(logdata->buffer, (size_t)LOGLINE_MAXLEN,
-			"%s -!- Topic for %s: %s", timestamp(), channel,
-			message);
+		 "%s -!- Topic for %s: %s", timestamp(), channel, message);
 	log_write(logdata, channel, logdata->buffer);
 }
 
 void log_init_topic_time(log_t *logdata, const char *channel, const char *who,
-		const char *when)
+			 const char *when)
 {
 	struct tm *time;
 	char *timestr;
@@ -633,34 +628,33 @@ void log_init_topic_time(log_t *logdata, const char *channel, const char *who,
 	timestr[50] = '\0';
 
 	snprintf(logdata->buffer, (size_t)LOGLINE_MAXLEN,
-			"%s -!- Topic set by %s [%s]", timestamp(), who,
-			timestr);
+		 "%s -!- Topic set by %s [%s]", timestamp(), who, timestr);
 	free(timestr);
 	log_write(logdata, channel, logdata->buffer);
 }
 
 void log_mode(log_t *logdata, const char *ircmask, const char *channel,
-		const char *modes, array_t *mode_args)
+	      const char *modes, array_t *mode_args)
 {
 	int i;
 	char *tmpbuf = bip_malloc((size_t)LOGLINE_MAXLEN + 1);
 	char *tmpbuf2 = bip_malloc((size_t)LOGLINE_MAXLEN + 1);
 	char *tmp;
 
-	snprintf(tmpbuf, (size_t)LOGLINE_MAXLEN,
-			"%s -!- mode/%s [%s", timestamp(), channel, modes);
+	snprintf(tmpbuf, (size_t)LOGLINE_MAXLEN, "%s -!- mode/%s [%s",
+		 timestamp(), channel, modes);
 	if (mode_args) {
 		for (i = 0; i < array_count(mode_args); i++) {
-			snprintf(tmpbuf2, (size_t)LOGLINE_MAXLEN, "%s %s", tmpbuf,
-					(const char*)array_get(mode_args, i));
+			snprintf(tmpbuf2, (size_t)LOGLINE_MAXLEN, "%s %s",
+				 tmpbuf, (const char *)array_get(mode_args, i));
 			tmp = tmpbuf;
 			tmpbuf = tmpbuf2;
 			tmpbuf2 = tmp;
 		}
 	}
 
-	snprintf(logdata->buffer, (size_t)LOGLINE_MAXLEN, "%s] by %s",
-			tmpbuf, ircmask);
+	snprintf(logdata->buffer, (size_t)LOGLINE_MAXLEN, "%s] by %s", tmpbuf,
+		 ircmask);
 	log_write(logdata, channel, logdata->buffer);
 
 	free(tmpbuf);
@@ -670,10 +664,12 @@ void log_mode(log_t *logdata, const char *ircmask, const char *channel,
 void log_disconnected(log_t *logdata)
 {
 	hash_iterator_t hi;
-	snprintf(logdata->buffer, (size_t)LOGLINE_MAXLEN, "%s -!- Disconnected"
-			" from server...", timestamp());
+	snprintf(logdata->buffer, (size_t)LOGLINE_MAXLEN,
+		 "%s -!- Disconnected"
+		 " from server...",
+		 timestamp());
 	for (hash_it_init(&logdata->logfgs, &hi); hash_it_item(&hi);
-			hash_it_next(&hi))
+	     hash_it_next(&hi))
 		log_write(logdata, hash_it_key(&hi), logdata->buffer);
 }
 
@@ -683,7 +679,7 @@ void log_ping_timeout(log_t *logdata)
 	char *s;
 
 	snprintf(logdata->buffer, (size_t)LOGLINE_MAXLEN,
-			"%s -!- Ping timeout with server...", timestamp());
+		 "%s -!- Ping timeout with server...", timestamp());
 	while ((s = list_remove_first(l))) {
 		log_write(logdata, s, logdata->buffer);
 		free(s);
@@ -696,10 +692,12 @@ void log_connected(log_t *logdata)
 {
 	hash_iterator_t hi;
 
-	snprintf(logdata->buffer, (size_t)LOGLINE_MAXLEN, "%s -!- Connected to"
-			" server...", timestamp());
+	snprintf(logdata->buffer, (size_t)LOGLINE_MAXLEN,
+		 "%s -!- Connected to"
+		 " server...",
+		 timestamp());
 	for (hash_it_init(&logdata->logfgs, &hi); hash_it_item(&hi);
-			hash_it_next(&hi)) {
+	     hash_it_next(&hi)) {
 		log_write(logdata, hash_it_key(&hi), logdata->buffer);
 	}
 }
@@ -740,7 +738,7 @@ void log_reset_all(log_t *logdata)
 	list_init(&drop, NULL);
 
 	for (hash_it_init(&logdata->logfgs, &hi); hash_it_item(&hi);
-			hash_it_next(&hi)) {
+	     hash_it_next(&hi)) {
 		store = hash_it_item(&hi);
 // TODO resolve this issue from array_get
 // passing argument X of .... with different width due to prototype
@@ -793,11 +791,11 @@ void log_client_connected(log_t *logdata)
 	logdata->connected = 1;
 }
 
-void log_advance_backlogs(log_t* ld, logstore_t *store)
+void log_advance_backlogs(log_t *ld, logstore_t *store)
 {
 	int c;
 
-	//mylog(LOG_ERROR, "LOG: log_advance_backlogs %s", store->name);
+	// mylog(LOG_ERROR, "LOG: log_advance_backlogs %s", store->name);
 	if (!store->track_backlog)
 		return;
 
@@ -811,18 +809,20 @@ void log_advance_backlogs(log_t* ld, logstore_t *store)
 
 	logfile_t *lf;
 	while ((lf = list_it_item(&store->file_it))) {
-		//mylog(LOG_ERROR, "LOG: %s %d", lf->filename, store->file_offset);
+		// mylog(LOG_ERROR, "LOG: %s %d", lf->filename,
+		// store->file_offset);
 		if (!lf->file) {
 			lf->file = fopen(lf->filename, "r");
 			if (!lf->file) {
 				mylog(LOG_ERROR, "Can't open %s for reading",
-						lf->filename);
+				      lf->filename);
 				log_reinit(store);
 				return;
 			}
 		}
 		if (fseek(lf->file, store->file_offset, SEEK_SET)) {
-			//mylog(LOG_ERROR, "LOG: fseek FAIL %s %d", lf->filename, store->file_offset);
+			// mylog(LOG_ERROR, "LOG: fseek FAIL %s %d",
+			// lf->filename, store->file_offset);
 			log_reinit(store);
 			return;
 		}
@@ -830,16 +830,20 @@ void log_advance_backlogs(log_t* ld, logstore_t *store)
 		while ((c = fgetc(lf->file)) != EOF) {
 			store->file_offset++;
 			if (c == '\n') {
-				//mylog(LOG_ERROR, "LOG: %s advanced at %d", lf->filename, store->file_offset);
+				// mylog(LOG_ERROR, "LOG: %s advanced at %d",
+				// lf->filename, store->file_offset);
 				return;
 			}
 		}
-		//mylog(LOG_ERROR, "LOG: %s advanced at %d", lf->filename, store->file_offset);
+		// mylog(LOG_ERROR, "LOG: %s advanced at %d", lf->filename,
+		// store->file_offset);
 		if (lf == list_get_last(&store->file_group)) {
-			//mylog(LOG_ERROR, "LOG: %s is last of file_group", lf->filename, store->file_offset);
+			// mylog(LOG_ERROR, "LOG: %s is last of file_group",
+			// lf->filename, store->file_offset);
 			return;
 		}
-		//mylog(LOG_ERROR, "LOG: next file %s %d", lf->filename, store->file_offset);
+		// mylog(LOG_ERROR, "LOG: next file %s %d", lf->filename,
+		// store->file_offset);
 		fclose(lf->file);
 		lf->file = NULL;
 		list_it_next(&store->file_it);
@@ -879,7 +883,7 @@ chan:
 09-01-2009 14:16:21 < nohar!~nohar@haruka.t1r.net: chantestrepl
 */
 char *log_beautify(log_t *logdata, const char *buf, const char *storename,
-		const char *dest)
+		   const char *dest)
 {
 	int action = 0;
 	char *p;
@@ -962,10 +966,10 @@ char *log_beautify(log_t *logdata, const char *buf, const char *storename,
 		return _log_wrap(dest, buf);
 
 	// action and out are 0 or 1, safe to cast
-	p = ret = (char *)bip_malloc(
-		1 + lon + strlen(LAMESTRING) + strlen(dest) + 2 + lots + 2 +
-		lom + 3 + (size_t)action * (2 + strlen("ACTION ")) +
-		(size_t)out * strlen(PMSG_ARROW));
+	p = ret = (char *)bip_malloc(1 + lon + strlen(LAMESTRING) + strlen(dest)
+				     + 2 + lots + 2 + lom + 3
+				     + (size_t)action * (2 + strlen("ACTION "))
+				     + (size_t)out * strlen(PMSG_ARROW));
 
 	*p++ = ':';
 
@@ -977,8 +981,8 @@ char *log_beautify(log_t *logdata, const char *buf, const char *storename,
 
 	memcpy(p, dest, strlen(dest));
 	p += strlen(dest);
-	//memcpy(p, sod, lod);
-	//p += lod;
+	// memcpy(p, sod, lod);
+	// p += lod;
 
 	*p++ = ' ';
 	*p++ = ':';
@@ -1032,20 +1036,20 @@ static time_t compute_time(const char *buf)
 }
 
 static int log_backread_file(log_t *log, logstore_t *store, logfile_t *lf,
-		list_t *res, const char *dest, time_t start)
+			     list_t *res, const char *dest, time_t start)
 {
 	char *buf, *logbr;
 	int close = 0;
 
-	//mylog(LOG_ERROR, "log_backread_file store:", store->name);
+	// mylog(LOG_ERROR, "log_backread_file store:", store->name);
 
 	if (!lf->file) {
 		lf->file = fopen(lf->filename, "r");
 		if (!lf->file) {
 			mylog(LOG_ERROR, "Can't open %s for reading",
-					lf->filename);
+			      lf->filename);
 			list_add_last(res, _log_wrap("Error opening logfile",
-					store->name));
+						     store->name));
 			return 0;
 		}
 
@@ -1059,26 +1063,29 @@ static int log_backread_file(log_t *log, logstore_t *store, logfile_t *lf,
 		*/
 		if (fseek(lf->file, store->file_offset, SEEK_SET)) {
 			mylog(LOG_ERROR, "Can't seek in %s", lf->filename);
-			list_add_last(res, _log_wrap(store->name,
+			list_add_last(res,
+				      _log_wrap(store->name,
 						"Error seeking in logfile"));
 			return 0;
 		}
 	} else {
-		//mylog(LOG_ERROR, "bread Seeking %s to %d", lf->filename, 0);
+		// mylog(LOG_ERROR, "bread Seeking %s to %d", lf->filename, 0);
 		if (fseek(lf->file, (long)0, SEEK_SET)) {
 			mylog(LOG_ERROR, "Can't seek in %s", lf->filename);
-			list_add_last(res, _log_wrap(store->name,
+			list_add_last(res,
+				      _log_wrap(store->name,
 						"Error seeking in logfile"));
 			return 0;
 		}
 	}
 
 	buf = bip_malloc((size_t)LOGLINE_MAXLEN + 1);
-	for(;;) {
+	for (;;) {
 		if (!fgets(buf, LOGLINE_MAXLEN, lf->file)) {
 			if (ferror(lf->file)) {
 				list_add_last(res, _log_wrap("Error reading "
-						"logfile", store->name));
+							     "logfile",
+							     store->name));
 			}
 			/* error or oef */
 			break;
@@ -1098,8 +1105,8 @@ static int log_backread_file(log_t *log, logstore_t *store, logfile_t *lf,
 			/* parse error, don't backlog */
 			if (linetime == (time_t)-1) {
 				list_add_last(res, _log_wrap("Error in "
-							"timestamp in %s",
-							store->name));
+							     "timestamp in %s",
+							     store->name));
 				continue;
 			}
 			/* too old line, don't backlog */
@@ -1109,14 +1116,13 @@ static int log_backread_file(log_t *log, logstore_t *store, logfile_t *lf,
 		logbr = log_beautify(log, buf, store->name, dest);
 		if (logbr)
 			list_add_last(res, logbr);
-
 	}
 	if (close) {
 		fclose(lf->file);
 		lf->file = NULL;
 	}
 	free(buf);
-	//mylog(LOG_ERROR, "end of log_backread_file store: %s", store->name);
+	// mylog(LOG_ERROR, "end of log_backread_file store: %s", store->name);
 	return 1;
 }
 
@@ -1139,7 +1145,7 @@ static list_t *log_backread(log_t *log, const char *storename, const char *dest)
 		ret = list_new(NULL);
 
 		for (list_it_init(store->memlog, &li); list_it_item(&li);
-				list_it_next(&li))
+		     list_it_next(&li))
 			list_add_last(ret, bip_strdup(list_it_item(&li)));
 		return ret;
 	}
@@ -1153,11 +1159,10 @@ static list_t *log_backread(log_t *log, const char *storename, const char *dest)
 	logfile_t *logf;
 
 	ret = list_new(NULL);
-	for (file_it = store->file_it;
-			(logf = list_it_item(&file_it));
-			list_it_next(&file_it)) {
+	for (file_it = store->file_it; (logf = list_it_item(&file_it));
+	     list_it_next(&file_it)) {
 		if (!log_backread_file(log, store, logf, ret, dest,
-					(time_t)0)) {
+				       (time_t)0)) {
 			log_reinit(store);
 			return ret;
 		}
@@ -1172,10 +1177,10 @@ static char *_log_wrap(const char *dest, const char *line)
 
 	buf = bip_malloc((size_t)LOGLINE_MAXLEN + 1);
 	count = snprintf(buf, (size_t)LOGLINE_MAXLEN + 1,
-			":" P_IRCMASK " PRIVMSG %s :%s\r\n", dest, line);
+			 ":" P_IRCMASK " PRIVMSG %s :%s\r\n", dest, line);
 	if (count < 0) {
 		mylog(LOG_ERROR, "_log_wrap: error on snprintf: %s",
-				strerror(errno));
+		      strerror(errno));
 		buf[LOGLINE_MAXLEN - 2] = '\r';
 		buf[LOGLINE_MAXLEN - 1] = '\n';
 		buf[LOGLINE_MAXLEN] = 0;
@@ -1191,7 +1196,7 @@ static char *_log_wrap(const char *dest, const char *line)
 }
 
 static size_t _log_write(log_t *logdata, logstore_t *store,
-		const char *destination, const char *str)
+			 const char *destination, const char *str)
 {
 	size_t nbwrite;
 	size_t len;
@@ -1201,8 +1206,8 @@ static size_t _log_write(log_t *logdata, logstore_t *store,
 	tmpstr[LOGLINE_MAXLEN] = 0;
 
 	if (store->memlog) {
-		char *r = log_beautify(logdata, tmpstr, store->name,
-				destination);
+		char *r =
+			log_beautify(logdata, tmpstr, store->name, destination);
 		if (r != NULL) {
 			list_add_last(store->memlog, r);
 			if (store->memc == logdata->user->backlog_lines)
@@ -1236,7 +1241,7 @@ void log_write(log_t *logdata, const char *destination, const char *str)
 
 	if (!store) {
 		mylog(LOG_ERROR, "Unable to find/create logfile for '%s'",
-				destination);
+		      destination);
 		return;
 	}
 	written = _log_write(logdata, store, destination, str);
@@ -1254,15 +1259,15 @@ void log_flush_all(void)
 
 	fflush(conf_global_log_file);
 	for (list_it_init(log_all_logs, &li); list_it_item(&li);
-			list_it_next(&li)) {
+	     list_it_next(&li)) {
 		log_t *log = list_it_item(&li);
 		hash_iterator_t hi;
 		for (hash_it_init(&log->logfgs, &hi); hash_it_item(&hi);
-				hash_it_next(&hi)) {
+		     hash_it_next(&hi)) {
 			logstore_t *store = hash_it_item(&hi);
 			list_iterator_t lj;
 			for (list_it_init(&store->file_group, &lj);
-					list_it_item(&lj); list_it_next(&lj)) {
+			     list_it_item(&lj); list_it_next(&lj)) {
 				logfile_t *lf = list_it_item(&lj);
 				if (lf->file)
 					fflush(lf->file);
@@ -1301,7 +1306,7 @@ void log_free(log_t *log)
 	free(log->buffer);
 
 	for (hash_it_init(&log->logfgs, &it); (store = hash_it_item(&it));
-			hash_it_next(&it)) {
+	     hash_it_next(&it)) {
 		log_reset(store);
 		log_store_free(store);
 	}
@@ -1320,7 +1325,8 @@ array_t *str_split(const char *str, const char *splt)
 	const char *start = str;
 	size_t len;
 	char *extracted;
-	array_t *array = array_new();;
+	array_t *array = array_new();
+	;
 
 	do {
 		if (!*p || strchr(splt, *p)) {
@@ -1341,7 +1347,7 @@ array_t *str_split(const char *str, const char *splt)
 
 /* 26-12-2008 08:54:39 */
 int log_parse_date(char *strdate, int *year, int *month, int *mday, int *hour,
-		int *min, int *sec)
+		   int *min, int *sec)
 {
 	array_t *fields;
 	char *sptr;
@@ -1358,8 +1364,7 @@ int log_parse_date(char *strdate, int *year, int *month, int *mday, int *hour,
 		ret = 1;
 	}
 	int i;
-	array_each(fields, i, sptr)
-		free(sptr);
+	array_each(fields, i, sptr) free(sptr);
 
 	array_free(fields);
 	return ret;
@@ -1368,7 +1373,7 @@ int log_parse_date(char *strdate, int *year, int *month, int *mday, int *hour,
 void logstore_get_file_at(logstore_t *store, time_t at, list_iterator_t *li)
 {
 	for (list_it_init(&store->file_group, li); list_it_item(li);
-			list_it_next(li)) {
+	     list_it_next(li)) {
 		logfile_t *lf = list_it_item(li);
 
 		if (mktime(&lf->last_log) > at)
@@ -1377,7 +1382,7 @@ void logstore_get_file_at(logstore_t *store, time_t at, list_iterator_t *li)
 }
 
 static list_t *log_backread_hours(log_t *log, const char *storename,
-		const char *dest, int hours)
+				  const char *dest, int hours)
 {
 	time_t blstarttime;
 	struct timeval tv;
@@ -1397,10 +1402,9 @@ static list_t *log_backread_hours(log_t *log, const char *storename,
 
 	ret = list_new(NULL);
 	for (logstore_get_file_at(store, blstarttime, &file_it);
-			(logf = list_it_item(&file_it));
-			list_it_next(&file_it)) {
+	     (logf = list_it_item(&file_it)); list_it_next(&file_it)) {
 		if (!log_backread_file(log, store, logf, ret, dest,
-					blstarttime)) {
+				       blstarttime)) {
 			log_reinit(store);
 			return ret;
 		}
@@ -1409,7 +1413,7 @@ static list_t *log_backread_hours(log_t *log, const char *storename,
 }
 
 list_t *backlog_lines(log_t *log, const char *bl, const char *cli_nick,
-		int hours)
+		      int hours)
 {
 	list_t *ret;
 	struct line l;
@@ -1454,4 +1458,3 @@ list_t *backlog_lines(log_t *log, const char *bl, const char *cli_nick,
 	}
 	return ret;
 }
-

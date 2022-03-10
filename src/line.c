@@ -16,7 +16,8 @@
 #include "line.h"
 #include "util.h"
 
-// TODO resolve assuming signed overflow does not occur when changing X +- C1 cmp C2 to X cmp C2 -+ C1
+// TODO resolve assuming signed overflow does not occur when changing X +- C1
+// cmp C2 to X cmp C2 -+ C1
 #pragma GCC diagnostic ignored "-Wstrict-overflow"
 
 void irc_line_init(struct line *l)
@@ -85,7 +86,7 @@ char *irc_line_to_string(struct line *l)
 	for (i = 0; i < array_count(&l->words); i++)
 		len += strlen(array_get(&l->words, i)) + 1;
 	len += 1; /* remove one trailing space and add \r\n */
-	len++; /* last args ":" */
+	len++;	  /* last args ":" */
 	ret = bip_malloc(len + 1);
 	ret[0] = 0;
 

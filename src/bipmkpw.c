@@ -45,10 +45,11 @@ void readpass(char *buffer, int buflen)
 		bipmkpw_fatal("tcgetattr failed", strerror(errno));
 
 	memcpy(&tt, &ttback, sizeof(ttback));
-// unsigned conversion from ‘int’ to ‘tcflag_t’ {aka ‘unsigned int’} changes value from ‘-11’ to ‘4294967285’
+// unsigned conversion from ‘int’ to ‘tcflag_t’ {aka ‘unsigned int’} changes
+// value from ‘-11’ to ‘4294967285’
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wsign-conversion"
-	tt.c_lflag &= ~(ICANON|ECHO);
+	tt.c_lflag &= ~(ICANON | ECHO);
 #pragma GCC diagnostic pop
 	if (tcsetattr(ttyfd, TCSANOW, &tt) < 0)
 		bipmkpw_fatal("tcsetattr failed", strerror(errno));
@@ -59,7 +60,7 @@ void readpass(char *buffer, int buflen)
 	int idx = 0;
 	int valid = 1;
 	while (idx < buflen) {
-		ssize_t rbytes = read(ttyfd, buffer+idx, (size_t)1);
+		ssize_t rbytes = read(ttyfd, buffer + idx, (size_t)1);
 		if (rbytes <= 0) {
 			break;
 		}
@@ -94,9 +95,9 @@ int main(void)
 	readpass(str, 256);
 	str[255] = 0;
 
-// passing argument 1 of ‘srand’ with different width due to prototype [-Werror=traditional-conversion]
-// conversion from ‘time_t’ {aka ‘long int’} to ‘unsigned int’ may change value [-Werror=conversion]
-// We don't care.
+// passing argument 1 of ‘srand’ with different width due to prototype
+// [-Werror=traditional-conversion] conversion from ‘time_t’ {aka ‘long int’} to
+// ‘unsigned int’ may change value [-Werror=conversion] We don't care.
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wtraditional-conversion"
 #pragma GCC diagnostic ignored "-Wconversion"
@@ -106,7 +107,7 @@ int main(void)
 	seed = (unsigned)rand(); // rand should be > 0
 
 	md5 = chash_double(str, seed);
-        for (i = 0; i < 20; i++)
+	for (i = 0; i < 20; i++)
 		printf("%02x", md5[i]);
 	printf("\n");
 	free(md5);

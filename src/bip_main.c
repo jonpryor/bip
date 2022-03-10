@@ -72,24 +72,25 @@ int do_pid_stuff(void);
 
 static void usage(char *name)
 {
-	printf(
-"Usage: %s [-f config_file] [-h] [-n]\n"
-"	-f config_file: Use config_file as the configuration file\n"
-"		If no config file is given %s will try to open ~/.bip/" S_CONF "\n"
-"	-n: Don't daemonize, log in stderr\n"
-"	-s: Bip HOME, default parent directory for client certificate,\n"
-"		configuration, logs, pid, oidentd\n"
-"	-v: Print version and exit\n"
-"	-h: This help\n", name, name);
+	printf("Usage: %s [-f config_file] [-h] [-n]\n"
+	       "	-f config_file: Use config_file as the configuration file\n"
+	       "		If no config file is given %s will try to open ~/.bip/" S_CONF
+	       "\n"
+	       "	-n: Don't daemonize, log in stderr\n"
+	       "	-s: Bip HOME, default parent directory for client certificate,\n"
+	       "		configuration, logs, pid, oidentd\n"
+	       "	-v: Print version and exit\n"
+	       "	-h: This help\n",
+	       name, name);
 	exit(1);
 }
 
 static void version(void)
 {
-	printf(
-"Bip IRC Proxy - " PACKAGE_VERSION "\n"
-"Copyright © Arnaud Cornet and Loïc Gomez (2004 - 2008)\n"
-"Distributed under the GNU General Public License Version 2\n");
+	printf("Bip IRC Proxy - " PACKAGE_VERSION
+	       "\n"
+	       "Copyright © Arnaud Cornet and Loïc Gomez (2004 - 2008)\n"
+	       "Distributed under the GNU General Public License Version 2\n");
 }
 
 static void log_file_setup(void)
@@ -99,7 +100,7 @@ static void log_file_setup(void)
 	if (conf_log_system && conf_daemonize) {
 		if (conf_global_log_file && conf_global_log_file != stderr)
 			fclose(conf_global_log_file);
-		snprintf(buf, (size_t) 4095, "%s/bip.log", conf_log_root);
+		snprintf(buf, (size_t)4095, "%s/bip.log", conf_log_root);
 		FILE *f = fopen(buf, "a");
 		if (!f)
 			fatal("Can't open %s: %s", buf, strerror(errno));
@@ -208,8 +209,9 @@ int main(int argc, char **argv)
 	char *home = NULL; /* oidentd path searching ignores conf_biphome */
 	home = getenv("HOME");
 	if (!home && !conf_biphome) {
-		conf_die(&bip, "no value for environment variable $HOME,"
-			"use '-s' parameter");
+		conf_die(&bip,
+			 "no value for environment variable $HOME,"
+			 "use '-s' parameter");
 		return 0;
 	}
 
@@ -220,16 +222,16 @@ int main(int argc, char **argv)
 	}
 
 	if (!bip.oidentdpath) {
-		bip.oidentdpath = bip_malloc(strlen(conf_biphome) + 1 +
-				strlen(OIDENTD_FILENAME) + 1);
+		bip.oidentdpath = bip_malloc(strlen(conf_biphome) + 1
+					     + strlen(OIDENTD_FILENAME) + 1);
 		strcpy(bip.oidentdpath, conf_biphome);
 		strcat(bip.oidentdpath, "/");
 		strcat(bip.oidentdpath, OIDENTD_FILENAME);
 	}
 
 	if (!confpath) {
-		confpath = bip_malloc(strlen(conf_biphome) + 1 +
-				strlen(S_CONF) + 1);
+		confpath = bip_malloc(strlen(conf_biphome) + 1 + strlen(S_CONF)
+				      + 1);
 		strcpy(confpath, conf_biphome);
 		strcat(confpath, "/");
 		strcat(confpath, S_CONF);
@@ -245,16 +247,16 @@ int main(int argc, char **argv)
 
 	if (!conf_log_root) {
 		char *ap = "/logs";
-		conf_log_root = bip_malloc(strlen(conf_biphome) +
-				strlen(ap) + 1);
+		conf_log_root =
+			bip_malloc(strlen(conf_biphome) + strlen(ap) + 1);
 		strcpy(conf_log_root, conf_biphome);
 		strcat(conf_log_root, ap);
 		mylog(LOG_INFO, "Default log root: %s", conf_log_root);
 	}
 	if (!conf_pid_file) {
 		char *pid = "/bip.pid";
-		conf_pid_file = bip_malloc(strlen(conf_biphome) +
-				strlen(pid) + 1);
+		conf_pid_file =
+			bip_malloc(strlen(conf_biphome) + strlen(pid) + 1);
 		strcpy(conf_pid_file, conf_biphome);
 		strcat(conf_pid_file, pid);
 		mylog(LOG_INFO, "Default pid file: %s", conf_pid_file);
@@ -266,19 +268,22 @@ int main(int argc, char **argv)
 		struct stat fs;
 
 		if (!conf_ssl_certfile) {
-			conf_ssl_certfile = default_path(conf_biphome, "bip.pem",
-					"SSL certificate");
+			conf_ssl_certfile = default_path(
+				conf_biphome, "bip.pem", "SSL certificate");
 		}
 		assert_path_exists(conf_ssl_certfile);
 
 		e = stat(conf_ssl_certfile, &fs);
 		if (e)
-			mylog(LOG_WARN, "Unable to check PEM file, stat(%s): "
-				"%s", conf_ssl_certfile, strerror(errno));
+			mylog(LOG_WARN,
+			      "Unable to check PEM file, stat(%s): "
+			      "%s",
+			      conf_ssl_certfile, strerror(errno));
 		else if ((fs.st_mode & S_IROTH) | (fs.st_mode & S_IWOTH))
-			mylog(LOG_ERROR, "PEM file %s should not be world "
-				"readable / writable. Please fix the modes.",
-				conf_ssl_certfile);
+			mylog(LOG_ERROR,
+			      "PEM file %s should not be world "
+			      "readable / writable. Please fix the modes.",
+			      conf_ssl_certfile);
 
 		if (conf_client_dh_file) {
 			assert_path_exists(conf_client_dh_file);
@@ -295,7 +300,7 @@ int main(int argc, char **argv)
 		pid = daemonize();
 	else
 		pid = getpid();
-	snprintf(buf, (size_t) 29, "%lu\n", (unsigned long int)pid);
+	snprintf(buf, (size_t)29, "%lu\n", (unsigned long int)pid);
 	ssize_t written;
 	written = write(fd, buf, strlen(buf));
 	if (written <= 0)

@@ -29,8 +29,8 @@ static const unsigned char base64_table[65] =
  *
  * BIP change: remove line returns.
  */
-unsigned char * base64_encode(const unsigned char *src, size_t len,
-			      size_t *out_len)
+unsigned char *base64_encode(const unsigned char *src, size_t len,
+			     size_t *out_len)
 {
 	unsigned char *out, *pos;
 	const unsigned char *end, *in;
@@ -38,8 +38,8 @@ unsigned char * base64_encode(const unsigned char *src, size_t len,
 	int line_len;
 
 	olen = len * 4 / 3 + 4; /* 3-byte blocks to 4-byte */
-	olen += olen / 72; /* line feeds */
-	olen++; /* nul termination */
+	olen += olen / 72;	/* line feeds */
+	olen++;			/* nul termination */
 	if (olen < len)
 		return NULL; /* integer overflow */
 	out = malloc(olen);
@@ -57,7 +57,7 @@ unsigned char * base64_encode(const unsigned char *src, size_t len,
 		*pos++ = base64_table[in[2] & 0x3f];
 		in += 3;
 		line_len += 4;
- 		/*
+		/*
 		 *  BIP change: remove line returns.
 		if (line_len >= 72) {
 			*pos++ = '\n';
@@ -72,15 +72,15 @@ unsigned char * base64_encode(const unsigned char *src, size_t len,
 			*pos++ = base64_table[(in[0] & 0x03) << 4];
 			*pos++ = '=';
 		} else {
-			*pos++ = base64_table[((in[0] & 0x03) << 4) |
-					      (in[1] >> 4)];
+			*pos++ = base64_table[((in[0] & 0x03) << 4)
+					      | (in[1] >> 4)];
 			*pos++ = base64_table[(in[1] & 0x0f) << 2];
 		}
 		*pos++ = '=';
 		line_len += 4;
 	}
 
- 	/*
+	/*
 	 *  BIP change: remove line returns.
 	if (line_len)
 		*pos++ = '\n';
@@ -91,4 +91,3 @@ unsigned char * base64_encode(const unsigned char *src, size_t len,
 		*out_len = (size_t)(pos - out);
 	return out;
 }
-

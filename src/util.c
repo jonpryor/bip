@@ -107,8 +107,9 @@ char *bip_strcat_fit(size_t *remaining, char *str, const char *str2)
 
 	res = memccpy(str, str2, '\0', *remaining);
 	if (!res) {
-		mylog(LOG_DEBUGTOOMUCH, "bip_strcat_fit: memccpy() failed, remaining %lu",
-				*remaining);
+		mylog(LOG_DEBUGTOOMUCH,
+		      "bip_strcat_fit: memccpy() failed, remaining %lu",
+		      *remaining);
 		return NULL;
 	}
 
@@ -135,8 +136,9 @@ char *bip_strcatf_fit(size_t *remaining, char *str, const char *fmt, ...)
 	}
 
 	if (*remaining > STRCATF_BUF_MAXLEN) {
-		mylog(LOG_ERROR, "bip_strcatf_fit: remaining "
-				"is over STRCATF_BUF_MAXLEN");
+		mylog(LOG_ERROR,
+		      "bip_strcatf_fit: remaining "
+		      "is over STRCATF_BUF_MAXLEN");
 	}
 
 	va_start(ap, fmt);
@@ -144,19 +146,22 @@ char *bip_strcatf_fit(size_t *remaining, char *str, const char *fmt, ...)
 	written = vsnprintf(str2, *remaining, fmt, ap);
 	if (written < 0) {
 		mylog(LOG_ERROR, "bip_strcatf_fit: vsnprintf failed with: %s",
-				strerror(errno));
+		      strerror(errno));
 		return NULL;
 	}
 
 	if ((unsigned)written >= *remaining) {
-		mylog(LOG_DEBUGVERB, "bip_strcatf_fit,vsnprintf: no space left");
+		mylog(LOG_DEBUGVERB,
+		      "bip_strcatf_fit,vsnprintf: no space left");
 		goto end;
 	}
 
 	res = memccpy(str, str2, '\0', *remaining);
 	if (!res) {
-		mylog(LOG_DEBUGTOOMUCH, "bip_strcatf_fit: memccpy() failed, "
-				"remaining %lu", *remaining);
+		mylog(LOG_DEBUGTOOMUCH,
+		      "bip_strcatf_fit: memccpy() failed, "
+		      "remaining %lu",
+		      *remaining);
 		goto end;
 	}
 
@@ -194,10 +199,10 @@ int is_valid_nick(char *str)
 		return 0;
 
 	tmp = str;
-	while (*tmp != '\0' && (isalnum(*tmp) || *tmp == '-' || *tmp == '[' ||
-			*tmp == ']' || *tmp == '\\' || *tmp == '`' ||
-			*tmp == '^' || *tmp == '{' || *tmp == '}' ||
-			*tmp == '|' || *tmp == '_' ))
+	while (*tmp != '\0'
+	       && (isalnum(*tmp) || *tmp == '-' || *tmp == '[' || *tmp == ']'
+		   || *tmp == '\\' || *tmp == '`' || *tmp == '^' || *tmp == '{'
+		   || *tmp == '}' || *tmp == '|' || *tmp == '_'))
 		tmp++;
 	return (*tmp == '\0');
 }
@@ -209,8 +214,8 @@ int is_valid_username(char *str)
 		return 0;
 
 	tmp = str;
-	while (*tmp != '\0' && *tmp != ' ' && *tmp != '\0' && *tmp != '\r' &&
-			*tmp != '\n')
+	while (*tmp != '\0' && *tmp != ' ' && *tmp != '\0' && *tmp != '\r'
+	       && *tmp != '\n')
 		tmp++;
 	return (*tmp == '\0');
 }
@@ -266,27 +271,27 @@ void _mylog(int level, char *fmt, va_list ap)
 		return;
 
 	switch (level) {
-		case LOG_FATAL:
-			prefix = "FATAL: ";
-			break;
-		case LOG_DEBUGVERB:
-			prefix = "DEBUGVERB: ";
-			break;
-		case LOG_DEBUG:
-			prefix = "DEBUG: ";
-			break;
-		case LOG_ERROR:
-			prefix = "ERROR: ";
-			break;
-		case LOG_WARN:
-			prefix = "WARNING: ";
-			break;
-		case LOG_INFO:
-			prefix = "";
-			break;
-		default:
-			prefix = "";
-			break;
+	case LOG_FATAL:
+		prefix = "FATAL: ";
+		break;
+	case LOG_DEBUGVERB:
+		prefix = "DEBUGVERB: ";
+		break;
+	case LOG_DEBUG:
+		prefix = "DEBUG: ";
+		break;
+	case LOG_ERROR:
+		prefix = "ERROR: ";
+		break;
+	case LOG_WARN:
+		prefix = "WARNING: ";
+		break;
+	case LOG_INFO:
+		prefix = "";
+		break;
+	default:
+		prefix = "";
+		break;
 	}
 
 	fprintf(conf_global_log_file, "%s %s", timestamp(), prefix);
@@ -606,13 +611,13 @@ void hash_init(hash_t *h, int options)
 		switch (options) {
 		case HASH_NOCASE:
 			list_init(&h->lists[i],
-				(int (*)(const void*, const void*))
-					hash_item_nocase_cmp);
+				  (int (*)(const void *,
+					   const void *))hash_item_nocase_cmp);
 			break;
 		case HASH_DEFAULT:
 			list_init(&h->lists[i],
-				(int (*)(const void*,const void*))
-					hash_item_cmp);
+				  (int (*)(const void *,
+					   const void *))hash_item_cmp);
 			break;
 		default:
 			fatal("wrong hash option %d", options);
@@ -800,7 +805,7 @@ void hash_dump(hash_t *h)
 {
 	hash_iterator_t it;
 	assert(h);
-	for (hash_it_init(h, &it); hash_it_key(&it) ;hash_it_next(&it))
+	for (hash_it_init(h, &it); hash_it_key(&it); hash_it_next(&it))
 		printf("%s => %p\n", hash_it_key(&it), hash_it_item(&it));
 }
 
@@ -869,7 +874,7 @@ void array_ensure(array_t *a, int index)
 	a->elemv = bip_realloc(a->elemv, sizeof(void *) * (size_t)(index + 1));
 	// a->elemc should be lower than index + 1
 	memset(a->elemv + a->elemc, 0,
-			sizeof(void *) * (size_t)(index + 1 - a->elemc));
+	       sizeof(void *) * (size_t)(index + 1 - a->elemc));
 	a->elemc = index + 1;
 }
 

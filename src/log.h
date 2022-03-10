@@ -29,8 +29,7 @@
 
 struct list;
 
-typedef struct logfile
-{
+typedef struct logfile {
 	FILE *file;
 	char *filename;
 	char *canonical_filename;
@@ -38,8 +37,7 @@ typedef struct logfile
 	size_t len;
 } logfile_t;
 
-typedef struct logstore
-{
+typedef struct logstore {
 	char *name;
 	list_t file_group;
 	int skip_advance;
@@ -51,8 +49,7 @@ typedef struct logstore
 	long file_offset;
 } logstore_t;
 
-typedef struct log
-{
+typedef struct log {
 	hash_t logfgs;
 	char *network;
 	char *buffer;
@@ -69,29 +66,29 @@ void logdata_free(log_t *logdata);
 
 void log_join(log_t *logdata, const char *ircmask, const char *channel);
 void log_part(log_t *logdata, const char *ircmask, const char *channel,
-		const char *message);
+	      const char *message);
 void log_kick(log_t *logdata, const char *ircmask, const char *channel,
-		const char *who, const char *message);
+	      const char *who, const char *message);
 void log_quit(log_t *logdata, const char *ircmask, const char *channel,
-		const char *message);
+	      const char *message);
 void log_nick(log_t *logdata, const char *ircmask, const char *channel,
-		const char *newnick);
+	      const char *newnick);
 void log_privmsg(log_t *logdata, const char *ircmask, const char *destination,
-		const char *message);
+		 const char *message);
 void log_notice(log_t *logdata, const char *ircmask, const char *channel,
 		const char *message);
 void log_cli_privmsg(log_t *logdata, const char *ircmask,
-		const char *destination, const char *message);
+		     const char *destination, const char *message);
 void log_cli_notice(log_t *logdata, const char *ircmask, const char *channel,
-		const char *message);
+		    const char *message);
 void log_write(log_t *logdata, const char *str, const char *destination);
 void log_mode(log_t *logdata, const char *ircmask, const char *channel,
-		const char *modes, array_t *mode_args);
+	      const char *modes, array_t *mode_args);
 void log_topic(log_t *logdata, const char *ircmask, const char *channel,
-		const char *message);
+	       const char *message);
 void log_init_topic(log_t *logdata, const char *channel, const char *message);
 void log_init_topic_time(log_t *logdata, const char *channel, const char *who,
-		const char *when);
+			 const char *when);
 void log_connected(log_t *logdata);
 void log_disconnected(log_t *logdata);
 void log_ping_timeout(log_t *logdata);
@@ -108,5 +105,5 @@ void log_drop(log_t *log, const char *storename);
 
 list_t *log_backlogs(log_t *log);
 list_t *backlog_lines(log_t *log, const char *bl, const char *cli_nick,
-		int hours);
+		      int hours);
 #endif
