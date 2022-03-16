@@ -227,7 +227,7 @@ This option should of course not be enabled if \fBbacklog_lines\fP is 0 !
 If you still want to do so, don't forget to \fB/BIP BLRESET\fP sometimes.
 
 .TP
-\fBbacklog_lines\fP (default: \fB10\fP)
+\fBbacklog_lines\fP (default: \fB0\fP)
 If set to 0, BIP will replay all the logs since last client disconnect. Else,
 it'll replay exactly \fBbacklog_lines\fP lines on each channel and privates.
 Be aware that BIP will replay \fBbacklog_lines\fP lines of all privates, even
