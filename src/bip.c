@@ -67,6 +67,7 @@ void conf_die(bip_t *bip, char *fmt, ...);
 static char *get_tuple_pvalue(list_t *tuple_l, int lex);
 void bip_notify(struct link_client *ic, char *fmt, ...);
 void adm_list_connections(struct link_client *ic, struct bipuser *bu);
+struct link *find_link(const char *link_name, struct bipuser *bu);
 void free_conf(list_t *l);
 
 
@@ -373,6 +374,45 @@ static int add_network(bip_t *bip, list_t *data)
 	return 1;
 }
 
+void adm_bip_jump(struct link_client *ic, const char *conn_name,
+		  int reset_timer)
+{
+	struct link *lnk;
+	if (conn_name) {
+		lnk = find_link(conn_name, LINK(ic)->user);
+		if (!lnk) {
+			bip_notify(ic, "-- Cannot find connection named %s",
+				   conn_name);
+			return;
+		}
+		goto do_the_jump;
+	} else {
+		lnk = LINK(ic);
+	}
+
+do_the_jump:
+	if (!lnk->l_server) {
+		if (reset_timer) {
+			lnk->recon_timer = 0;
+			bip_notify(ic,
+				   "-- %s is not connected, "
+				   "timer has been reset, please wait",
+				   conn_name);
+			return;
+		}
+		int timer = (lnk->recon_timer ? lnk->recon_timer : 0);
+		bip_notify(ic,
+			   "-- %s is not connected, "
+			   "please wait for reconnect (%ds)",
+			   conn_name, timer);
+		return;
+	}
+
+	WRITE_LINE1(CONN(lnk->l_server), NULL, "QUIT", "jumpin' jumpin'");
+	connection_close(CONN(lnk->l_server));
+	bip_notify(ic, "-- Jumping to next server on %s", conn_name);
+}
+
 void adm_bip_delconn(bip_t *bip, struct link_client *ic, const char *conn_name)
 {
 	struct bipuser *user = LINK(ic)->user;
@@ -662,6 +702,31 @@ static int add_connection(bip_t *bip, struct bipuser *user, list_t *data)
 
 	l->in_use = 1;
 	return 1;
+}
+
+struct link *find_link(const char *link_name, struct bipuser *bu)
+{
+	list_iterator_t it;
+
+	// Immediately return NULL when bip user (bu) is NULL
+	if (!bu) {
+		return NULL;
+	}
+
+	for (list_it_init(&_bip->link_list, &it); list_it_item(&it);
+	     list_it_next(&it)) {
+		struct link *lnk = list_it_item(&it);
+		if (!lnk)
+			continue;
+		// Only lookup in optionally specified user links
+		if (bu != lnk->user)
+			continue;
+
+		if (strcmp(link_name, lnk->name) == 0)
+			return lnk;
+	}
+
+	return NULL;
 }
 
 static char *get_tuple_pvalue(list_t *tuple_l, int lex)
@@ -1992,8 +2057,8 @@ void adm_bip_help(struct link_client *ic, int admin, const char *subhelp)
 			bip_notify(ic, "/BIP LIST networks|connections");
 		}
 		bip_notify(ic,
-			   "/BIP JUMP # jump to next server (in same "
-			   "network)");
+			   "/BIP JUMP [-f] [conn_name] # jump to next "
+			   "server (defaults to current network)");
 		bip_notify(ic,
 			   "/BIP BLRESET [channel|query]# reset backlog "
 			   "(this connection only). Add -q flag and the "
@@ -2046,8 +2111,14 @@ void adm_bip_help(struct link_client *ic, int admin, const char *subhelp)
 			   "  Removing a connection will cause "
 			   "its disconnection.");
 	} else if (strcasecmp(subhelp, "JUMP") == 0) {
-		bip_notify(ic, "/BIP JUMP :");
+		bip_notify(ic, "/BIP JUMP [-f] [conn_name]:");
 		bip_notify(ic, "  Jump to next server in current network.");
+		bip_notify(ic,
+			   "  If [conn_name] is set, jump to next server in "
+			   "[conn_name] network instead.");
+		bip_notify(ic,
+			   "  If [-f] flag is used, also resets reconnect "
+			   "timer.");
 	} else if (strcasecmp(subhelp, "BLRESET") == 0) {
 		bip_notify(ic, "/BIP BLRESET :");
 		bip_notify(ic, "  Reset backlog on this network.");
@@ -2227,12 +2298,16 @@ int adm_bip(bip_t *bip, struct link_client *ic, struct line *line, int privmsg)
 			bip_notify(ic, "-- Invalid INFO request");
 		}
 	} else if (irc_line_elem_case_equals(line, privmsg + 1, "JUMP")) {
-		if (LINK(ic)->l_server) {
-			WRITE_LINE1(CONN(LINK(ic)->l_server), NULL, "QUIT",
-				    "jumpin' jumpin'");
-			connection_close(CONN(LINK(ic)->l_server));
+		if (irc_line_count(line) == privmsg + 2) {
+			adm_bip_jump(ic, NULL, 0);
+		} else if (irc_line_count(line) == privmsg + 3) {
+			adm_bip_jump(ic, irc_line_elem(line, privmsg + 2), 0);
+		} else if (irc_line_count(line) == privmsg + 4
+			   && irc_line_elem_equals(line, privmsg + 2, "-f")) {
+			adm_bip_jump(ic, irc_line_elem(line, privmsg + 3), 1);
+		} else {
+			bip_notify(ic, "-- Invalid usage (/BIP HELP JUMP)");
 		}
-		bip_notify(ic, "-- Jumping to next server");
 	} else if (irc_line_elem_case_equals(line, privmsg + 1, "BLRESET")) {
 		if (irc_line_includes(line, privmsg + 2)) {
 			if (irc_line_elem_equals(line, privmsg + 2, "-q")) {
