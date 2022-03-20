@@ -3,7 +3,7 @@ if COND_WANT_TESTS
 endif
 SUBDIRS = src . $(MAYBE_TESTS)
 
-dist_man_MANS = bip.1 bip.conf.5 bipmkpw.1
+dist_man_MANS = bip.1 bip.conf.5 bipmkpw.1 bipgenconfig.1
 
 examplesdir = $(prefix)/share/doc/bip/examples/
 dist_examples_DATA = samples/bip.conf samples/bip.vim
