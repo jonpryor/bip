@@ -36,9 +36,14 @@ bipmkpw_LDADD = libbip.a libbiplex.a $(OPENSSL_LIBS)
 AM_YFLAGS= -d
 BUILT_SOURCES = conf.c conf.h lex.c
 
-AM_CFLAGS=-Wall -Wextra -Werror \
+# _BIP_WARNING_AS_ERROR = -Werror
+# _BIP_GNU_LINKER_FLAGS = -Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -Wl,-z,separate-code
+_BIP_WARNING_AS_ERROR =
+_BIP_GNU_LINKER_FLAGS =
+
+AM_CFLAGS=-Wall -Wextra $(_BIP_WARNING_AS_ERROR) \
 	-O2 \
-	-D_FORTIFY_SOURCE=2 \
+	-D_FORTIFY_SOURCE=2 -D_C99_SOURCE=1 \
 	-fstack-protector-strong -fstack-clash-protection \
-	-Wl,-z,relro -Wl,-z,now -Wl,-z,noexecstack -Wl,-z,separate-code \
+	$(_BIP_GNU_LINKER_FLAGS) \
 	-Wpedantic -Wformat=2 -Wformat-overflow=2 -Wformat-truncation=2 -Wformat-security -Wnull-dereference -Wstack-protector -Wtrampolines -Walloca -Wvla -Warray-bounds=2 -Wimplicit-fallthrough=3 -Wtraditional-conversion -Wshift-overflow=2 -Wcast-qual -Wstringop-overflow=4 -Wconversion -Warith-conversion -Wlogical-op -Wduplicated-cond -Wduplicated-branches -Wformat-signedness -Wshadow -Wstrict-overflow=4 -Wundef -Wstrict-prototypes -Wswitch-default -Wswitch-enum -Wstack-usage=1000000 -Wcast-align=strict
